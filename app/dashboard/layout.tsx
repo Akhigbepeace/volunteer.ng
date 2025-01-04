@@ -1,5 +1,5 @@
 import React, { ReactNode } from "react";
-import Navbar from "../component/navbar";
+// import Navbar from "../component/navbar";
 import Footer from "../component/footer";
 
 type DashboardLayoutProp = {
@@ -9,7 +9,7 @@ type DashboardLayoutProp = {
 const DashboardLayout = ({ children }: DashboardLayoutProp) => {
   return (
     <>
-      <Navbar />
+      {/* <Navbar /> */}
 
       {children}
 

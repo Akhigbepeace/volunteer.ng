@@ -3,20 +3,18 @@
 import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
-import { useUser } from "@/context/user-context";
 
 const Navbar = () => {
-  const { user, setUser } = useUser();
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const router = useRouter();
 
   const role = localStorage.getItem("role");
   useEffect(() => {
-    const isUserLoggedIn = localStorage.getItem("isLoggedIn");
-    console.log({ isUserLoggedIn });
-    if (isUserLoggedIn === "true") {
-      setIsLoggedIn(true);
+    if (typeof window !== "undefined") {
+      const isUserLoggedIn = localStorage.getItem("isLoggedIn");
+      
+      if (isUserLoggedIn === "true") {
+        setIsLoggedIn(true);
+      }
     }
   }, []);
 

@@ -1,14 +1,13 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import Image from "next/image";
 import React, { SyntheticEvent, useState } from "react";
-import { GoogleLogin } from "@react-oauth/google";
 import { SiLinkedin } from "react-icons/si";
 import { FcGoogle } from "react-icons/fc";
 import { IoEyeSharp } from "react-icons/io5";
 import { FaEyeSlash } from "react-icons/fa";
 import Link from "next/link";
+import { toast, ToastContainer } from "react-toastify";
 
 type UserData = {
   email: string;
@@ -23,7 +22,6 @@ const Signup = () => {
   });
 
   const router = useRouter();
-  const role = localStorage.getItem("role");
 
   const handleOnChange = (e: SyntheticEvent) => {
     const { name, value } = e.currentTarget as HTMLFormElement;
@@ -44,14 +42,12 @@ const Signup = () => {
   };
 
   const handleSignUp = async (e: React.FormEvent<HTMLFormElement>) => {
+    const role = localStorage.getItem("role");
+
     try {
       e.preventDefault();
 
-      const data = new FormData(e.currentTarget);
-
-      const email = data.get("email");
-      const password = data.get("password");
-      const name = data.get("name");
+      toast("Account Created Successfully");
 
       if (role === "volunteer") {
         router.push("/onboarding/volunteer");
@@ -70,6 +66,7 @@ const Signup = () => {
   return (
     <div className="flex items-center justify-center min-h-screen bg-gray-100">
       <div className="bg-white shadow-lg rounded-lg p-8 w-full max-w-md">
+        <ToastContainer />
         <h2 className="text-2xl font-bold text-center mb-6">Signup</h2>
 
         <form onSubmit={handleSignUp} className="space-y-4">

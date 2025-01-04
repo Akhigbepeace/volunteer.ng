@@ -2,23 +2,12 @@
 
 import { useRouter } from "next/navigation";
 import React, { SyntheticEvent, useState } from "react";
-import Select from "react-select";
-
-type HandleSelectOption = {
-  selectedOptions: any;
-  name: string;
-};
-
-type SelectOptions = {
-  value: string;
-  label: string;
-};
 
 type FormData = {
   fullName: string;
   phone: string;
-  skills: SelectOptions[];
-  industries: SelectOptions[];
+  skills: string;
+  industry: string;
   experience: string;
   sstpId: string;
 };
@@ -26,8 +15,8 @@ type FormData = {
 const defaultData: FormData = {
   fullName: "",
   phone: "",
-  skills: [],
-  industries: [],
+  skills: "",
+  industry: "",
   experience: "",
   sstpId: "",
 };
@@ -79,24 +68,10 @@ const VolunteerOnboardingForm = () => {
     setFormData((prevData) => ({ ...prevData, [name]: value }));
   };
 
-  const handleSelectOption = (props: HandleSelectOption) => {
-    const { selectedOptions, name } = props;
-
-    setFormData((prevData) => ({ ...prevData, [name]: selectedOptions || [] }));
-  };
-
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
 
-    const submittedData = {
-      ...formData,
-      skills: formData.skills.map((skill) => skill.label),
-      industries: formData.industries.map((industy) => industy.label),
-    };
-
-    if (submittedData) router.push("/project");
-
-    console.log("Submitted Data:", { submittedData, formData });
+    if (formData) router.push("/project/volunteer");
   };
 
   return (
@@ -109,7 +84,6 @@ const VolunteerOnboardingForm = () => {
           Volunteer Onboarding
         </h1>
 
-        {/* Full Name */}
         <div className="mb-4">
           <label htmlFor="fullName" className="block text-gray-700 mb-1">
             Full Name
@@ -126,7 +100,6 @@ const VolunteerOnboardingForm = () => {
           />
         </div>
 
-        {/* Phone Number */}
         <div className="mb-4">
           <label htmlFor="phone" className="block text-gray-700 mb-1">
             Phone Number
@@ -143,54 +116,60 @@ const VolunteerOnboardingForm = () => {
           />
         </div>
 
-        {/* Skill Set */}
         <div className="mb-4">
           <label htmlFor="skills" className="block text-gray-700 mb-1">
             Skill Set
           </label>
-          <Select
-            isMulti
+
+          <select
             required
-            id="skills"
             name="skills"
-            options={skillOptions}
-            placeholder="Select Skills"
+            id="skills"
             value={formData.skills}
-            onChange={(selectedOptions) =>
-              handleSelectOption({
-                selectedOptions,
-                name: "skills",
-              })
-            }
-            className="focus:outline-none focus:ring-2 focus:ring-primary"
-          />
+            onChange={handleInputChange}
+          >
+            <option
+              defaultChecked
+              disabled
+              className="focus:outline-none focus:ring-2 focus:ring-primary"
+            >
+              Select Skills
+            </option>
+            {skillOptions.map((skill, index) => (
+              <option key={index} value={skill.value}>
+                {skill.label}
+              </option>
+            ))}
+          </select>
         </div>
 
-        {/* Industry */}
         <div className="mb-4">
           <label htmlFor="industries" className="block text-gray-700 mb-1">
             Industry
           </label>
 
-          <Select
-            isMulti
+          <select
             required
-            id="industries"
-            name="industries"
-            placeholder="Select Industry"
-            options={industryOptions}
-            value={formData.industries}
-            onChange={(selectedOptions) =>
-              handleSelectOption({
-                selectedOptions,
-                name: "industries",
-              })
-            }
-            className="focus:outline-none focus:ring-2 focus:ring-primary"
-          />
+            name="industry"
+            id="industry"
+            value={formData.industry}
+            onChange={handleInputChange}
+          >
+            <option
+              defaultChecked
+              disabled
+              className="focus:outline-none focus:ring-2 focus:ring-primary"
+            >
+              Select Industry
+            </option>
+            {industryOptions.map((skill, index) => (
+              <option key={index} value={skill.value}>
+                {skill.label}
+              </option>
+            ))}
+          </select>
         </div>
 
-        {/* Experience */}
         <div className="mb-4">
           <label htmlFor="experience" className="block text-gray-700 mb-1">
             Experience (Years)
@@ -208,7 +187,6 @@ const VolunteerOnboardingForm = () => {
           />
         </div>
 
-        {/* SSTP/SSAF ID */}
         <div className="mb-4">
           <label htmlFor="sstpId" className="block text-gray-700 mb-1">
             SSTP/SSAF ID
@@ -225,7 +203,6 @@ const VolunteerOnboardingForm = () => {
           />
         </div>
 
-        {/* Submit Button */}
         <button
           type="submit"
           className="w-full bg-primary text-white py-2 rounded-lg hover:bg-secondary transition"

@@ -2,12 +2,10 @@
 
 import React, { useState } from "react";
 import Image from "next/image";
-import { useRouter } from "next/navigation";
 import Link from "next/link";
 
 const SelectRole = () => {
   const [selectedRole, setSelectedRole] = useState("");
-  const router = useRouter();
 
   return (
     <div className="relative h-screen bg-tertiary flex items-center justify-center">

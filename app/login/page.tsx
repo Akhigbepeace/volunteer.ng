@@ -1,9 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import Image from "next/image";
-import React, { SyntheticEvent, useState } from "react";
-import { GoogleLogin } from "@react-oauth/google";
+import React, { useState } from "react";
 import { SiLinkedin } from "react-icons/si";
 import { FcGoogle } from "react-icons/fc";
 import { IoEyeSharp } from "react-icons/io5";
@@ -40,11 +38,9 @@ const Login = () => {
   const handleCredentialLogin = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-
     const data = new FormData(e.currentTarget);
     const email = data.get("email");
     const password = data.get("password");
-
 
     if (email === "test@gmail.com" && password === "password") {
       localStorage.setItem("isLoggedIn", "true");
@@ -148,7 +144,7 @@ const Login = () => {
 
             <div className="flex items-center justify-center text-center mt-5">
               <p className="text-gray-600">
-                Don't have an account?{" "}
+                Don&apos;t have an account?{" "}
                 <Link href="/signup" className="text-primary">
                   Sign up
                 </Link>

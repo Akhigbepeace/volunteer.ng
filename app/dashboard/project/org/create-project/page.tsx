@@ -2,6 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import React, { SyntheticEvent, useState } from "react";
+import { toast, ToastContainer } from "react-toastify";
 
 const CreateProject = () => {
   const [formData, setFormData] = useState({
@@ -31,12 +32,14 @@ const CreateProject = () => {
     e.preventDefault();
     console.log("Form submitted:", formData);
 
+    toast("Project created successfully");
     router.push("/dashboard/project/org");
     // Add logic to send formData to your backend or API
   };
 
   return (
     <div className="max-w-3xl mx-auto p-6 bg-white shadow rounded-lg">
+      <ToastContainer />
       <h2 className="text-2xl font-bold mb-4 text-gray-800">
         Create a New Project
       </h2>

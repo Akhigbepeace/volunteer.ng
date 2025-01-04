@@ -4,12 +4,12 @@ import { ProjectObj } from "../home/volunteer/page";
 
 type ProjectProps = {
   project: ProjectObj;
-  handleClick: (value?: any) => void;
+  handleClick: () => void;
 };
 
 const Project = (props: ProjectProps) => {
   const { handleClick, project } = props;
-  
+
   return (
     <div className="border rounded-lg shadow-md overflow-hidden bg-white">
       <div className="relative w-full h-40">

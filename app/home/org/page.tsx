@@ -1,7 +1,7 @@
 "use client";
 
 import Footer from "@/app/component/footer";
-import Navbar from "@/app/component/navbar";
+// import Navbar from "@/app/component/navbar";
 import Image from "next/image";
 import Link from "next/link";
 import React from "react";
@@ -9,14 +9,9 @@ import React from "react";
 const HomePage = () => {
   return (
     <>
-      <Navbar />
+      {/* <Navbar /> */}
 
       <div className="min-h-screen bg-gray-50">
-        {/* Hero Section */}
-        {/* <header className="bg-primary text-white py-20">
-          
-        </header> */}
-
         <section className="relative h-[400px]">
           <div className="relative w-full h-[400px]">
             <Image
@@ -51,7 +46,6 @@ const HomePage = () => {
           </div>
         </section>
 
-        {/* About Section */}
         <section className="py-16 bg-white">
           <div className="container mx-auto px-6">
             <h2 className="text-2xl font-bold text-center mb-8">
@@ -59,14 +53,13 @@ const HomePage = () => {
             </h2>
             <p className="text-center text-gray-700 max-w-3xl mx-auto">
               Volunteer.ng is an innovative platform connecting organizations
-              with passionate volunteers to make a difference. Whether you're
-              looking to manage projects or find opportunities to help, we’ve
-              got you covered.
+              with passionate volunteers to make a difference. Whether
+              you&apos;re looking to manage projects or find opportunities to
+              help, we&apos;ve got you covered.
             </p>
           </div>
         </section>
 
-        {/* Features Section */}
         <section id="features" className="py-16 bg-gray-100">
           <div className="container mx-auto px-6">
             <h2 className="text-2xl font-bold text-center mb-8">Features</h2>
@@ -91,8 +84,7 @@ const HomePage = () => {
           </div>
         </section>
 
-        {/* Testimonials Section */}
-        <section className="py-16 bg-white">
+        {/* <section className="py-16 bg-white">
           <div className="container mx-auto px-6">
             <h2 className="text-2xl font-bold text-center mb-8">
               Success Stories
@@ -104,8 +96,8 @@ const HomePage = () => {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
               <blockquote className="bg-gray-50 p-6 rounded-lg shadow-lg">
                 <p className="italic text-gray-700">
-                  "Volunteer.ng helped us find skilled volunteers quickly and
-                  efficiently. Our projects have never run smoother!"
+                  &quot;Volunteer.ng helped us find skilled volunteers quickly
+                  and efficiently. Our projects have never run smoother!&quot;
                 </p>
                 <cite className="block mt-4 text-sm text-gray-600">
                   – Organization A
@@ -113,8 +105,9 @@ const HomePage = () => {
               </blockquote>
               <blockquote className="bg-gray-50 p-6 rounded-lg shadow-lg">
                 <p className="italic text-gray-700">
-                  "Through Volunteer.ng, I found projects that align with my
-                  skills and passion. It’s been a truly rewarding experience."
+                  &quot;Through Volunteer.ng, I found projects that align with
+                  my skills and passion. It&apos;s been a truly rewarding
+                  experience.&quot;
                 </p>
                 <cite className="block mt-4 text-sm text-gray-600">
                   – Volunteer B
@@ -122,9 +115,8 @@ const HomePage = () => {
               </blockquote>
             </div>
           </div>
-        </section>
+        </section> */}
 
-        {/* Call-to-Action Section */}
         <section className="py-16 bg-primary text-white">
           <div className="container mx-auto px-6 text-center">
             <h2 className="text-2xl font-bold mb-4">

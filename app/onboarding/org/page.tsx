@@ -2,13 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import React, { SyntheticEvent, useState } from "react";
-import Select from "react-select";
 import { toast, ToastContainer } from "react-toastify";
-
-type SelectOptions = {
-  value: string;
-  label: string;
-};
 
 type FormData = {
   organizationName: string;
