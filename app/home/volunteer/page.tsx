@@ -2,8 +2,6 @@
 
 import Image from "next/image";
 import React from "react";
-import Project from "../../component/project";
-import { useRouter } from "next/navigation";
 
 export type ProjectObj = {
   id: number;
@@ -21,49 +19,6 @@ export type ProjectObj = {
 };
 
 const Home = () => {
-  const router = useRouter();
-
-  const handleApply = (projectId: number) => {
-    const isLoggedIn = localStorage.getItem("isLoggedIn");
-
-    if (!isLoggedIn) {
-      router.push("/login");
-    } else {
-      router.push(`/project/volunteer/${projectId}`);
-    }
-  };
-
-  const projects: ProjectObj[] = [
-    {
-      id: 1,
-      status: "published",
-      image: "/assets/cwi.jpeg",
-      title: "Clean Water Initiative",
-      description: "Help provide clean water to underprivileged communities.",
-    },
-    {
-      id: 2,
-      status: "published",
-      image: "/assets/tpc.jpeg",
-      title: "Tree Planting Campaign",
-      description: "Join us in planting trees to combat climate change.",
-    },
-    {
-      id: 3,
-      status: "published",
-      image: "/assets/literarcy-drive.jpeg",
-      title: "Literacy Drive",
-      description: "Help teach basic reading and writing skills.",
-    },
-    {
-      id: 4,
-      status: "published",
-      image: "/assets/fdp.jpeg",
-      title: "Food Distribution Program",
-      description: "Distribute food to families in need.",
-    },
-  ];
-
   return (
     <div>
       <section className="relative h-[400px]">
@@ -92,15 +47,15 @@ const Home = () => {
         <h2 className="text-3xl font-bold text-center mb-8">
           Available Projects
         </h2>
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
+        {/* <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
           {projects.map((project) => (
             <Project
               key={project.id}
               project={project}
-              handleClick={() => handleApply(project.id)}
+              // handleClick={() => handleApply(project.id)}
             />
           ))}
-        </div>
+        </div> */}
       </section>
     </div>
   );
