@@ -1,38 +1,56 @@
 import Image from "next/image";
 import React from "react";
-import { ProjectObj } from "../home/volunteer/page";
 
-type ProjectProps = {
-  project: ProjectObj;
-  handleClick: () => void;
+export type Project = {
+  image: string;
+  type: string;
+  duration: string;
+  heading: string;
+  orgName: string;
+  description: string;
+  category: string;
 };
 
-const Project = (props: ProjectProps) => {
-  const { handleClick, project } = props;
+type ProjectProps = {
+  project: Project;
+};
+
+const ProjectCard = (props: ProjectProps) => {
+  const { project } = props;
 
   return (
-    <div className="border rounded-lg shadow-md overflow-hidden bg-white">
+    <div className="group border rounded-lg shadow-md overflow-hidden bg-white relative">
       <div className="relative w-full h-40">
         <Image
           src={project.image}
-          alt={project.title}
+          alt={project.heading}
           fill
           className="object-cover"
         />
       </div>
-      <div className="p-4">
-        <h3 className="text-xl font-semibold mb-2">{project.title}</h3>
-        <p className="text-gray-600 mb-4">{project.description}</p>
-        <button
-          onClick={handleClick}
-          // onClick={() => handleApply(project.id)}
-          className="w-full py-2 bg-primary text-white rounded hover:bg-secondary transition"
-        >
-          View Details
-        </button>
+
+      <div className="cursor-pointer">
+        <div className="p-4">
+          <div className="flex items-center divide-x text-gray-600 text-xs divide-black gap-2 uppercase">
+            <h6>{project.type}</h6>
+            <h6 className="pl-2">{project.duration}</h6>
+          </div>
+
+          <h2 className="my-3 font-bold text-xl">{project.heading}</h2>
+          <p className="font-bold text-sm text-gray-600">{` for ${project.orgName}`}</p>
+        </div>
+
+        <div className="absolute bottom-0 left-0 right-0 translate-y-full group-hover:translate-y-0 transition-transform duration-300 ease-in-out bg-white">
+          <p className="p-4 text-sm font-bold opacity-70">
+            {project.description}
+          </p>
+          <p className="bg-gray-200 font-semibold text-sm w-full py-2 px-4">
+            {project.category}
+          </p>
+        </div>
       </div>
     </div>
   );
 };
 
-export default Project;
+export default ProjectCard;

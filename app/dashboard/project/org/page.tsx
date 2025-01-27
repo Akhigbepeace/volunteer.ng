@@ -1,43 +1,10 @@
 "use client";
 
-import Project from "@/app/component/project";
-import { ProjectObj } from "@/app/home/volunteer/page";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+// import { useRouter } from "next/navigation";
 import React, { useState } from "react";
 
 const OrganizationProjectPage = () => {
-  const projects: ProjectObj[] = [
-    {
-      id: 1,
-      image: "/assets/cwi.jpeg",
-      status: "published",
-      title: "Clean Water Initiative",
-      description: "Help provide clean water to underprivileged communities.",
-    },
-    {
-      id: 2,
-      image: "/assets/tpc.jpeg",
-      status: "active",
-      title: "Tree Planting Campaign",
-      description: "Join us in planting trees to combat climate change.",
-    },
-    {
-      id: 3,
-      status: "active",
-      image: "/assets/literarcy-drive.jpeg",
-      title: "Literacy Drive",
-      description: "Help teach basic reading and writing skills.",
-    },
-    {
-      id: 4,
-      status: "created",
-      image: "/assets/fdp.jpeg",
-      title: "Food Distribution Program",
-      description: "Distribute food to families in need.",
-    },
-  ];
-
   const categories = [
     { key: "published", label: "Published Projects" },
     { key: "created", label: "Created Projects" },
@@ -46,11 +13,11 @@ const OrganizationProjectPage = () => {
 
   const [activeTab, setActiveTab] = useState("published");
 
-  const router = useRouter();
+  // const router = useRouter();
 
-  const filteredProjects = projects.filter(
-    (project) => project.status === activeTab
-  );
+  // const filteredProjects = projects.filter(
+  //   (project) => project.status === activeTab
+  // );
 
   return (
     <div className="min-h-screen bg-gray-100 p-6">
@@ -79,16 +46,16 @@ const OrganizationProjectPage = () => {
           </button>
         ))}
       </div>
-
+      {/* 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {filteredProjects.length > 0 ? (
           filteredProjects.map((project) => (
             <Project
               key={project.id}
               project={project}
-              handleClick={() =>
-                router.push(`/dashboard/project/org/${project.id}`)
-              }
+              // handleClick={() =>
+              //   router.push(`/dashboard/project/org/${project.id}`)
+              // }
             />
           ))
         ) : (
@@ -96,7 +63,7 @@ const OrganizationProjectPage = () => {
             No projects available in this category.
           </p>
         )}
-      </div>
+      </div> */}
     </div>
   );
 };

@@ -1,75 +1,99 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { FaChevronDown } from "react-icons/fa";
+
+type MenuOptions = {
+  title: string;
+  path: string;
+};
+
+type Navlinks = {
+  title: string;
+  menuOptions: MenuOptions[];
+};
 
 const Navbar = () => {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [openMenuIndex, setOpenMenuIndex] = useState<number | null>(null);
 
-  const role = localStorage.getItem("role");
-  useEffect(() => {
-    if (typeof window !== "undefined") {
-      const isUserLoggedIn = localStorage.getItem("isLoggedIn");
-      
-      if (isUserLoggedIn === "true") {
-        setIsLoggedIn(true);
-      }
-    }
-  }, []);
+  const navLinks: Navlinks[] = [
+    {
+      title: "For Volunteers",
+      menuOptions: [
+        {
+          title: "Explore Volunteers",
+          path: "/explore",
+        },
+      ],
+    },
+    {
+      title: "For Organization",
+      menuOptions: [
+        {
+          title: "Post Project",
+          path: "/project",
+        },
+      ],
+    },
+  ];
+
+  const toggleMenuOption = (index: number) => {
+    setOpenMenuIndex((prevIndex) => (prevIndex === index ? null : index));
+  };
 
   return (
-    <nav className="sticky top-0 z-20 flex items-center justify-between px-6 py-4 bg-white shadow-md">
-      <div className="flex items-center">
-        <Image src="/assets/logo.png" alt="Logo" width={120} height={50} />
+    <nav className="sticky top-0 z-20 grid grid-cols-3 px-6 items-center bg-primary shadow-md">
+      <div className="flex items-center relative w-[250px] h-[100px]">
+        <Image
+          src="/assets/logos/full-white.png"
+          alt="Logo"
+          objectFit="cover"
+          fill
+          priority
+        />
       </div>
 
-      {!isLoggedIn ? (
-        <ul className="flex ml-8 space-x-6 text-secondary">
-          <li>
-            <Link href="/" className="hover:text-primary">
-              Home
-            </Link>
-          </li>
-          <li>
-            <Link href="#features" className="hover:text-primary">
-              About
-            </Link>
-          </li>
-          <li>
-            <Link href="#" className="hover:text-primary">
-              Contact
-            </Link>
-          </li>
-        </ul>
-      ) : (
-        <Link
-          href={role === "volunteer" ? "/project/volunteer" : "/project/org"}
-          className="hover:text-primary"
-        >
-          Projects
-        </Link>
-      )}
+      <div className="flex items-center gap-10 font-bold text-white">
+        {navLinks.map((link, index) => {
+          return (
+            <div key={index} className="relative">
+              <div
+                onClick={() => toggleMenuOption(index)}
+                className="flex cursor-pointer items-center gap-1"
+              >
+                <span>{link.title}</span>
+                <FaChevronDown color="#FFF" size={15} />
+              </div>
 
-      {isLoggedIn ? (
-        <div className="flex items-center space-x-2">
-          <Image
-            src="/assets/user.png"
-            alt="user"
-            width={40}
-            height={40}
-            className="rounded-full"
-          />
-          <span className="text-gray-700 font-medium">John Doe</span>
-        </div>
-      ) : (
-        <Link
-          href="/login"
-          className="px-4 py-2 bg-primary text-white rounded hover:bg-opaciry-80 transition"
-        >
-          Sign In
-        </Link>
-      )}
+              {openMenuIndex === index && (
+                <div className="absolute font-light bg-white p-3 px-5 rounded-xl text-black text-sm whitespace-nowrap mt-5">
+                  {link.menuOptions.map((option) => {
+                    return (
+                      <Link key={option.path} href={option.path}>
+                        {option.title}
+                      </Link>
+                    );
+                  })}
+                </div>
+              )}
+            </div>
+          );
+        })}
+
+        <Link href="/about">About</Link>
+      </div>
+
+      <div className="flex items-center gap-4 justify-end">
+        <div className="w-[1px] h-14 bg-white mr-20" />
+        <button className="border border-white py-2 w-28 rounded-2xl text-white">
+          Sign in
+        </button>
+        <button className="bg-secondary border border-secondary py-2 w-28 rounded-2xl text-white">
+          Join
+        </button>
+      </div>
     </nav>
   );
 };

@@ -1,8 +1,5 @@
 "use client";
 
-import Project from "@/app/component/project";
-import { ProjectObj } from "@/app/home/volunteer/page";
-import { useRouter } from "next/navigation";
 import React, { useState } from "react";
 
 type ProjectStatus =
@@ -12,45 +9,14 @@ type ProjectStatus =
   | "completed"
   | "rejected";
 
-const projects: ProjectObj[] = [
-  {
-    id: 1,
-    image: "/assets/cwi.jpeg",
-    status: "published",
-    title: "Clean Water Initiative",
-    description: "Help provide clean water to underprivileged communities.",
-  },
-  {
-    id: 2,
-    image: "/assets/tpc.jpeg",
-    status: "applied",
-    title: "Tree Planting Campaign",
-    description: "Join us in planting trees to combat climate change.",
-  },
-  {
-    id: 3,
-    status: "ongoing",
-    image: "/assets/literarcy-drive.jpeg",
-    title: "Literacy Drive",
-    description: "Help teach basic reading and writing skills.",
-  },
-  {
-    id: 4,
-    status: "completed",
-    image: "/assets/fdp.jpeg",
-    title: "Food Distribution Program",
-    description: "Distribute food to families in need.",
-  },
-];
-
 const ProjectsPage = () => {
   const [activeTab, setActiveTab] = useState<ProjectStatus>("published");
 
-  const router = useRouter();
+  // const router = useRouter();
 
-  const filteredProjects = projects.filter(
-    (project) => project.status === activeTab
-  );
+  // const filteredProjects = projects.filter(
+  //   (project) => project.status === activeTab
+  // );
 
   return (
     <div className="min-h-screen bg-gray-100">
@@ -79,16 +45,16 @@ const ProjectsPage = () => {
         </div>
 
         {/* Project List */}
-        <div>
+        {/* <div>
           {filteredProjects.length > 0 ? (
             <ul className="space-y-4">
               {filteredProjects.map((project) => (
                 <Project
                   key={project.id}
                   project={project}
-                  handleClick={() =>
-                    router.push(`/dashboard/project/volunteer/${project.id}`)
-                  }
+                  // handleClick={() =>
+                  //   router.push(`/dashboard/project/volunteer/${project.id}`)
+                  // }
                 />
               ))}
             </ul>
@@ -97,7 +63,7 @@ const ProjectsPage = () => {
               No projects found for {activeTab}.
             </p>
           )}
-        </div>
+        </div> */}
       </div>
     </div>
   );
