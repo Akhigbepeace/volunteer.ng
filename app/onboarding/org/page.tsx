@@ -68,7 +68,7 @@ const OrgOnboardingForm = () => {
     toast("Onboarded Successful");
 
     setTimeout(() => {
-      router.push("/dashboard/project/org");
+      router.push("/project/org");
     }, 3000);
   };
 

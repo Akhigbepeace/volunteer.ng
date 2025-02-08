@@ -19,7 +19,7 @@ const LandingPage = () => {
     <div className="flex items-center justify-center h-screen">
       <div className="relative w-[600px] h-full animate__animated animate__pulse">
         <Image
-          src="/assets/icons/green-icon.png"
+          src="/assets/logos/green-icon.png"
           alt="logo"
           fill
           priority

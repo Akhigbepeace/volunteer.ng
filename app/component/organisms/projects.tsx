@@ -1,49 +1,7 @@
 import React from "react";
-import ProjectCard from "../project";
-import type { Project } from "../project";
+import ProjectCard from "../project/project-card";
+import { projects } from "@/data/project";
 
-const projects: Project[] = [
-  {
-    image: "/assets/cwi.jpeg",
-    heading: "Clean Water Initiative",
-    description:
-      "Help with critical web development needs over the course of 4 weeks, in areas like maintaining or making critical updates to their website.",
-    type: "Project",
-    duration: "2 - 3Weeks",
-    orgName: "Productive Living Board",
-    category: "Diversity and Inclusion",
-  },
-  {
-    image: "/assets/cwi.jpeg",
-    heading: "Clean Water Initiative",
-    description:
-      "Help with critical web development needs over the course of 4 weeks, in areas like maintaining or making critical updates to their website.",
-    type: "Project",
-    duration: "2 - 3Weeks",
-    orgName: "Productive Living Board",
-    category: "Diversity and Inclusion",
-  },
-  {
-    image: "/assets/cwi.jpeg",
-    heading: "Clean Water Initiative",
-    description:
-      "Help with critical web development needs over the course of 4 weeks, in areas like maintaining or making critical updates to their website.",
-    type: "Project",
-    duration: "2 - 3Weeks",
-    orgName: "Productive Living Board",
-    category: "Diversity and Inclusion",
-  },
-  {
-    image: "/assets/cwi.jpeg",
-    heading: "Clean Water Initiative",
-    description:
-      "Help with critical web development needs over the course of 4 weeks, in areas like maintaining or making critical updates to their website.",
-    type: "Project",
-    duration: "2 - 3Weeks",
-    orgName: "Productive Living Board",
-    category: "Diversity and Inclusion",
-  },
-];
 const Projects = () => {
   return (
     <section className="py-12 px-6 max-w-[1050px] mx-auto">
