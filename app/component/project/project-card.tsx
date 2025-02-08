@@ -1,15 +1,9 @@
+"use client";
+
 import Image from "next/image";
 import React from "react";
-
-export type Project = {
-  image: string;
-  type: string;
-  duration: string;
-  heading: string;
-  orgName: string;
-  description: string;
-  category: string;
-};
+import Link from "next/link";
+import { Project } from "@/data/project";
 
 type ProjectProps = {
   project: Project;
@@ -19,7 +13,10 @@ const ProjectCard = (props: ProjectProps) => {
   const { project } = props;
 
   return (
-    <div className="group border rounded-lg shadow-md overflow-hidden bg-white relative">
+    <Link
+      className="group border rounded-lg shadow-md overflow-hidden bg-white relative cursor-pointer"
+      href={`/project/${project.id}`}
+    >
       <div className="relative w-full h-40">
         <Image
           src={project.image}
@@ -49,7 +46,7 @@ const ProjectCard = (props: ProjectProps) => {
           </p>
         </div>
       </div>
-    </div>
+    </Link>
   );
 };
 

@@ -106,7 +106,7 @@ const VolunteerOnboardingForm = () => {
           </label>
           <input
             required
-            type="text"
+            type="tel"
             id="phone"
             name="phone"
             placeholder="Enter Phone Number"
@@ -127,12 +127,9 @@ const VolunteerOnboardingForm = () => {
             id="skills"
             value={formData.skills}
             onChange={handleInputChange}
+            className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
           >
-            <option
-              defaultChecked
-              disabled
-              className="focus:outline-none focus:ring-2 focus:ring-primary"
-            >
+            <option value="" disabled hidden>
               Select Skills
             </option>
             {skillOptions.map((skill, index) => (
@@ -154,10 +151,12 @@ const VolunteerOnboardingForm = () => {
             id="industry"
             value={formData.industry}
             onChange={handleInputChange}
+            className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
           >
             <option
-              defaultChecked
+              hidden
               disabled
+              value=""
               className="focus:outline-none focus:ring-2 focus:ring-primary"
             >
               Select Industry

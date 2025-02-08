@@ -87,12 +87,18 @@ const Navbar = () => {
 
       <div className="flex items-center gap-4 justify-end">
         <div className="w-[1px] h-14 bg-white mr-20" />
-        <button className="border border-white py-2 w-28 rounded-2xl text-white">
+        <Link
+          href="/login"
+          className="border border-white py-2 w-28 rounded-2xl text-white text-center"
+        >
           Sign in
-        </button>
-        <button className="bg-secondary border border-secondary py-2 w-28 rounded-2xl text-white">
+        </Link>
+        <Link
+          href="/join"
+          className="bg-secondary border border-secondary py-2 w-28 rounded-2xl text-white text-center"
+        >
           Join
-        </button>
+        </Link>
       </div>
     </nav>
   );

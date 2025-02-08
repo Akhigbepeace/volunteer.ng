@@ -44,11 +44,11 @@ const Login = () => {
 
     if (email === "test@gmail.com" && password === "password") {
       localStorage.setItem("isLoggedIn", "true");
-      toast("Logged in successfully");
+      toast.success("Logged in successfully");
       setFormData({ email: "", password: "" });
-      router.push("/volunteer");
+      router.back();
     } else {
-      alert("Invalid email or password");
+      toast.error("Invalid email or password");
     }
   };
 
@@ -145,7 +145,7 @@ const Login = () => {
             <div className="flex items-center justify-center text-center mt-5">
               <p className="text-gray-600">
                 Don&apos;t have an account?{" "}
-                <Link href="/signup" className="text-primary">
+                <Link href="/join" className="text-primary">
                   Sign up
                 </Link>
               </p>
