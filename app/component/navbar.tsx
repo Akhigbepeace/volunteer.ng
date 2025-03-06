@@ -33,7 +33,7 @@ const Navbar = () => {
       menuOptions: [
         {
           title: "Post Project",
-          path: "/project",
+          path: "/project/create",
         },
       ],
     },

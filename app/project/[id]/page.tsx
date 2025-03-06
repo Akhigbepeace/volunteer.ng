@@ -16,7 +16,7 @@ const ProjectDetails = () => {
 
   // const [isLoggedIn, setIsLoggedIn] = useState(false);
 
-  const isLoggedIn = false;
+  const isLoggedIn = localStorage.getItem("isLoggedIn");
 
   return (
     <div className="max-w-[1000px] mx-auto py-5 px-4">
@@ -72,7 +72,11 @@ const ProjectDetails = () => {
           <p className="text-gray-500 text-sm">Posted February 6th</p>
 
           <Link
-            href={isLoggedIn ? "" : "/login"}
+            href={
+              isLoggedIn
+                ? `/project/apply?project=${"Clean Water Initiative"}`
+                : "/login"
+            }
             className="bg-secondary text-white py-2 px-4 rounded-lg text-lg text-center"
           >
             Apply now
