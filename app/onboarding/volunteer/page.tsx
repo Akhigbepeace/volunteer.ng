@@ -1,24 +1,31 @@
 "use client";
 
+import MultiSelectDropdown from "@/app/component/multiple-select-dropdown";
 import { useRouter } from "next/navigation";
 import React, { SyntheticEvent, useState } from "react";
 
 type FormData = {
   fullName: string;
   phone: string;
-  skills: string;
+  skills: string[];
+  user: string;
   industry: string;
   experience: string;
-  sstpId: string;
+  school: string;
+  company: string;
+  sosecGraduate: string;
 };
 
 const defaultData: FormData = {
   fullName: "",
   phone: "",
-  skills: "",
+  skills: [],
   industry: "",
+  school: "",
+  company: "",
   experience: "",
-  sstpId: "",
+  user: "",
+  sosecGraduate: "",
 };
 
 const skillOptions = [
@@ -59,6 +66,7 @@ const industryOptions = [
 ];
 
 const VolunteerOnboardingForm = () => {
+  const [userType, setUserType] = useState("");
   const [formData, setFormData] = useState<FormData>(defaultData);
 
   const router = useRouter();
@@ -66,6 +74,19 @@ const VolunteerOnboardingForm = () => {
   const handleInputChange = (e: SyntheticEvent) => {
     const { name, value } = e.currentTarget as HTMLFormElement;
     setFormData((prevData) => ({ ...prevData, [name]: value }));
+  };
+
+  const handleUserTypeChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setUserType(event.target.value);
+  };
+
+  const handleCheckboxChange = (value: string) => {
+    setFormData((prev) => ({
+      ...prev,
+      skills: prev.skills.includes(value)
+        ? prev.skills.filter((skill) => skill !== value)
+        : [...prev.skills, value],
+    }));
   };
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -116,29 +137,11 @@ const VolunteerOnboardingForm = () => {
           />
         </div>
 
-        <div className="mb-4">
-          <label htmlFor="skills" className="block text-gray-700 mb-1">
-            Skill Set
-          </label>
-
-          <select
-            required
-            name="skills"
-            id="skills"
-            value={formData.skills}
-            onChange={handleInputChange}
-            className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
-          >
-            <option value="" disabled hidden>
-              Select Skills
-            </option>
-            {skillOptions.map((skill, index) => (
-              <option key={index} value={skill.value}>
-                {skill.label}
-              </option>
-            ))}
-          </select>
-        </div>
+        <MultiSelectDropdown
+          skillOptions={skillOptions}
+          formData={formData}
+          handleCheckboxChange={handleCheckboxChange}
+        />
 
         <div className="mb-4">
           <label htmlFor="industries" className="block text-gray-700 mb-1">
@@ -188,20 +191,82 @@ const VolunteerOnboardingForm = () => {
 
         <div className="mb-4">
           <label htmlFor="sstpId" className="block text-gray-700 mb-1">
-            SSTP/SSAF ID
+            Are you a graduate of SoSec College
           </label>
           <input
             required
             type="text"
             id="sstpId"
             name="sstpId"
-            placeholder="Enter SSTP/SSAF ID"
-            value={formData.sstpId}
+            placeholder="Yes/No"
+            value={formData.sosecGraduate}
             onChange={handleInputChange}
             className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
           />
         </div>
+        <div>
+          <div className="mb-4">
+            <label className="block text-gray-700 mb-1">
+              Are you a student or professional worker?
+            </label>
+            <div className="flex gap-4">
+              <label className="flex items-center">
+                <input
+                  type="radio"
+                  name="userType"
+                  value="student"
+                  checked={userType === "student"}
+                  onChange={handleUserTypeChange}
+                  className="mr-2"
+                />
+                Student
+              </label>
+              <label className="flex items-center">
+                <input
+                  type="radio"
+                  name="userType"
+                  value="professional"
+                  checked={userType === "professional"}
+                  onChange={handleUserTypeChange}
+                  className="mr-2"
+                />
+                Professional Worker
+              </label>
+            </div>
+          </div>
 
+          {userType === "student" && (
+            <div className="mb-4">
+              <label htmlFor="school" className="block text-gray-700 mb-1">
+                School Name
+              </label>
+              <input
+                type="text"
+                id="school"
+                name="school"
+                value={formData.school}
+                onChange={handleInputChange}
+                className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
+              />
+            </div>
+          )}
+
+          {userType === "professional" && (
+            <div className="mb-4">
+              <label htmlFor="company" className="block text-gray-700 mb-1">
+                Company Name
+              </label>
+              <input
+                type="text"
+                id="company"
+                name="company"
+                value={formData.company}
+                onChange={handleInputChange}
+                className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
+              />
+            </div>
+          )}
+        </div>
         <button
           type="submit"
           className="w-full bg-primary text-white py-2 rounded-lg hover:bg-secondary transition"
