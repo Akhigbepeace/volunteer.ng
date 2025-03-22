@@ -137,40 +137,45 @@ const types = [
 
 const MenuType = () => {
   return (
-    <>
-      {types.map((type, index) => {
-        return (
-          <div key={index} className="flex items-start gap-3">
-            {!Array.isArray(type.desc) && (
-              <input
-                type="checkbox"
-                className="mt-2"
-                name={type.heading.toLowerCase()}
-                id={type.heading.toLowerCase()}
-              />
-            )}
+    <div className="space-y-6">
+      {types.map((type, index) => (
+        <div
+          key={index}
+          className="flex items-start gap-4 flex-wrap sm:flex-col"
+        >
+          {/* Checkbox for Single Description */}
+          {!Array.isArray(type.desc) && (
+            <input
+              type="checkbox"
+              className="mt-2 sm:mt-0"
+              name={type.heading.toLowerCase()}
+              id={type.heading.toLowerCase()}
+            />
+          )}
 
-            <div className="mr-10">
-              <h1 className="font-bold text-xl">{type.heading}</h1>
-              <p className="grid gap-3">
-                {Array.isArray(type.desc)
-                  ? type.desc.map((mode, index) => (
-                      <span key={index} className="flex items-center gap-2">
-                        <input
-                          type="checkbox"
-                          name={mode.toLowerCase()}
-                          id={mode.toLowerCase()}
-                        />
-                        {mode}
-                      </span>
-                    ))
-                  : type.desc}
-              </p>
+          {/* Text Content */}
+          <div className="sm:w-full">
+            <h1 className="font-bold text-xl sm:text-lg">{type.heading}</h1>
+            <div className="grid gap-3 sm:text-sm">
+              {Array.isArray(type.desc) ? (
+                type.desc.map((mode, index) => (
+                  <span key={index} className="flex items-center gap-2">
+                    <input
+                      type="checkbox"
+                      name={mode.toLowerCase()}
+                      id={mode.toLowerCase()}
+                    />
+                    {mode}
+                  </span>
+                ))
+              ) : (
+                <p>{type.desc}</p>
+              )}
             </div>
           </div>
-        );
-      })}
-    </>
+        </div>
+      ))}
+    </div>
   );
 };
 
@@ -182,8 +187,8 @@ const FilterOptions = () => {
   };
 
   return (
-    <div className="bg-white flex items-center justify-center border border-secondary relative">
-      <div className="flex items-center justify-center border-x divide-secondary border-secondary divide-x">
+    <div className="bg-white md:flex items-center justify-center border border-secondary relative">
+      <div className="md:flex items-center justify-center border-y md:border-x divide-secondary border-secondary md:divide-x">
         {optionSelectors.map((selector, index) => {
           const isSelectedMenu = openMenuIndex === index;
           return (
@@ -191,7 +196,7 @@ const FilterOptions = () => {
               <div
                 key={index}
                 onClick={() => toggleMenuOption(index)}
-                className={`flex items-center gap-20 py-3 px-5 cursor-pointer ${
+                className={`flex items-center justify-between gap-20 py-3 px-5 cursor-pointer ${
                   isSelectedMenu ? "border-b-2 border-secondary" : ""
                 }`}
               >
@@ -204,7 +209,7 @@ const FilterOptions = () => {
               </div>
 
               {isSelectedMenu && (
-                <div className="bg-white shadow-xl py-10 px-40 grid grid-cols-3 w-full absolute right-0 top-[52px] z-10">
+                <div className="bg-white shadow-xl lg:py-10 lg:px-40 p-5 grid md:grid-cols-3 w-full absolute right-0 top-[52px] z-10">
                   {index === 2 && <MenuType />}
                   {selector.options?.map((option, index) => {
                     return (
