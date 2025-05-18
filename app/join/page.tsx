@@ -2,11 +2,13 @@
 import { RiUserCommunityLine } from "react-icons/ri";
 import { GoOrganization } from "react-icons/go";
 import { useEffect, useState } from "react";
-import { handleSelectRole } from "@/lib/user";
-import { useSearchParams } from "next/navigation";
+import { handleSelectRole, Role } from "@/lib/user";
+import { useRouter, useSearchParams } from "next/navigation";
 
 const Join = () => {
   const searchParams = useSearchParams();
+  const router = useRouter();
+
   const [userId, setUserId] = useState<string | null>(null);
 
   useEffect(() => {
@@ -20,7 +22,7 @@ const Join = () => {
     }
   }, [searchParams]);
 
-  const handleRoleSelection = async (role: string) => {
+  const handleRoleSelection = async (role: Role) => {
     try {
       if (!userId) return;
 
@@ -30,8 +32,11 @@ const Join = () => {
       });
 
       if (data.status) {
-        console.log("Role successfully selected:", role);
-        // You can redirect or update state here if needed
+        if (role === "volunteer") {
+          router.push("/onboarding/volunteer");
+        } else {
+          router.push("/onboarding/org");
+        }
       }
     } catch (error) {
       console.log("Error selecting role:", error);

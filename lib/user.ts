@@ -1,11 +1,13 @@
+export type Role = "volunteer" | "organization";
+
 type SelectRoleProp = {
   userId: string | null;
-  role: string;
+  role: Role;
 };
 
 const handleSelectRole = async (props: SelectRoleProp) => {
-  const { userId, role } = props;
   
+  const { userId, role } = props;
   const apiRes = await fetch(
     `${process.env.NEXT_PUBLIC_BASE_URL}/save-user-type`,
     {
