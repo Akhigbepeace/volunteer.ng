@@ -36,6 +36,15 @@ const Join = () => {
     }
   };
 
+  useEffect(() => {
+    const fetchUserId = async () => {
+      const data = await getUserId();
+      if (data.status) setUserId(data.userId);
+    };
+
+    fetchUserId();
+  }, []);
+
   return (
     <div className="min-h-screen flex flex-col items-center bg-white">
       <div className="text-center mt-12">
