@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import React, { SyntheticEvent, useState } from "react";
 
 type FormData = {
-  fullName: string;
+  displayName: string;
   phone: string;
   skills: string[];
   user: string;
@@ -17,7 +17,7 @@ type FormData = {
 };
 
 const defaultData: FormData = {
-  fullName: "",
+  displayName: "",
   phone: "",
   skills: [],
   industry: "",
@@ -115,7 +115,7 @@ const VolunteerOnboardingForm = () => {
             id="fullName"
             name="fullName"
             placeholder="Enter Full Name"
-            value={formData.fullName}
+            value={formData.displayName}
             onChange={handleInputChange}
             className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
           />

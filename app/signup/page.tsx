@@ -30,9 +30,13 @@ const Signup = () => {
   };
 
   const handleGoogleLogin = async () => {
-    console.log("Google login clicked");
-    // Integrate Google OAuth logic here
-    // Example: router.push("/api/auth/google");
+    const apiRes = await fetch("", {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+    const response = await apiRes.json();
   };
 
   const handleLinkedInLogin = async () => {
@@ -132,21 +136,21 @@ const Signup = () => {
           <div className="w-full h-px bg-gray-300"></div>
         </div>
         <div className="space-y-4">
-          <button
-            onClick={handleGoogleLogin}
+          <Link
+            href="https://volunteer-ng.onrender.com/auth/google"
             className="w-full flex items-center justify-center gap-10 py-2 px-4 bg-transparent border border-[#0077B5] rounded-md text-secondary hover:bg-gray-100 transition"
           >
             <FcGoogle size={24} />
             Sign up with Google
-          </button>
+          </Link>
 
-          <button
-            onClick={handleLinkedInLogin}
+          <Link
+            href="https://volunteer-ng.onrender.com/auth/google"
             className="w-full flex items-center justify-center gap-10 py-2 px-4 bg-[#0077B5] border border-[#0077B5] rounded-md text-white hover:bg-opacity-80 transition"
           >
             <SiLinkedin color="white" size={24} />
             Sign up with LinkedIn
-          </button>
+          </Link>
 
           <div className="flex items-center justify-center text-center mt-5">
             <p className="text-gray-600">

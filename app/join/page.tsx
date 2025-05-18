@@ -2,9 +2,21 @@
 import { RiUserCommunityLine } from "react-icons/ri";
 import { GoOrganization } from "react-icons/go";
 import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
+import { getUserId } from "@/lib/user";
 
 const Join = () => {
+  const [userId, setUserId] = useState<string | null>(null);
   const router = useRouter();
+
+  useEffect(() => {
+    const fetchUserId = async () => {
+      const data = await getUserId();
+      if (data.status) setUserId(data.userId);
+    };
+
+    fetchUserId();
+  }, []);
 
   return (
     <div className="min-h-screen flex flex-col items-center bg-white">
