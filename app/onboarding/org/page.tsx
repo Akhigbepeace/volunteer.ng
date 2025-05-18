@@ -5,7 +5,7 @@ import React, { SyntheticEvent, useState } from "react";
 import { toast, ToastContainer } from "react-toastify";
 
 type FormData = {
-  organizationName: string;
+  displayName: string;
   email: string;
   phoneNumber: string;
   address: string;
@@ -32,7 +32,7 @@ const organizationType = [
 ];
 
 const defaultData: FormData = {
-  organizationName: "",
+  displayName: "",
   email: "",
   phoneNumber: "",
   address: "",
@@ -99,7 +99,7 @@ const OrgOnboardingForm = () => {
             id="organizationName"
             name="organizationName"
             placeholder="Enter Organization Name"
-            value={formData.organizationName}
+            value={formData.displayName}
             onChange={handleInputChange}
             className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
           />

@@ -1,10 +1,40 @@
 "use client";
 import { RiUserCommunityLine } from "react-icons/ri";
 import { GoOrganization } from "react-icons/go";
-import { useRouter } from "next/navigation";
+// import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
+import { getUserId, handleSelectRole } from "@/lib/user";
 
 const Join = () => {
-  const router = useRouter();
+  const [userId, setUserId] = useState<string | null>(null);
+  // const router = useRouter();
+
+  useEffect(() => {
+    const fetchUserId = async () => {
+      try {
+        const data = await getUserId();
+        if (data.status) setUserId(data.userId);
+      } catch (error) {
+        console.log("Error", error);
+      }
+    };
+
+    fetchUserId();
+  }, []);
+
+  const handleRoleSelection = async (role: string) => {
+    try {
+      if (!userId) return;
+
+      const data = await handleSelectRole({
+        userId,
+        role,
+      });
+      if (data.status) setUserId(data.userId);
+    } catch (error) {
+      console.log("Error", error);
+    }
+  };
 
   return (
     <div className="min-h-screen flex flex-col items-center bg-white">
@@ -23,10 +53,7 @@ const Join = () => {
         <div className="mt-6 flex flex-col md:flex-row justify-center gap-6">
           <button
             // href="/signup"
-            onClick={() => {
-              localStorage.setItem("role", "volunteer");
-              router.push("/signup");
-            }}
+            onClick={() => handleRoleSelection("volunteer")}
             className="flex flex-col items-center bg-white border border-gray-300 rounded-lg p-6 w-full md:w-1/2 cursor-pointer hover:shadow-md transition"
           >
             <RiUserCommunityLine size={80} />
@@ -40,10 +67,7 @@ const Join = () => {
           </button>
 
           <button
-            onClick={() => {
-              localStorage.setItem("role", "organization");
-              router.push("/signup");
-            }}
+            onClick={() => handleRoleSelection("organization")}
             className="flex flex-col items-center bg-white border border-gray-300 rounded-lg p-6 w-full md:w-1/2 cursor-pointer hover:shadow-md transition"
           >
             <GoOrganization size={80} />

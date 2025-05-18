@@ -89,7 +89,7 @@ const Navbar = () => {
             Sign in
           </Link>
           <Link
-            href="/join"
+            href="/signup"
             className="bg-secondary border border-secondary py-2 px-6 rounded-2xl text-white text-center"
           >
             Join
