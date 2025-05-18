@@ -1,26 +1,24 @@
 "use client";
 import { RiUserCommunityLine } from "react-icons/ri";
 import { GoOrganization } from "react-icons/go";
-// import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import { getUserId, handleSelectRole } from "@/lib/user";
+import { handleSelectRole } from "@/lib/user";
+import { useSearchParams } from "next/navigation";
 
 const Join = () => {
+  const searchParams = useSearchParams();
   const [userId, setUserId] = useState<string | null>(null);
-  // const router = useRouter();
 
   useEffect(() => {
-    const fetchUserId = async () => {
-      try {
-        const data = await getUserId();
-        if (data.status) setUserId(data.userId);
-      } catch (error) {
-        console.log("Error", error);
-      }
-    };
-
-    fetchUserId();
-  }, []);
+    const idFromParams = searchParams.get("userId");
+    if (idFromParams) {
+      localStorage.setItem("userId", idFromParams);
+      setUserId(idFromParams);
+    } else {
+      const storedId = localStorage.getItem("userId");
+      if (storedId) setUserId(storedId);
+    }
+  }, [searchParams]);
 
   const handleRoleSelection = async (role: string) => {
     try {
@@ -30,20 +28,15 @@ const Join = () => {
         userId,
         role,
       });
-      if (data.status) setUserId(data.userId);
+
+      if (data.status) {
+        console.log("Role successfully selected:", role);
+        // You can redirect or update state here if needed
+      }
     } catch (error) {
-      console.log("Error", error);
+      console.log("Error selecting role:", error);
     }
   };
-
-  useEffect(() => {
-    const fetchUserId = async () => {
-      const data = await getUserId();
-      if (data.status) setUserId(data.userId);
-    };
-
-    fetchUserId();
-  }, []);
 
   return (
     <div className="min-h-screen flex flex-col items-center bg-white">
@@ -61,12 +54,10 @@ const Join = () => {
 
         <div className="mt-6 flex flex-col md:flex-row justify-center gap-6">
           <button
-            // href="/signup"
             onClick={() => handleRoleSelection("volunteer")}
             className="flex flex-col items-center bg-white border border-gray-300 rounded-lg p-6 w-full md:w-1/2 cursor-pointer hover:shadow-md transition"
           >
             <RiUserCommunityLine size={80} />
-
             <h1 className="text-3xl font-semibold text-gray-900 mt-3">
               Volunteer
             </h1>
