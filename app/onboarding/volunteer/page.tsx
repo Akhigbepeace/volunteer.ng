@@ -1,10 +1,12 @@
 "use client";
 
 import MultiSelectDropdown from "@/app/component/multiple-select-dropdown";
+import { handleVolunteerOnboarding } from "@/lib/user";
 import { useRouter } from "next/navigation";
 import React, { SyntheticEvent, useState } from "react";
+import Cookies from "universal-cookie";
 
-type FormData = {
+export type VolunteerOnboardingData = {
   displayName: string;
   phone: string;
   skills: string[];
@@ -16,7 +18,7 @@ type FormData = {
   sosecGraduate: string;
 };
 
-const defaultData: FormData = {
+const defaultData: VolunteerOnboardingData = {
   displayName: "",
   phone: "",
   skills: [],
@@ -67,9 +69,12 @@ const industryOptions = [
 
 const VolunteerOnboardingForm = () => {
   const [userType, setUserType] = useState("");
-  const [formData, setFormData] = useState<FormData>(defaultData);
+  const [formData, setFormData] =
+    useState<VolunteerOnboardingData>(defaultData);
 
   const router = useRouter();
+  const cookies = new Cookies();
+  const userId = "115947693215891185926";
 
   const handleInputChange = (e: SyntheticEvent) => {
     const { name, value } = e.currentTarget as HTMLFormElement;
@@ -89,8 +94,15 @@ const VolunteerOnboardingForm = () => {
     }));
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    try {
+      const res = await handleVolunteerOnboarding({
+        userId,
+        volunteer: formData,
+      });
+    } catch (error) {}
 
     if (formData) router.push("/project/volunteer");
   };
@@ -112,8 +124,8 @@ const VolunteerOnboardingForm = () => {
           <input
             required
             type="text"
-            id="fullName"
-            name="fullName"
+            id="displayName"
+            name="displayName"
             placeholder="Enter Full Name"
             value={formData.displayName}
             onChange={handleInputChange}
@@ -190,14 +202,14 @@ const VolunteerOnboardingForm = () => {
         </div>
 
         <div className="mb-4">
-          <label htmlFor="sstpId" className="block text-gray-700 mb-1">
+          <label htmlFor="sosecGraduate" className="block text-gray-700 mb-1">
             Are you a graduate of SoSec College
           </label>
           <input
             required
             type="text"
-            id="sstpId"
-            name="sstpId"
+            id="sosecGraduate"
+            name="sosecGraduate"
             placeholder="Yes/No"
             value={formData.sosecGraduate}
             onChange={handleInputChange}

@@ -126,13 +126,13 @@ const Login = () => {
             <div className="w-full h-px bg-gray-300"></div>
           </div>
           <div className="space-y-4">
-            <button
-              onClick={handleGoogleLogin}
-              className="w-full flex items-center justify-center gap-10 py-2 px-4 bg-transparent border border-[#0077B5] rounded-md text-secondary hover:bg-gray-100 transition"
-            >
-              <FcGoogle size={24} />
-              Sign in with Google
-            </button>
+          <Link
+            href="https://volunteer-ng.onrender.com/auth/google"
+            className="w-full flex items-center justify-center gap-10 py-2 px-4 bg-transparent border border-[#0077B5] rounded-md text-secondary hover:bg-gray-100 transition"
+          >
+            <FcGoogle size={24} />
+            Sign up with Google
+          </Link>
 
             <button
               onClick={handleLinkedInLogin}
