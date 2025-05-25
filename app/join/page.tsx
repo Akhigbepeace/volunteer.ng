@@ -1,26 +1,16 @@
 "use client";
 import { RiUserCommunityLine } from "react-icons/ri";
 import { GoOrganization } from "react-icons/go";
-import { useEffect, useState } from "react";
 import { handleSelectRole, Role } from "@/lib/user";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
+import Cookies from "universal-cookie";
 
 const Join = () => {
-  const searchParams = useSearchParams();
   const router = useRouter();
+  const cookies = new Cookies();
 
-  const [userId, setUserId] = useState<string | null>(null);
-
-  useEffect(() => {
-    const idFromParams = searchParams.get("userId");
-    if (idFromParams) {
-      localStorage.setItem("userId", idFromParams);
-      setUserId(idFromParams);
-    } else {
-      const storedId = localStorage.getItem("userId");
-      if (storedId) setUserId(storedId);
-    }
-  }, [searchParams]);
+  const user = cookies.get("user");
+  const userId = user?.id;
 
   const handleRoleSelection = async (role: Role) => {
     try {

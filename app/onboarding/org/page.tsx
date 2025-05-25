@@ -1,10 +1,12 @@
 "use client";
 
+import { handleOrganizationOnboarding } from "@/lib/user";
 import { useRouter } from "next/navigation";
 import React, { SyntheticEvent, useState } from "react";
 import { toast, ToastContainer } from "react-toastify";
+import Cookies from "universal-cookie";
 
-type FormData = {
+export type OrganizationOnboardingForm = {
   displayName: string;
   email: string;
   phoneNumber: string;
@@ -31,7 +33,7 @@ const organizationType = [
   { value: "government", label: "Government" },
 ];
 
-const defaultData: FormData = {
+const defaultData: OrganizationOnboardingForm = {
   displayName: "",
   email: "",
   phoneNumber: "",
@@ -43,9 +45,13 @@ const defaultData: FormData = {
 };
 
 const OrgOnboardingForm = () => {
-  const [formData, setFormData] = useState<FormData>(defaultData);
+  const [formData, setFormData] =
+    useState<OrganizationOnboardingForm>(defaultData);
 
   const router = useRouter();
+  const cookies = new Cookies();
+  const user = cookies.get("user");
+  const userId = user?.id;
 
   const handleInputChange = (e: SyntheticEvent) => {
     const { name, value } = e.currentTarget as HTMLFormElement;
@@ -61,15 +67,25 @@ const OrgOnboardingForm = () => {
     }));
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    localStorage.setItem("isLoggedIn", "true");
-    toast("Onboarded Successful");
+    try {
+      const res = await handleOrganizationOnboarding({
+        userId,
+        organization: formData,
+      });
 
-    setTimeout(() => {
-      router.push("/project/org");
-    }, 3000);
+      if (res.organisation) {
+        toast.success("Onboarded Successful");
+
+        setTimeout(() => {
+          router.push("/project/org");
+        }, 3000);
+      }
+    } catch (error) {
+      toast.error(String(error));
+    }
   };
 
   return (
@@ -86,18 +102,15 @@ const OrgOnboardingForm = () => {
 
         {/* Organization Name */}
         <div className="mb-4">
-          <label
-            htmlFor="organizationName"
-            className="block text-gray-700 mb-1"
-          >
+          <label htmlFor="displayName" className="block text-gray-700 mb-1">
             Organization Name
           </label>
 
           <input
             required
             type="text"
-            id="organizationName"
-            name="organizationName"
+            id="displayName"
+            name="displayName"
             placeholder="Enter Organization Name"
             value={formData.displayName}
             onChange={handleInputChange}

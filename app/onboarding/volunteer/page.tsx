@@ -2,8 +2,10 @@
 
 import MultiSelectDropdown from "@/app/component/multiple-select-dropdown";
 import { handleVolunteerOnboarding } from "@/lib/user";
+// import { handleVolunteerOnboarding } from "@/lib/user";
 import { useRouter } from "next/navigation";
 import React, { SyntheticEvent, useState } from "react";
+import { toast, ToastContainer } from "react-toastify";
 import Cookies from "universal-cookie";
 
 export type VolunteerOnboardingData = {
@@ -68,13 +70,15 @@ const industryOptions = [
 ];
 
 const VolunteerOnboardingForm = () => {
+  const [loading, setLoading] = useState(false);
   const [userType, setUserType] = useState("");
   const [formData, setFormData] =
     useState<VolunteerOnboardingData>(defaultData);
 
   const router = useRouter();
   const cookies = new Cookies();
-  const userId = "115947693215891185926";
+  const user = cookies.get("user");
+  const userId = user?.id;
 
   const handleInputChange = (e: SyntheticEvent) => {
     const { name, value } = e.currentTarget as HTMLFormElement;
@@ -97,18 +101,27 @@ const VolunteerOnboardingForm = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
+    setLoading(true);
     try {
       const res = await handleVolunteerOnboarding({
         userId,
         volunteer: formData,
       });
-    } catch (error) {}
 
-    if (formData) router.push("/project/volunteer");
+      console.log("res", res);
+
+      if (formData) router.push("/project/volunteer");
+    } catch (error) {
+      toast.error(String(error));
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
     <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+      <ToastContainer />
+
       <form
         onSubmit={handleSubmit}
         className="bg-white p-8 rounded-lg shadow-lg w-full max-w-md my-10"
@@ -283,7 +296,29 @@ const VolunteerOnboardingForm = () => {
           type="submit"
           className="w-full bg-primary text-white py-2 rounded-lg hover:bg-secondary transition"
         >
-          Submit
+          {loading ? (
+            <svg
+              className="animate-spin h-5 w-5 mr-2 text-white"
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+            >
+              <circle
+                className="opacity-25"
+                cx="12"
+                cy="12"
+                r="10"
+                stroke="currentColor"
+                strokeWidth="4"
+              />
+              <path
+                className="opacity-75"
+                fill="currentColor"
+                d="M4 12a8 8 0 018-8v8H4z"
+              />
+            </svg>
+          ) : null}
+          {loading ? "Please Wait..." : "Submit"}
         </button>
       </form>
     </div>

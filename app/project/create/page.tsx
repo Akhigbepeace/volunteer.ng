@@ -1,9 +1,13 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { ChangeEvent, useState } from "react";
 import { Project } from "@/data/project";
 import { v4 as uuidv4 } from "uuid"; // For generating unique IDs
 import { useRouter } from "next/navigation";
+import { createProject, uploadImage } from "@/lib/project";
+import Cookies from "universal-cookie";
+import { toast, ToastContainer } from "react-toastify";
+import Image from "next/image";
 
 const defaultData: Project = {
   id: uuidv4(),
@@ -29,8 +33,12 @@ const defaultData: Project = {
 
 const CreateProject = () => {
   const [formData, setFormData] = useState(defaultData);
+  const [loading, setLoading] = useState(false);
+  const [imageIsLoading, setImageIsLoading] = useState(false);
 
   const router = useRouter();
+  const cookies = new Cookies();
+  const userId = cookies.get("userId");
 
   const handleChange = (
     e: React.ChangeEvent<
@@ -49,14 +57,52 @@ const CreateProject = () => {
     setFormData({ ...formData, [field]: values });
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // console.log("New Project Created:", formData);
-    router.push("/project/organization");
+
+    try {
+      setLoading(true);
+
+      const res = await createProject({
+        userId,
+        project: {
+          ...formData,
+        },
+      });
+
+      if (res.project) {
+        setFormData(defaultData);
+        toast.success("Project Created Successfully");
+        setTimeout(() => {
+          router.push("/project/organization");
+        }, 3000);
+      }
+    } catch (error) {
+      toast.error(String(error));
+    } finally {
+      setLoading(false);
+    }
+  };
+  const handleUploadImage = async (e: ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+
+    try {
+      setImageIsLoading(true);
+      if (file) {
+        const data = await uploadImage(file);
+        setFormData((prev) => ({ ...prev, image: data.project.image }));
+      }
+    } catch (error) {
+      toast.error(String(error));
+    } finally {
+      setImageIsLoading(false);
+    }
   };
 
   return (
     <div className="p-6 max-w-3xl mx-auto">
+      <ToastContainer />
+
       <h1 className="text-2xl font-bold mb-6">Create New Project</h1>
 
       <form onSubmit={handleSubmit} className="space-y-6">
@@ -247,27 +293,59 @@ const CreateProject = () => {
 
         {/* Project Image */}
         <div>
-          <label className="block text-sm font-medium">Project Image URL</label>
+          <label id="image" className="block text-sm font-medium">
+            Project Image
+          </label>
           <input
-            required
-            type="text"
             name="image"
-            value={formData.image}
-            onChange={handleChange}
-            placeholder="Enter image URL"
+            type="file"
+            accept="image/*"
+            onChange={(e) => handleUploadImage(e)}
             className="w-full p-2 border rounded"
           />
+          {imageIsLoading && <div>Loading Image....</div>}
+          {!imageIsLoading && formData.image && (
+            <div className="relative w-full h-16">
+              <Image
+                src={formData.image}
+                fill
+                alt="Preview"
+                className="mt-2 object-cover rounded border"
+              />
+            </div>
+          )}
         </div>
 
         {/* Submit Button */}
-        <div>
-          <button
-            type="submit"
-            className="w-full py-3 bg-secondary text-white rounded-lg"
-          >
-            Create Project
-          </button>
-        </div>
+        <button
+          type="submit"
+          className="w-full py-3 bg-secondary text-white rounded-lg flex items-center justify-center"
+          disabled={loading}
+        >
+          {loading ? (
+            <svg
+              className="animate-spin h-5 w-5 mr-2 text-white"
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+            >
+              <circle
+                className="opacity-25"
+                cx="12"
+                cy="12"
+                r="10"
+                stroke="currentColor"
+                strokeWidth="4"
+              />
+              <path
+                className="opacity-75"
+                fill="currentColor"
+                d="M4 12a8 8 0 018-8v8H4z"
+              />
+            </svg>
+          ) : null}
+          {loading ? "Creating..." : "Create Project"}
+        </button>
       </form>
     </div>
   );

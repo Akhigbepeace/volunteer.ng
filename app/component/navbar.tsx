@@ -1,9 +1,14 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { FaChevronDown, FaBars, FaTimes } from "react-icons/fa";
+import { getUser } from "@/lib/user";
+import { useRouter, useSearchParams } from "next/navigation";
+import Cookies from "universal-cookie";
+import { toast, ToastContainer } from "react-toastify";
+import { handleUserLogout } from "@/lib/auth";
 
 type MenuOptions = {
   title: string;
@@ -15,27 +20,100 @@ type Navlinks = {
   menuOptions: MenuOptions[];
 };
 
+type User = {
+  displayName: string;
+  email: string;
+  picture: string;
+  role: "organisation" | "volunteer";
+};
+
 const Navbar = () => {
   const [openMenuIndex, setOpenMenuIndex] = useState<number | null>(null);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [userData, setUserData] = useState<User | null>(null);
 
-  const navLinks: Navlinks[] = [
-    {
-      title: "For Volunteers",
-      menuOptions: [{ title: "Explore Volunteers", path: "/explore" }],
-    },
-    {
-      title: "For Organization",
-      menuOptions: [{ title: "Post Project", path: "/project/create" }],
-    },
-  ];
+  const router = useRouter();
+  const cookies = new Cookies();
+  const searchParams = useSearchParams();
+  const searchParamsUserId = searchParams.get("userId");
+  const user = cookies.get("user");
+  const userId = user?.id;
+
+  const navLinks: Navlinks[] = (() => {
+    if (!userData?.role) {
+      return [
+        {
+          title: "For Volunteers",
+          menuOptions: [{ title: "Explore Volunteers", path: "/explore" }],
+        },
+        {
+          title: "For Organization",
+          menuOptions: [{ title: "Post Project", path: "/project/create" }],
+        },
+      ];
+    }
+
+    if (userData.role === "volunteer") {
+      return [
+        {
+          title: "For Volunteers",
+          menuOptions: [{ title: "Explore Volunteers", path: "/explore" }],
+        },
+      ];
+    }
+
+    if (userData.role === "organisation") {
+      return [
+        {
+          title: "For Organization",
+          menuOptions: [{ title: "Post Project", path: "/project/create" }],
+        },
+      ];
+    }
+
+    return [];
+  })();
+
+  useEffect(() => {
+    if (searchParamsUserId) {
+      cookies.set("user", { id: searchParamsUserId }, { path: "/" });
+    }
+  }, [searchParamsUserId]);
+
+  useEffect(() => {
+    const fetchUser = async () => {
+      const id = searchParamsUserId || userId;
+
+      if (!id) return;
+
+      try {
+        const data = await getUser(id);
+        if (data.displayName) setUserData(data);
+      } catch (error) {
+        toast.error(String(error));
+      }
+    };
+
+    fetchUser();
+  }, [searchParamsUserId]);
 
   const toggleMenuOption = (index: number) => {
     setOpenMenuIndex((prevIndex) => (prevIndex === index ? null : index));
   };
 
+  const handleLogout = async () => {
+    try {
+      await handleUserLogout();
+      cookies.remove("user");
+      router.push("/login");
+    } catch (error) {
+      toast.error(String(error));
+    }
+  };
+
   return (
     <nav className="sticky top-0 z-50 bg-primary shadow-md px-4 md:px-6 py-4">
+      <ToastContainer />
       <div className="flex justify-between items-center w-full">
         {/* Logo */}
         <Link href="/explore" className="relative w-[200px] h-[50px]">
@@ -75,28 +153,43 @@ const Navbar = () => {
               )}
             </div>
           ))}
-
           <Link href="/about">About</Link>
         </div>
 
         {/* Right Section */}
         <div className="hidden md:flex items-center gap-4">
           <div className="w-[1px] h-14 bg-white" />
-          <Link
-            href="/login"
-            className="border border-white py-2 px-6 rounded-2xl text-white text-center"
-          >
-            Sign in
-          </Link>
-          <Link
-            href="/signup"
-            className="bg-secondary border border-secondary py-2 px-6 rounded-2xl text-white text-center"
-          >
-            Join
-          </Link>
+          {userData ? (
+            <div className="flex items-center gap-4">
+              <span className="text-white">
+                {userData.displayName || "User"}
+              </span>
+              <button
+                onClick={handleLogout}
+                className="border border-white py-2 px-6 rounded-2xl text-white"
+              >
+                Log out
+              </button>
+            </div>
+          ) : (
+            <>
+              <Link
+                href="/login"
+                className="border border-white py-2 px-6 rounded-2xl text-white text-center"
+              >
+                Sign in
+              </Link>
+              <Link
+                href="/signup"
+                className="bg-secondary border border-secondary py-2 px-6 rounded-2xl text-white text-center"
+              >
+                Join
+              </Link>
+            </>
+          )}
         </div>
 
-        {/* Mobile Menu Toggle */}
+        {/* Mobile Toggle */}
         <button
           onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
           className="md:hidden text-white"
@@ -105,7 +198,7 @@ const Navbar = () => {
         </button>
       </div>
 
-      {/* Mobile Navigation */}
+      {/* Mobile Nav */}
       {mobileMenuOpen && (
         <div className="md:hidden absolute top-16 left-0 w-full bg-primary p-5 shadow-lg flex flex-col items-center gap-4 text-white font-medium">
           {navLinks.map((link, index) => (
@@ -137,18 +230,34 @@ const Navbar = () => {
           <Link href="/about">About</Link>
 
           <div className="flex flex-col gap-3 w-full items-center">
-            <Link
-              href="/login"
-              className="border border-white py-2 w-40 rounded-2xl text-white text-center"
-            >
-              Sign in
-            </Link>
-            <Link
-              href="/join"
-              className="bg-secondary border border-secondary py-2 w-40 rounded-2xl text-white text-center"
-            >
-              Join
-            </Link>
+            {userData ? (
+              <>
+                <span className="text-white">
+                  {userData.displayName || "User"}
+                </span>
+                <button
+                  onClick={handleLogout}
+                  className="border border-white py-2 w-40 rounded-2xl text-white text-center"
+                >
+                  Log out
+                </button>
+              </>
+            ) : (
+              <>
+                <Link
+                  href="/login"
+                  className="border border-white py-2 w-40 rounded-2xl text-white text-center"
+                >
+                  Sign in
+                </Link>
+                <Link
+                  href="/signup"
+                  className="bg-secondary border border-secondary py-2 w-40 rounded-2xl text-white text-center"
+                >
+                  Join
+                </Link>
+              </>
+            )}
           </div>
         </div>
       )}
