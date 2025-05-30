@@ -25,8 +25,6 @@ const Login = () => {
 
   const handleLinkedInLogin = async () => {
     console.log("LinkedIn login clicked");
-    // Integrate LinkedIn OAuth logic here
-    // Example: router.push("/api/auth/linkedin");
   };
 
   const handleCredentialLogin = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -99,7 +97,6 @@ const Login = () => {
                 <button
                   type="button"
                   onClick={() => setIsVisible(!isVisible)}
-                  // className="absolute right-2 top-2"
                   className="p-2"
                 >
                   {isVisible ? <IoEyeSharp /> : <FaEyeSlash />}

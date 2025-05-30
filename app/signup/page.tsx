@@ -45,10 +45,6 @@ const Signup = () => {
     } catch (error) {
       console.log("Signup error:", error);
     }
-    // if (email === "test@gmail.com" && password === "password") {
-    // } else {
-    //   alert("Invalid email or password");
-    // }
   };
 
   return (

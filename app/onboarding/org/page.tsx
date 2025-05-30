@@ -23,7 +23,6 @@ const industryOptions = [
   { value: "healthcare", label: "Healthcare" },
   { value: "education", label: "Education" },
   { value: "retail", label: "Retail and E-commerce" },
-  // Add more industries as needed
 ];
 
 const organizationType = [
@@ -76,11 +75,11 @@ const OrgOnboardingForm = () => {
         organization: formData,
       });
 
-      if (res.organisation) {
+      if (res.status === "true") {
         toast.success("Onboarded Successful");
 
         setTimeout(() => {
-          router.push("/project/org");
+          router.push("/project/organization");
         }, 3000);
       }
     } catch (error) {

@@ -108,15 +108,17 @@ const VolunteerOnboardingForm = () => {
         volunteer: formData,
       });
 
-      console.log("res", res);
-
-      if (formData) router.push("/project/volunteer");
+      if (res) router.push("/project/volunteer");
     } catch (error) {
       toast.error(String(error));
     } finally {
       setLoading(false);
     }
   };
+
+  if (loading) {
+    return <div>Loading...</div>;
+  }
 
   return (
     <div className="min-h-screen bg-gray-50 flex items-center justify-center">

@@ -4,7 +4,7 @@ import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { FaChevronDown, FaBars, FaTimes } from "react-icons/fa";
-import { getUser } from "@/lib/user";
+import { getUser, User } from "@/lib/user";
 import { useRouter, useSearchParams } from "next/navigation";
 import Cookies from "universal-cookie";
 import { toast, ToastContainer } from "react-toastify";
@@ -20,12 +20,6 @@ type Navlinks = {
   menuOptions: MenuOptions[];
 };
 
-type User = {
-  displayName: string;
-  email: string;
-  picture: string;
-  role: "organisation" | "volunteer";
-};
 
 const Navbar = () => {
   const [openMenuIndex, setOpenMenuIndex] = useState<number | null>(null);
@@ -39,7 +33,7 @@ const Navbar = () => {
   const user = cookies.get("user");
   const userId = user?.id;
 
-  const navLinks: Navlinks[] = (() => {
+  const navLinks: Navlinks[] = React.useMemo(() => {
     if (!userData?.role) {
       return [
         {
@@ -53,26 +47,20 @@ const Navbar = () => {
       ];
     }
 
-    if (userData.role === "volunteer") {
-      return [
-        {
-          title: "For Volunteers",
-          menuOptions: [{ title: "Explore Volunteers", path: "/explore" }],
-        },
-      ];
-    }
-
-    if (userData.role === "organisation") {
-      return [
-        {
-          title: "For Organization",
-          menuOptions: [{ title: "Post Project", path: "/project/create" }],
-        },
-      ];
-    }
-
-    return [];
-  })();
+    return userData.role === "volunteer"
+      ? [
+          {
+            title: "For Volunteers",
+            menuOptions: [{ title: "Explore Volunteers", path: "/explore" }],
+          },
+        ]
+      : [
+          {
+            title: "For Organization",
+            menuOptions: [{ title: "Post Project", path: "/project/create" }],
+          },
+        ];
+  }, [userData]);
 
   useEffect(() => {
     if (searchParamsUserId) {
@@ -83,19 +71,22 @@ const Navbar = () => {
   useEffect(() => {
     const fetchUser = async () => {
       const id = searchParamsUserId || userId;
-
       if (!id) return;
 
       try {
         const data = await getUser(id);
-        if (data.displayName) setUserData(data);
+        if (data?.email) {
+          setUserData(data);
+        } else {
+          router.push("/explore");
+        }
       } catch (error) {
-        toast.error(String(error));
+        toast.error("Failed to fetch user data");
       }
     };
 
     fetchUser();
-  }, [searchParamsUserId]);
+  }, [searchParamsUserId, userId]);
 
   const toggleMenuOption = (index: number) => {
     setOpenMenuIndex((prevIndex) => (prevIndex === index ? null : index));
@@ -105,9 +96,10 @@ const Navbar = () => {
     try {
       await handleUserLogout();
       cookies.remove("user");
+      setUserData(null);
       router.push("/login");
     } catch (error) {
-      toast.error(String(error));
+      toast.error("Logout failed");
     }
   };
 
@@ -115,7 +107,6 @@ const Navbar = () => {
     <nav className="sticky top-0 z-50 bg-primary shadow-md px-4 md:px-6 py-4">
       <ToastContainer />
       <div className="flex justify-between items-center w-full">
-        {/* Logo */}
         <Link href="/explore" className="relative w-[200px] h-[50px]">
           <Image
             src="/assets/logos/full-white.png"
@@ -130,13 +121,13 @@ const Navbar = () => {
         <div className="hidden md:flex items-center gap-10 font-bold text-white">
           {navLinks.map((link, index) => (
             <div key={index} className="relative">
-              <div
+              <button
                 onClick={() => toggleMenuOption(index)}
-                className="flex cursor-pointer items-center gap-1"
+                className="flex items-center gap-1 cursor-pointer focus:outline-none"
               >
                 <span>{link.title}</span>
                 <FaChevronDown size={15} />
-              </div>
+              </button>
 
               {openMenuIndex === index && (
                 <div className="absolute left-0 bg-white p-3 px-5 rounded-xl text-black text-sm mt-2 shadow-md">
@@ -160,10 +151,18 @@ const Navbar = () => {
         <div className="hidden md:flex items-center gap-4">
           <div className="w-[1px] h-14 bg-white" />
           {userData ? (
-            <div className="flex items-center gap-4">
-              <span className="text-white">
-                {userData.displayName || "User"}
-              </span>
+            <div className="flex items-center gap-4 text-white">
+              <Image
+                src={userData.image}
+                alt="user"
+                width={40}
+                height={40}
+                className="rounded-full"
+              />
+              <div>
+                <div>{userData.displayName || "User"}</div>
+                <div className="text-sm opacity-80">{userData.email}</div>
+              </div>
               <button
                 onClick={handleLogout}
                 className="border border-white py-2 px-6 rounded-2xl text-white"
@@ -193,6 +192,7 @@ const Navbar = () => {
         <button
           onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
           className="md:hidden text-white"
+          aria-label="Toggle mobile menu"
         >
           {mobileMenuOpen ? <FaTimes size={24} /> : <FaBars size={24} />}
         </button>
@@ -203,13 +203,13 @@ const Navbar = () => {
         <div className="md:hidden absolute top-16 left-0 w-full bg-primary p-5 shadow-lg flex flex-col items-center gap-4 text-white font-medium">
           {navLinks.map((link, index) => (
             <div key={index} className="w-full text-center">
-              <div
+              <button
                 onClick={() => toggleMenuOption(index)}
-                className="flex items-center justify-center gap-2 cursor-pointer"
+                className="flex items-center justify-center gap-2 cursor-pointer w-full"
               >
                 <span>{link.title}</span>
                 <FaChevronDown size={15} />
-              </div>
+              </button>
 
               {openMenuIndex === index && (
                 <div className="bg-white p-3 rounded-xl text-black text-sm mt-2 shadow-md">
@@ -232,9 +232,7 @@ const Navbar = () => {
           <div className="flex flex-col gap-3 w-full items-center">
             {userData ? (
               <>
-                <span className="text-white">
-                  {userData.displayName || "User"}
-                </span>
+                <span>{userData.displayName || "User"}</span>
                 <button
                   onClick={handleLogout}
                   className="border border-white py-2 w-40 rounded-2xl text-white text-center"

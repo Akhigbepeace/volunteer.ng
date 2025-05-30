@@ -4,7 +4,11 @@ import React, { ChangeEvent, useState } from "react";
 import { Project } from "@/data/project";
 import { v4 as uuidv4 } from "uuid";
 import { useRouter } from "next/navigation";
-import { createProject, uploadImageToCloudinary } from "@/lib/project";
+import {
+  createProject,
+  editProject,
+  uploadImageToCloudinary,
+} from "@/lib/project";
 import Cookies from "universal-cookie";
 import { toast, ToastContainer } from "react-toastify";
 import Image from "next/image";
@@ -31,10 +35,9 @@ const defaultData: Project = {
   createdAt: new Date().toISOString(),
 };
 
-const CreateProject = () => {
+const EditProject = () => {
   const [formData, setFormData] = useState(defaultData);
   const [loading, setLoading] = useState(false);
-  const [imageURL, setImageURL] = useState("");
   const [imageIsLoading, setImageIsLoading] = useState(false);
 
   const router = useRouter();
@@ -63,7 +66,8 @@ const CreateProject = () => {
 
     try {
       setLoading(true);
-      const res = await createProject({
+
+      const res = await editProject({
         userId,
         project: {
           ...formData,
@@ -72,7 +76,7 @@ const CreateProject = () => {
 
       if (res.project) {
         setFormData(defaultData);
-        toast.success("Project Created Successfully");
+        toast.success("Project Edited Successfully");
         setTimeout(() => {
           router.push("/project/organization");
         }, 3000);
@@ -92,10 +96,9 @@ const CreateProject = () => {
       setImageIsLoading(true);
 
       const imageUrl = await uploadImageToCloudinary(file);
-      setImageURL(imageUrl);
       setFormData((prev) => ({ ...prev, image: imageUrl }));
     } catch (err) {
-      console.error("Upload error:", err);
+      toast.error(String(err));
     } finally {
       setImageIsLoading(false);
     }
@@ -109,7 +112,7 @@ const CreateProject = () => {
     <div className="p-6 max-w-3xl mx-auto">
       <ToastContainer />
 
-      <h1 className="text-2xl font-bold mb-6">Create New Project</h1>
+      <h1 className="text-2xl font-bold mb-6">Edit Project</h1>
 
       <form onSubmit={handleSubmit} className="space-y-6">
         {/* Project Title */}
@@ -357,4 +360,4 @@ const CreateProject = () => {
   );
 };
 
-export default CreateProject;
+export default EditProject;

@@ -3,6 +3,13 @@ import { VolunteerOnboardingData } from "@/app/onboarding/volunteer/page";
 
 export type Role = "volunteer" | "organization";
 
+type User = {
+  displayName: string;
+  email: string;
+  image: string;
+  role: "organisation" | "volunteer";
+};
+
 type SelectRoleProp = {
   userId: string | null;
   role: Role;
@@ -15,9 +22,6 @@ type OnboardingProps = {
 };
 
 const getUser = async (userId: string) => {
-  console.log({
-    newuserId: String(userId),
-  });
   const apiRes = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/user`, {
     headers: {
       "Content-Type": "application/json",
@@ -26,7 +30,8 @@ const getUser = async (userId: string) => {
   });
 
   const res = await apiRes.json();
-  return res;
+
+  return res as User;
 };
 
 const handleSelectRole = async (props: SelectRoleProp) => {
@@ -74,8 +79,6 @@ const handleVolunteerOnboarding = async (props: OnboardingProps) => {
 const handleOrganizationOnboarding = async (props: OnboardingProps) => {
   const { userId, organization } = props;
 
-  console.log({ userId, organization });
-
   const apiRes = await fetch(
     `${process.env.NEXT_PUBLIC_BASE_URL}/save-user-data`,
     {
@@ -100,3 +103,5 @@ export {
   handleVolunteerOnboarding,
   handleOrganizationOnboarding,
 };
+
+export type { User };

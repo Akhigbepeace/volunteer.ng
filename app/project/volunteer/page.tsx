@@ -1,20 +1,47 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import ProjectCard from "@/app/component/project/project-card";
-import { projects } from "@/data/project";
+import { Project } from "@/data/project";
+import { getProject } from "@/lib/project";
+import { toast, ToastContainer } from "react-toastify";
 
 const TABS = ["Applied", "Ongoing", "Completed", "Rejected"];
 
 const Projects = () => {
   const [activeTab, setActiveTab] = useState("Applied");
+  const [loading, setLoading] = useState(false);
+  const [projects, setProjects] = useState<Project[]>([]);
+
+  useEffect(() => {
+    const fetchProjects = async () => {
+      setLoading(true);
+
+      try {
+        const res = await getProject();
+        setProjects(res);
+      } catch (error) {
+        toast.error(String(error));
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchProjects();
+  }, []);
 
   const filteredProjects = projects.filter(
     (project) => project.status === activeTab.toLowerCase()
   );
 
+  if (loading) {
+    return <div>Loading...</div>;
+  }
+
   return (
     <div className="max-w-6xl mx-auto p-5">
+      <ToastContainer />
+
       <h2 className="text-2xl font-bold mb-4">My Projects</h2>
 
       <div className="flex border-b mb-5">
