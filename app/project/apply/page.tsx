@@ -1,4 +1,4 @@
-import ProjectApplication from "@/app/component/suspense/project/apply";
+import ProjectApplication from "@/app/component/suspense/apply";
 import React, { Suspense } from "react";
 
 const ProjectApplyPage = () => {

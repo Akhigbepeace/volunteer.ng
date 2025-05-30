@@ -7,7 +7,7 @@ import { toast, ToastContainer } from "react-toastify";
 const ProjectApplication = () => {
   const searchParams = useSearchParams();
   const router = useRouter();
-  const project = searchParams.get("project");
+  const project = searchParams.get("project");``
 
   // Mock authenticated user (replace with actual auth state)
   const user = {
