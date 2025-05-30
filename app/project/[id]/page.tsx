@@ -59,7 +59,7 @@ const ProjectDetails = () => {
     };
 
     fetchSingleProject();
-  }, [userId]);
+  }, [userId, project?._id]);
 
   useEffect(() => {
     const fetchProjects = async () => {
