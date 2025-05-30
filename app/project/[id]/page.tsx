@@ -5,7 +5,7 @@ import ProjectCard from "@/app/component/project/project-card";
 import Details from "@/app/component/project/project-detail";
 import { Project } from "@/data/project";
 import { deleteProject, getProject, getSingleProject } from "@/lib/project";
-import { getUser, User } from "@/lib/user";
+import { getUser } from "@/lib/user";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -37,7 +37,7 @@ const ProjectDetails = () => {
         const data = await getUser(userId);
         setRole(data.role);
       } catch (error) {
-        toast.error("Failed to fetch user data");
+        toast.error(String(error));
       }
     };
 

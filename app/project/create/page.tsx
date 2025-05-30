@@ -34,7 +34,6 @@ const defaultData: Project = {
 const CreateProject = () => {
   const [formData, setFormData] = useState(defaultData);
   const [loading, setLoading] = useState(false);
-  const [imageURL, setImageURL] = useState("");
   const [imageIsLoading, setImageIsLoading] = useState(false);
 
   const router = useRouter();
@@ -92,7 +91,6 @@ const CreateProject = () => {
       setImageIsLoading(true);
 
       const imageUrl = await uploadImageToCloudinary(file);
-      setImageURL(imageUrl);
       setFormData((prev) => ({ ...prev, image: imageUrl }));
     } catch (err) {
       console.error("Upload error:", err);

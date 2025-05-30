@@ -4,11 +4,7 @@ import React, { ChangeEvent, useState } from "react";
 import { Project } from "@/data/project";
 import { v4 as uuidv4 } from "uuid";
 import { useRouter } from "next/navigation";
-import {
-  createProject,
-  editProject,
-  uploadImageToCloudinary,
-} from "@/lib/project";
+import { editProject, uploadImageToCloudinary } from "@/lib/project";
 import Cookies from "universal-cookie";
 import { toast, ToastContainer } from "react-toastify";
 import Image from "next/image";

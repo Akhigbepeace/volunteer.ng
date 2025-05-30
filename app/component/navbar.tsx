@@ -20,7 +20,6 @@ type Navlinks = {
   menuOptions: MenuOptions[];
 };
 
-
 const Navbar = () => {
   const [openMenuIndex, setOpenMenuIndex] = useState<number | null>(null);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -81,7 +80,7 @@ const Navbar = () => {
           router.push("/explore");
         }
       } catch (error) {
-        toast.error("Failed to fetch user data");
+        toast.error(String(error));
       }
     };
 
@@ -99,7 +98,7 @@ const Navbar = () => {
       setUserData(null);
       router.push("/login");
     } catch (error) {
-      toast.error("Logout failed");
+      toast.error(String(error));
     }
   };
 
