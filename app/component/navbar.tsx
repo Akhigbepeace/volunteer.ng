@@ -23,12 +23,15 @@ type Navlinks = {
 const Navbar = () => {
   const [openMenuIndex, setOpenMenuIndex] = useState<number | null>(null);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [searchParamsUserId, setSearchParamsUserId] = useState<string | null>(
+    null
+  );
+
   const [userData, setUserData] = useState<User | null>(null);
 
   const router = useRouter();
   const cookies = new Cookies();
   const searchParams = useSearchParams();
-  const searchParamsUserId = searchParams.get("userId");
   const user = cookies.get("user");
   const userId = user?.id;
 
@@ -62,10 +65,12 @@ const Navbar = () => {
   }, [userData]);
 
   useEffect(() => {
-    if (searchParamsUserId) {
-      cookies.set("user", { id: searchParamsUserId }, { path: "/" });
+    const id = searchParams.get("userId");
+    if (id) {
+      setSearchParamsUserId(id);
+      cookies.set("user", { id }, { path: "/" });
     }
-  }, [searchParamsUserId]);
+  }, [searchParams]);
 
   useEffect(() => {
     const fetchUser = async () => {
