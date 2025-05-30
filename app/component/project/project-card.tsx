@@ -14,8 +14,8 @@ const ProjectCard = (props: ProjectProps) => {
 
   return (
     <Link
+      href={`/project/${project._id}`}
       className="group border rounded-lg shadow-md overflow-hidden bg-white relative cursor-pointer"
-      href={`/project/${project.id}`}
     >
       <div className="relative w-full h-40">
         <Image

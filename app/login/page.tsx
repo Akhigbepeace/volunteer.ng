@@ -23,16 +23,8 @@ const Login = () => {
 
   const router = useRouter();
 
-  const handleGoogleLogin = async () => {
-    console.log("Google login clicked");
-    // Integrate Google OAuth logic here
-    // Example: router.push("/api/auth/google");
-  };
-
   const handleLinkedInLogin = async () => {
     console.log("LinkedIn login clicked");
-    // Integrate LinkedIn OAuth logic here
-    // Example: router.push("/api/auth/linkedin");
   };
 
   const handleCredentialLogin = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -105,7 +97,6 @@ const Login = () => {
                 <button
                   type="button"
                   onClick={() => setIsVisible(!isVisible)}
-                  // className="absolute right-2 top-2"
                   className="p-2"
                 >
                   {isVisible ? <IoEyeSharp /> : <FaEyeSlash />}
@@ -126,13 +117,13 @@ const Login = () => {
             <div className="w-full h-px bg-gray-300"></div>
           </div>
           <div className="space-y-4">
-          <Link
-            href="https://volunteer-ng.onrender.com/auth/google"
-            className="w-full flex items-center justify-center gap-10 py-2 px-4 bg-transparent border border-[#0077B5] rounded-md text-secondary hover:bg-gray-100 transition"
-          >
-            <FcGoogle size={24} />
-            Sign up with Google
-          </Link>
+            <Link
+              href="https://volunteer-ng.onrender.com/auth/google"
+              className="w-full flex items-center justify-center gap-10 py-2 px-4 bg-transparent border border-[#0077B5] rounded-md text-secondary hover:bg-gray-100 transition"
+            >
+              <FcGoogle size={24} />
+              Sign in with Google
+            </Link>
 
             <button
               onClick={handleLinkedInLogin}

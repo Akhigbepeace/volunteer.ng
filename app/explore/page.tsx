@@ -1,15 +1,11 @@
-import React from "react";
-import HeroSection from "../component/organisms/hero-section";
-import FilterOptions from "../component/organisms/filter-options";
-import Projects from "../component/organisms/projects";
+import { Suspense } from "react";
+import ExploreContent from "../component/explore-content";
 
 const Explore = () => {
   return (
-    <div>
-      <HeroSection />
-      <FilterOptions />
-      <Projects />
-    </div>
+    <Suspense fallback={<div>Loading...</div>}>
+      <ExploreContent />
+    </Suspense>
   );
 };
 
