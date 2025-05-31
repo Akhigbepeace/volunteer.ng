@@ -90,8 +90,11 @@ const CreateProject = () => {
     try {
       setImageIsLoading(true);
 
-      const imageUrl = await uploadImageToCloudinary(file);
-      setFormData((prev) => ({ ...prev, image: imageUrl }));
+      const imageRes: any = await uploadImageToCloudinary(file);
+
+      const { secure_url, public_id } = imageRes;
+
+      setFormData((prev) => ({ ...prev, public_id, image: secure_url }));
     } catch (err) {
       console.error("Upload error:", err);
     } finally {
