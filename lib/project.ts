@@ -5,6 +5,11 @@ type CreateProjectProps = {
   project: Project;
 };
 
+type CloudinaryRes = {
+  secure_url: string;
+  public_id: string;
+};
+
 const getProject = async () => {
   const apiRes = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/projects`, {
     headers: {
@@ -87,7 +92,7 @@ const createProject = async (props: CreateProjectProps) => {
   return res;
 };
 
-const uploadImageToCloudinary = async (file: File): Promise<string> => {
+const uploadImageToCloudinary = async (file: File): Promise<CloudinaryRes> => {
   const formData = new FormData();
   formData.append("file", file);
   formData.append("upload_preset", "my_preset");
@@ -116,3 +121,5 @@ export {
   getSingleProject,
   uploadImageToCloudinary,
 };
+
+export type { CloudinaryRes };
