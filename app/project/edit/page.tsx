@@ -4,7 +4,11 @@ import React, { ChangeEvent, useState } from "react";
 import { Project } from "@/data/project";
 import { v4 as uuidv4 } from "uuid";
 import { useRouter } from "next/navigation";
-import { editProject, uploadImageToCloudinary } from "@/lib/project";
+import {
+  CloudinaryRes,
+  editProject,
+  uploadImageToCloudinary,
+} from "@/lib/project";
 import Cookies from "universal-cookie";
 import { toast, ToastContainer } from "react-toastify";
 import Image from "next/image";
@@ -91,8 +95,11 @@ const EditProject = () => {
     try {
       setImageIsLoading(true);
 
-      const imageUrl = await uploadImageToCloudinary(file);
-      setFormData((prev) => ({ ...prev, image: imageUrl }));
+      const imageRes: CloudinaryRes = await uploadImageToCloudinary(file);
+
+      const { secure_url, public_id } = imageRes;
+
+      setFormData((prev) => ({ ...prev, public_id, image: secure_url }));
     } catch (err) {
       toast.error(String(err));
     } finally {
