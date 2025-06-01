@@ -42,7 +42,8 @@ const CreateProject = () => {
 
   const router = useRouter();
   const cookies = new Cookies();
-  const userId = cookies.get("userId");
+  const user = cookies.get("user");
+  const userId = user.id;
 
   const handleChange = (
     e: React.ChangeEvent<
@@ -63,7 +64,6 @@ const CreateProject = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-
     try {
       setLoading(true);
       const res = await createProject({
@@ -105,10 +105,6 @@ const CreateProject = () => {
       setImageIsLoading(false);
     }
   };
-
-  if (loading) {
-    return <div>Loading...</div>;
-  }
 
   return (
     <div className="p-6 max-w-3xl mx-auto">
