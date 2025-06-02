@@ -1,9 +1,9 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import HeroSection from "../component/organisms/hero-section";
-import FilterOptions from "../component/organisms/filter-options";
-import Projects from "../component/organisms/projects";
+import HeroSection from "../organisms/hero-section";
+import FilterOptions from "../organisms/filter-options";
+import Projects from "../organisms/projects";
 import { useSearchParams } from "next/navigation";
 import Cookies from "universal-cookie";
 import { getProject } from "@/lib/project";

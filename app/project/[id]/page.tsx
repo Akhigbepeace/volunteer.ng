@@ -8,11 +8,11 @@ import { deleteProject, getProject, getSingleProject } from "@/lib/project";
 import { getUser } from "@/lib/user";
 import Image from "next/image";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import { IoMdArrowRoundBack } from "react-icons/io";
 import { IoLogoBuffer } from "react-icons/io5";
-import { toast } from "react-toastify";
+import { toast, ToastContainer } from "react-toastify";
 import Cookies from "universal-cookie";
 
 const ProjectDetails = () => {
@@ -23,10 +23,12 @@ const ProjectDetails = () => {
 
   const cookies = new Cookies();
   const router = useRouter();
+  const params = useParams();
 
   const user = cookies.get("user");
 
   const userId = user.id;
+  const projectId = params.id;
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -46,20 +48,20 @@ const ProjectDetails = () => {
 
   useEffect(() => {
     const fetchSingleProject = async () => {
-      if (!userId) return;
+      if (!projectId) return;
 
       setLoading(true);
 
       try {
-        const res = await getSingleProject(project?._id as string);
-        setProject(res.project);
+        const res = await getSingleProject(projectId as string);
+        setProject(res);
       } catch (error) {
         toast.error(String(error));
       }
     };
 
     fetchSingleProject();
-  }, [userId, project?._id]);
+  }, [userId, projectId]);
 
   useEffect(() => {
     const fetchProjects = async () => {
@@ -78,17 +80,44 @@ const ProjectDetails = () => {
     fetchProjects();
   }, []);
 
-  const handleEdit = () => router.push(`/project/edit?id=${project?._id}`);
+  const handleEdit = () => router.push(`/project/edit/${projectId}`);
 
   const handleDelete = async () => {
-    if (!project?._id) return;
+    if (!projectId) return;
 
     try {
-      const res = await deleteProject(project._id);
-      if (res) router.push("/project/organization");
+      const res = await deleteProject({
+        projectId: projectId as string,
+        userId,
+      });
+
+      if (res.message === "Project and image deleted successfully") {
+        toast.success(res.message);
+        setTimeout(() => {
+          router.push("/project/organization");
+        }, 3000);
+      } else {
+        toast.error(res.message);
+      }
     } catch (error) {
       toast.error(String(error));
     }
+  };
+
+  const formatDateToReadable = (dateString: string) => {
+    const date = new Date(dateString);
+
+    const options: Intl.DateTimeFormatOptions = { month: "long" };
+    const month = new Intl.DateTimeFormat("en-US", options).format(date);
+    const day = date.getDate();
+
+    const getOrdinalSuffix = (n: number): string => {
+      const s = ["th", "st", "nd", "rd"];
+      const v = n % 100;
+      return s[(v - 20) % 10] || s[v] || s[0];
+    };
+
+    return `${month} ${day}${getOrdinalSuffix(day)}`;
   };
 
   const isVolunteer = role === "volunteer";
@@ -97,8 +126,12 @@ const ProjectDetails = () => {
     return <div>Loading...</div>;
   }
 
+  if (!project) return;
+
   return (
     <div className="max-w-[1000px] mx-auto py-5 px-4">
+      <ToastContainer />
+
       <div className="flex items-center justify-between">
         <button
           onClick={() => router.back()}
@@ -125,17 +158,14 @@ const ProjectDetails = () => {
         )}
       </div>
 
-      <h1 className="text-3xl font-bold mt-3">Clean Water Initiative</h1>
+      <h1 className="text-3xl font-bold mt-3">{project.heading}</h1>
 
-      <p className="text-gray-600 mt-2">
-        Help with critical web development needs over the course of 4 weeks, in
-        areas like maintaining or making critical updates to their website.
-      </p>
+      <p className="text-gray-600 mt-2">{project.description}</p>
 
       <div className="flex flex-col md:flex-row mt-5 gap-6">
         <div className="md:w-2/3">
           <Image
-            src="/assets/cwi.jpeg"
+            src={project.image || "/assets/cwi.jpeg"}
             alt="Project"
             width={800}
             height={800}
@@ -162,12 +192,18 @@ const ProjectDetails = () => {
 
           <div>
             <h4 className="text-gray-500 text-sm font-semibold">Skills</h4>
-            <span className="inline-block bg-gray-200 px-3 py-1 rounded-full text-sm">
-              Graphic Design
-            </span>
+            <ul className="inline-block bg-gray-200 px-3 py-1 rounded-full text-sm">
+              {project.requirements?.map((requirement, index) => (
+                <li key={index} className="list-disc list-inside">
+                  {requirement}
+                </li>
+              ))}
+            </ul>
           </div>
 
-          <p className="text-gray-500 text-sm">Posted February 6th</p>
+          <p className="text-gray-500 text-sm">
+            Posted {formatDateToReadable(project.createdAt as string)}
+          </p>
           {isVolunteer && (
             <Link
               href={`/project/apply?project=${"Clean Water Initiative"}`}

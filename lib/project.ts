@@ -5,6 +5,17 @@ type CreateProjectProps = {
   project: Project;
 };
 
+type EditProjectProps = {
+  userId: string;
+  projectId: string;
+  project: Project;
+};
+
+type DeleteProjectProps = {
+  userId: string;
+  projectId: string;
+};
+
 type CloudinaryRes = {
   secure_url: string;
   public_id: string;
@@ -22,8 +33,10 @@ const getProject = async () => {
 };
 
 const getSingleProject = async (projectId: string) => {
+  if (!projectId) return;
+
   const apiRes = await fetch(
-    `${process.env.NEXT_PUBLIC_BASE_URL}/projects/${projectId}`,
+    `${process.env.NEXT_PUBLIC_BASE_URL}/project/${projectId}`,
     {
       headers: {
         "Content-Type": "application/json",
@@ -35,11 +48,11 @@ const getSingleProject = async (projectId: string) => {
   return res;
 };
 
-const editProject = async (props: CreateProjectProps) => {
-  const { userId, project } = props;
+const editProject = async (props: EditProjectProps) => {
+  const { userId, project, projectId } = props;
 
   const apiRes = await fetch(
-    `${process.env.NEXT_PUBLIC_BASE_URL}/save-project-data`,
+    `${process.env.NEXT_PUBLIC_BASE_URL}/update-project/${projectId}`,
     {
       method: "PUT",
       headers: {
@@ -56,9 +69,11 @@ const editProject = async (props: CreateProjectProps) => {
   return res;
 };
 
-const deleteProject = async (projectId: string) => {
+const deleteProject = async (props: DeleteProjectProps) => {
+  const { projectId, userId } = props;
+
   const apiRes = await fetch(
-    `${process.env.NEXT_PUBLIC_BASE_URL}/save-project-data/${projectId}`,
+    `${process.env.NEXT_PUBLIC_BASE_URL}/delete-project/${userId}/${projectId}`,
     {
       method: "DELETE",
       headers: {

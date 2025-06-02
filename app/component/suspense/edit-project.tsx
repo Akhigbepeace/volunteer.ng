@@ -1,12 +1,13 @@
 "use client";
 
-import React, { ChangeEvent, useState } from "react";
+import React, { ChangeEvent, useEffect, useState } from "react";
 import { Project } from "@/data/project";
 import { v4 as uuidv4 } from "uuid";
-import { useRouter } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import {
   CloudinaryRes,
   editProject,
+  getSingleProject,
   uploadImageToCloudinary,
 } from "@/lib/project";
 import Cookies from "universal-cookie";
@@ -42,7 +43,71 @@ const EditProject = () => {
 
   const router = useRouter();
   const cookies = new Cookies();
-  const userId = cookies.get("userId");
+  const params = useParams();
+  const projectId = params.id;
+  const user = cookies.get("user");
+  const userId = user.id;
+
+  useEffect(() => {
+    const fetchSingleProject = async () => {
+      if (!projectId) return;
+
+      setLoading(true);
+
+      try {
+        const res: Project = await getSingleProject(projectId as string);
+        const {
+          _id,
+          category,
+          description,
+          duration,
+          heading,
+          image,
+          orgName,
+          status,
+          type,
+          benefits,
+          contactEmail,
+          contactPhone,
+          createdAt,
+          endDate,
+          location,
+          maxVolunteers,
+          requirements,
+          startDate,
+          tags,
+        } = res;
+
+        setFormData({
+          _id,
+          category,
+          description,
+          duration,
+          heading,
+          image,
+          orgName,
+          status,
+          type,
+          benefits,
+          contactEmail,
+          contactPhone,
+          createdAt,
+          endDate,
+          location,
+          maxVolunteers,
+          requirements,
+          startDate,
+          tags,
+        });
+      } catch (error) {
+        toast.error(String(error));
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchSingleProject();
+  }, [userId, projectId]);
 
   const handleChange = (
     e: React.ChangeEvent<
@@ -69,6 +134,7 @@ const EditProject = () => {
 
       const res = await editProject({
         userId,
+        projectId: projectId as string,
         project: {
           ...formData,
         },
@@ -80,6 +146,8 @@ const EditProject = () => {
         setTimeout(() => {
           router.push("/project/organization");
         }, 3000);
+      } else {
+        toast.error(res);
       }
     } catch (error) {
       toast.error(String(error));
@@ -106,10 +174,6 @@ const EditProject = () => {
       setImageIsLoading(false);
     }
   };
-
-  if (loading) {
-    return <div>Loading...</div>;
-  }
 
   return (
     <div className="p-6 max-w-3xl mx-auto">
@@ -356,7 +420,7 @@ const EditProject = () => {
               />
             </svg>
           ) : null}
-          {loading ? "Creating..." : "Create Project"}
+          {loading ? "Loading..." : "Edit Project"}
         </button>
       </form>
     </div>

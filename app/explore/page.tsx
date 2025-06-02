@@ -1,5 +1,5 @@
 import { Suspense } from "react";
-import ExploreContent from "../component/explore-content";
+import ExploreContent from "../component/suspense/explore-content";
 
 const Explore = () => {
   return (
