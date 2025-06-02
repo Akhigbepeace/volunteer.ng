@@ -24,7 +24,9 @@ const defaultData: Project = {
   description: "",
   category: "",
   status: "applied",
-  location: "",
+  location: null,
+  deadline: "",
+  numberOfHours: 0,
   startDate: "",
   endDate: "",
   requirements: [],
@@ -74,6 +76,8 @@ const EditProject = () => {
           location,
           maxVolunteers,
           requirements,
+          deadline,
+          numberOfHours,
           startDate,
           tags,
         } = res;
@@ -89,6 +93,8 @@ const EditProject = () => {
           status,
           type,
           benefits,
+          deadline,
+          numberOfHours,
           contactEmail,
           contactPhone,
           createdAt,
@@ -240,18 +246,49 @@ const EditProject = () => {
           />
         </div>
 
-        {/* Location */}
+        {/* Hours by week */}
         <div>
-          <label className="block text-sm font-medium">Location</label>
+          <label id="numberOfHours" className="block text-sm font-medium">
+            Hours per Week
+          </label>
           <input
             required
-            type="text"
-            name="location"
-            value={formData.location || ""}
+            type="number"
+            name="numberOfHours"
+            value={formData.numberOfHours}
+            min={1}
             onChange={handleChange}
-            placeholder="Location"
+            placeholder="Enter the number of hours per week"
             className="w-full p-2 border rounded"
           />
+        </div>
+
+        {/* Location */}
+        <div>
+          <label className="block text-sm font-medium mb-2">Location</label>
+          <div className="flex items-center gap-4">
+            <label className="flex items-center gap-2">
+              <input
+                type="radio"
+                name="location"
+                value="remote"
+                checked={formData.location === "remote"}
+                onChange={handleChange}
+                required
+              />
+              Remote
+            </label>
+            <label className="flex items-center gap-2">
+              <input
+                type="radio"
+                name="location"
+                value="physical"
+                checked={formData.location === "physical"}
+                onChange={handleChange}
+              />
+              Physical
+            </label>
+          </div>
         </div>
 
         {/* Start and End Date */}
@@ -278,6 +315,21 @@ const EditProject = () => {
               className="w-full p-2 border rounded"
             />
           </div>
+        </div>
+
+        {/* Application Deadline */}
+        <div>
+          <label id="deadline" className="block text-sm font-medium">
+            Application Deadline
+          </label>
+          <input
+            required
+            type="date"
+            name="deadline"
+            value={formData.deadline || ""}
+            onChange={handleChange}
+            className="w-full p-2 border rounded"
+          />
         </div>
 
         {/* Requirements */}
