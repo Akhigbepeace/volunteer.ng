@@ -45,7 +45,8 @@ const EditProject = () => {
   const cookies = new Cookies();
   const params = useParams();
   const projectId = params.id;
-  const userId = cookies.get("userId");
+  const user = cookies.get("user");
+  const userId = user.id;
 
   useEffect(() => {
     const fetchSingleProject = async () => {
@@ -145,6 +146,8 @@ const EditProject = () => {
         setTimeout(() => {
           router.push("/project/organization");
         }, 3000);
+      } else {
+        toast.error(res);
       }
     } catch (error) {
       toast.error(String(error));

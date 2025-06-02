@@ -1,6 +1,6 @@
 "use client";
 
-import React, { ChangeEvent, useState } from "react";
+import React, { ChangeEvent, useEffect, useState } from "react";
 import { Project } from "@/data/project";
 import { v4 as uuidv4 } from "uuid";
 import { useRouter } from "next/navigation";
@@ -39,11 +39,20 @@ const CreateProject = () => {
   const [formData, setFormData] = useState(defaultData);
   const [loading, setLoading] = useState(false);
   const [imageIsLoading, setImageIsLoading] = useState(false);
+  const [userId, setUserId] = useState<string | null>(null);
 
   const router = useRouter();
-  const cookies = new Cookies();
-  const user = cookies.get("user");
-  const userId = user.id;
+
+  useEffect(() => {
+    const cookies = new Cookies();
+    const user = cookies.get("user");
+    if (user?.id) {
+      setUserId(user.id);
+    } else {
+      toast.error("User not logged in.");
+      router.push("/login"); 
+    }
+  }, []);
 
   const handleChange = (
     e: React.ChangeEvent<
@@ -64,6 +73,11 @@ const CreateProject = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!userId) {
+      toast.error("User ID not found. Please log in.");
+      return;
+    }
+
     try {
       setLoading(true);
       const res = await createProject({
@@ -86,6 +100,7 @@ const CreateProject = () => {
       setLoading(false);
     }
   };
+
 
   const handleImageUpload = async (e: ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
