@@ -21,7 +21,7 @@ const Join = () => {
         role,
       });
 
-      if (data.status) {
+      if (data.status.email !== "") {
         if (role === "volunteer") {
           router.push("/onboarding/volunteer");
         } else {

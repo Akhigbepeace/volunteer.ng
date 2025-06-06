@@ -9,7 +9,7 @@ const LandingPage = () => {
 
   useEffect(() => {
     const timer = setTimeout(() => {
-      router.push("/explore");
+      router.push("/home");
     }, 2000);
 
     return () => clearTimeout(timer);

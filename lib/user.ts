@@ -7,7 +7,7 @@ type User = {
   displayName: string;
   email: string;
   image: string;
-  role: "organisation" | "volunteer";
+  role: "organization" | "volunteer";
 };
 
 type SelectRoleProp = {

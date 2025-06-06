@@ -6,6 +6,11 @@ import React, { SyntheticEvent, useState } from "react";
 import { toast, ToastContainer } from "react-toastify";
 import Cookies from "universal-cookie";
 
+type Industry = {
+  value: string;
+  label: string;
+};
+
 export type OrganizationOnboardingForm = {
   displayName: string;
   email: string;
@@ -14,10 +19,10 @@ export type OrganizationOnboardingForm = {
   description: string;
   websiteURL: string;
   organizationType: string;
-  industry: string;
+  industry: string[]; // Updated to be a string[] to store selected values
 };
 
-const industryOptions = [
+const industryOptions: Industry[] = [
   { value: "agriculture", label: "Agriculture" },
   { value: "informationTechnology", label: "Information Technology" },
   { value: "healthcare", label: "Healthcare" },
@@ -37,9 +42,9 @@ const defaultData: OrganizationOnboardingForm = {
   email: "",
   phoneNumber: "",
   address: "",
-  industry: industryOptions[0].value,
+  industry: [], // Start with empty selection
   description: "",
-  organizationType: organizationType[0].value,
+  organizationType: "",
   websiteURL: "",
 };
 
@@ -57,9 +62,19 @@ const OrgOnboardingForm = () => {
     setFormData((prevData) => ({ ...prevData, [name]: value }));
   };
 
-  const handleSelectChange = (e: SyntheticEvent) => {
-    const { name, value } = e.currentTarget as HTMLSelectElement;
+  const handleIndustryChange = (value: string) => {
+    setFormData((prevData) => {
+      const isSelected = prevData.industry.includes(value);
+      const updatedIndustries = isSelected
+        ? prevData.industry.filter((v) => v !== value)
+        : [...prevData.industry, value];
 
+      return { ...prevData, industry: updatedIndustries };
+    });
+  };
+
+  const handleSelectChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const { name, value } = e.target;
     setFormData((prevData) => ({
       ...prevData,
       [name]: value,
@@ -76,7 +91,7 @@ const OrgOnboardingForm = () => {
       });
 
       if (res.status === "true") {
-        toast.success("Onboarded Successful");
+        toast.success("Onboarded Successfully");
 
         setTimeout(() => {
           router.push("/project/organization");
@@ -104,7 +119,6 @@ const OrgOnboardingForm = () => {
           <label htmlFor="displayName" className="block text-gray-700 mb-1">
             Organization Name
           </label>
-
           <input
             required
             type="text"
@@ -168,27 +182,27 @@ const OrgOnboardingForm = () => {
           />
         </div>
 
-        {/* Industry */}
+        {/* Industry with checkboxes */}
         <div className="mb-4">
-          <label htmlFor="industry" className="block text-gray-700 mb-1">
-            Industry
-          </label>
-
-          <select
-            name="industry"
-            id="industry"
-            className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
-            onChange={(e) => handleSelectChange(e)}
-          >
-            <option defaultChecked disabled>
-              Select Industry
-            </option>
+          <label className="block text-gray-700 mb-1">Select Industry</label>
+          <div className="border rounded-lg px-4 py-2 space-y-2 max-h-40 overflow-y-auto">
             {industryOptions.map((industry) => (
-              <option key={industry.value} value={industry.value}>
-                {industry.label}
-              </option>
+              <label
+                key={industry.value}
+                className="flex items-center space-x-2"
+              >
+                <input
+                  type="checkbox"
+                  checked={formData.industry.includes(industry.value)}
+                  onChange={() => handleIndustryChange(industry.value)}
+                />
+                <span>{industry.label}</span>
+              </label>
             ))}
-          </select>
+          </div>
+          <p className="text-sm text-gray-500 mt-1">
+            You can select multiple industries.
+          </p>
         </div>
 
         {/* Description */}
@@ -208,7 +222,6 @@ const OrgOnboardingForm = () => {
         </div>
 
         {/* Organization Type */}
-
         <div className="mb-4">
           <label
             htmlFor="organizationType"
@@ -216,15 +229,15 @@ const OrgOnboardingForm = () => {
           >
             Organization Type
           </label>
-
           <select
             required
             name="organizationType"
             id="organizationType"
+            value={formData.organizationType}
+            onChange={handleSelectChange}
             className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
-            onChange={(e) => handleSelectChange(e)}
           >
-            <option defaultChecked disabled>
+            <option value="" disabled>
               Select Organization Type
             </option>
             {organizationType.map((organization) => (
@@ -252,7 +265,7 @@ const OrgOnboardingForm = () => {
           />
         </div>
 
-        {/* Submit Button */}
+        {/* Submit */}
         <button
           type="submit"
           className="w-full bg-primary text-white py-2 rounded-lg hover:bg-secondary transition"

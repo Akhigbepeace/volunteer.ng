@@ -1,5 +1,6 @@
 "use client";
 
+import Loader from "@/app/component/loader";
 import MultiSelectDropdown from "@/app/component/multiple-select-dropdown";
 import { handleVolunteerOnboarding } from "@/lib/user";
 // import { handleVolunteerOnboarding } from "@/lib/user";
@@ -13,23 +14,25 @@ export type VolunteerOnboardingData = {
   phone: string;
   skills: string[];
   user: string;
-  industry: string;
+  industry: string[];
   experience: string;
   school: string;
   company: string;
   sosecGraduate: string;
+  sosecProgram: string;
 };
 
 const defaultData: VolunteerOnboardingData = {
   displayName: "",
   phone: "",
   skills: [],
-  industry: "",
+  industry: [],
   school: "",
   company: "",
   experience: "",
   user: "",
   sosecGraduate: "",
+  sosecProgram: "",
 };
 
 const skillOptions = [
@@ -176,6 +179,7 @@ const VolunteerOnboardingForm = () => {
           </label>
 
           <select
+            multiple
             required
             name="industry"
             id="industry"
@@ -218,19 +222,46 @@ const VolunteerOnboardingForm = () => {
 
         <div className="mb-4">
           <label htmlFor="sosecGraduate" className="block text-gray-700 mb-1">
-            Are you a graduate of SoSec College
+            Are you a graduate of SoSec College?
           </label>
-          <input
-            required
-            type="text"
+          <select
             id="sosecGraduate"
             name="sosecGraduate"
-            placeholder="Yes/No"
             value={formData.sosecGraduate}
             onChange={handleInputChange}
             className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
-          />
+            required
+          >
+            <option value="" disabled>
+              Select an option
+            </option>
+            <option value="Yes">Yes</option>
+            <option value="No">No</option>
+          </select>
         </div>
+
+        {formData.sosecGraduate === "Yes" && (
+          <div className="mb-4">
+            <label htmlFor="sosecProgram" className="block text-gray-700 mb-1">
+              Select your SoSec program
+            </label>
+            <select
+              id="sosecProgram"
+              name="sosecProgram"
+              value={formData.sosecProgram}
+              onChange={handleInputChange}
+              className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
+              required
+            >
+              <option value="" disabled>
+                Select your program
+              </option>
+              <option value="SSTP">SSTP</option>
+              <option value="SSEP/SSAF">SSEP / SSAF</option>
+            </select>
+          </div>
+        )}
+
         <div>
           <div className="mb-4">
             <label className="block text-gray-700 mb-1">
@@ -298,28 +329,7 @@ const VolunteerOnboardingForm = () => {
           type="submit"
           className="w-full bg-primary text-white py-2 rounded-lg hover:bg-secondary transition"
         >
-          {loading ? (
-            <svg
-              className="animate-spin h-5 w-5 mr-2 text-white"
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
-            >
-              <circle
-                className="opacity-25"
-                cx="12"
-                cy="12"
-                r="10"
-                stroke="currentColor"
-                strokeWidth="4"
-              />
-              <path
-                className="opacity-75"
-                fill="currentColor"
-                d="M4 12a8 8 0 018-8v8H4z"
-              />
-            </svg>
-          ) : null}
+          {loading ? <Loader /> : null}
           {loading ? "Please Wait..." : "Submit"}
         </button>
       </form>
