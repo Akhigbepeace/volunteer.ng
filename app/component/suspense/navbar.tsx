@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { FaChevronDown, FaBars, FaTimes } from "react-icons/fa";
@@ -21,6 +21,7 @@ type Navlinks = {
 };
 
 const NavbarContent = () => {
+  const [userId, setUserId] = useState("");
   const [openMenuIndex, setOpenMenuIndex] = useState<number | null>(null);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [searchParamsUserId, setSearchParamsUserId] = useState<string | null>(
@@ -33,9 +34,9 @@ const NavbarContent = () => {
   const cookies = new Cookies();
   const searchParams = useSearchParams();
   const user = cookies.get("user");
-  const userId = user?.id;
+  // const userId = user?.id;
 
-  const navLinks: Navlinks[] = React.useMemo(() => {
+  const navLinks: Navlinks[] = useMemo(() => {
     if (!userData?.role) {
       return [
         {
@@ -73,6 +74,10 @@ const NavbarContent = () => {
   }, [searchParams]);
 
   useEffect(() => {
+    if (user) setUserId(user.id);
+  }, [user]);
+
+  useEffect(() => {
     const fetchUser = async () => {
       const id = searchParamsUserId || userId;
       if (!id) return;
@@ -106,6 +111,11 @@ const NavbarContent = () => {
       toast.error(String(error));
     }
   };
+
+  const userImage =
+    userData && userData.image && userData.image.trim() !== ""
+      ? userData.image
+      : "/assets/user.png";
 
   return (
     <nav className="sticky top-0 z-50 bg-primary shadow-md px-4 md:px-6 py-4">
@@ -148,7 +158,17 @@ const NavbarContent = () => {
               )}
             </div>
           ))}
-          <Link href="/about">About</Link>
+          {userData?.email && (
+            <Link
+              href={
+                userData.role === "organization"
+                  ? " /project/organization"
+                  : "/project/volunteer"
+              }
+            >
+              Project
+            </Link>
+          )}{" "}
         </div>
 
         {/* Right Section */}
@@ -157,7 +177,7 @@ const NavbarContent = () => {
           {userData ? (
             <div className="flex items-center gap-4 text-white">
               <Image
-                src={userData.image}
+                src={userImage}
                 alt="user"
                 width={40}
                 height={40}
@@ -231,7 +251,17 @@ const NavbarContent = () => {
             </div>
           ))}
 
-          <Link href="/about">About</Link>
+          {userData?.email && (
+            <Link
+              href={
+                userData.role === "organization"
+                  ? " /project/organization"
+                  : "/project/volunteer"
+              }
+            >
+              Project
+            </Link>
+          )}
 
           <div className="flex flex-col gap-3 w-full items-center">
             {userData ? (

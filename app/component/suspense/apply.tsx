@@ -1,50 +1,102 @@
 "use client";
 
+import { applyForProject } from "@/lib/project";
+import { getUser } from "@/lib/user";
 import { useRouter, useSearchParams } from "next/navigation";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, FormEvent, ChangeEvent } from "react";
 import { toast, ToastContainer } from "react-toastify";
+import Cookies from "universal-cookie";
+import Loader from "../loader";
+
+export type FormData = {
+  name: string;
+  email: string;
+  phone: string;
+  project: string;
+  qualifications: string;
+  experience: string;
+  skills: string;
+  availability: string;
+  message: string;
+};
 
 const ProjectApplication = () => {
   const searchParams = useSearchParams();
   const router = useRouter();
   const project = searchParams.get("project");
 
-  // Mock authenticated user (replace with actual auth state)
-  const user = {
-    name: "John Doe",
-    email: "johndoe@example.com",
-  };
+  const cookies = new Cookies();
+  const user = cookies.get("user");
+  const userId = user.id;
+  const projectId = searchParams.get("projectId");
 
-  const [formData, setFormData] = useState({
-    name: user.name,
-    email: user.email,
+  const defaultFormData = {
+    name: "",
+    email: "",
     phone: "",
-    project: project || "",
+    project: "",
     qualifications: "",
     experience: "",
     skills: "",
     availability: "",
     message: "",
-  });
+  };
+
+  const [formData, setFormData] = useState<FormData>(defaultFormData);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    if (project) {
-      setFormData((prev) => ({ ...prev, project }));
+    const fetchUserData = async () => {
+      try {
+        const userData = await getUser(user.id);
+
+        setFormData((prev) => ({
+          ...prev,
+          name: userData?.displayName || "",
+          email: userData?.email || "",
+          project: project || prev.project,
+        }));
+      } catch (error) {
+        console.error("Failed to fetch user:", error);
+      }
+    };
+
+    if (user?.id) {
+      fetchUserData();
     }
-  }, [project]);
+  }, [user?.id, project]);
 
   const handleChange = (
-    e: React.ChangeEvent<
-      HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
-    >
+    e: ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>
   ) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
-    router.push("/project/volunteer");
-    toast.success("Application submitted successfully!");
+    setLoading(true);
+
+    try {
+      const res = await applyForProject({
+        userId,
+        projectId: projectId as string,
+        formData,
+      });
+
+      if (res.user) {
+        toast.success("Application submitted successfully!");
+        setTimeout(() => {
+          router.push("/project/volunteer");
+        }, 3000);
+      } else {
+        toast.error("Oops.. Something went wrong!");
+      }
+    } catch (error) {
+      console.error(error);
+      toast.error("An error occurred while submitting.");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -156,7 +208,8 @@ const ProjectApplication = () => {
           type="submit"
           className="w-full bg-secondary text-white p-2 rounded"
         >
-          Apply Now
+          {loading ? <Loader /> : null}
+          {loading ? "Loading..." : " Apply Now"}
         </button>
       </form>
     </div>

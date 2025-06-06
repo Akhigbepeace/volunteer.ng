@@ -3,6 +3,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 import "animate.css";
 import AppLayout from "./app-layout";
+import { ReactNode } from "react";
 
 // const geistSans = Geist({
 //   variable: "--font-geist-sans",
@@ -20,7 +21,7 @@ export const metadata: Metadata = {
 };
 
 type RootLayoutProp = Readonly<{
-  children: React.ReactNode;
+  children: ReactNode;
 }>;
 
 export default function RootLayout({ children }: RootLayoutProp) {

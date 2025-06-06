@@ -19,7 +19,7 @@ const ProjectCard = (props: ProjectProps) => {
     >
       <div className="relative w-full h-40">
         <Image
-          src={project.image}
+          src={project.image || "/assets/showcase.jpeg"}
           alt={project.heading}
           fill
           className="object-cover"

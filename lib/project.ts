@@ -1,4 +1,11 @@
+import type { FormData } from "@/app/component/suspense/apply";
 import { Project } from "@/data/project";
+
+type ProjectApplicationProps = {
+  userId: string;
+  projectId: string;
+  formData: FormData;
+};
 
 type CreateProjectProps = {
   userId: string;
@@ -27,6 +34,22 @@ const getProject = async () => {
       "Content-Type": "application/json",
     },
   });
+
+  const res = await apiRes.json();
+  return res;
+};
+
+const getUserProject = async (userId: string) => {
+  const apiRes = await fetch(
+    `${process.env.NEXT_PUBLIC_BASE_URL}/projects?userId=${encodeURIComponent(
+      userId
+    )}`,
+    {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    }
+  );
 
   const res = await apiRes.json();
   return res;
@@ -86,6 +109,27 @@ const deleteProject = async (props: DeleteProjectProps) => {
   return res;
 };
 
+const exitProject = async (props: DeleteProjectProps) => {
+  const { projectId, userId } = props;
+
+  const apiRes = await fetch(
+    `${process.env.NEXT_PUBLIC_BASE_URL}/leave-project`,
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        userId,
+        projectId,
+      }),
+    }
+  );
+
+  const res = await apiRes.json();
+  return res;
+};
+
 const createProject = async (props: CreateProjectProps) => {
   const { userId, project } = props;
 
@@ -104,6 +148,29 @@ const createProject = async (props: CreateProjectProps) => {
   );
 
   const res = await apiRes.json();
+  return res;
+};
+
+const applyForProject = async (props: ProjectApplicationProps) => {
+  const { formData, userId, projectId } = props;
+
+  const apiRes = await fetch(
+    `${process.env.NEXT_PUBLIC_BASE_URL}/join-project`,
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        userId,
+        projectId,
+        ...formData,
+      }),
+    }
+  );
+
+  const res = await apiRes.json();
+
   return res;
 };
 
@@ -130,10 +197,13 @@ const uploadImageToCloudinary = async (file: File): Promise<CloudinaryRes> => {
 
 export {
   getProject,
+  applyForProject,
+  exitProject,
   createProject,
   editProject,
   deleteProject,
   getSingleProject,
+  getUserProject,
   uploadImageToCloudinary,
 };
 

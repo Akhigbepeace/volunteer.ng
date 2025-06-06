@@ -27,7 +27,8 @@ const OrganizationProjects = () => {
         const res = await getProject();
         setProjects(res);
       } catch (error) {
-        toast.error(String(error));
+        console.error(error);
+        toast.error("Error getting projects");
       } finally {
         setLoading(false);
       }
