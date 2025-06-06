@@ -1,7 +1,7 @@
 "use client";
 
 import { applyForProject } from "@/lib/project";
-import { getUser, User } from "@/lib/user";
+import { getUser } from "@/lib/user";
 import { useRouter, useSearchParams } from "next/navigation";
 import React, { useState, useEffect, FormEvent, ChangeEvent } from "react";
 import { toast, ToastContainer } from "react-toastify";

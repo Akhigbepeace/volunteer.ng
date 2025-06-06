@@ -78,7 +78,7 @@ const HomePage = () => {
         {/* Impact Stats */}
         <section id="impact" className="bg-green-100 py-20 text-center px-4">
           <h2 className="text-3xl font-semibold text-green-700 mb-2">
-            The Impact We're Making Together
+            The Impact We&apos;re Making Together
           </h2>
           <p className="text-gray-700 mb-10">
             Join a growing movement of Nigerians committed to national
@@ -109,29 +109,33 @@ const HomePage = () => {
             Stories of Transformation
           </h2>
           <p className="text-gray-600 mb-10">
-            Hear from volunteers and organizations who've experienced the power
-            of connection
+            Hear from volunteers and organizations who&apos;ve experienced the
+            power of connection
           </p>
           <div className="grid md:grid-cols-2 gap-10 text-left">
             <div className="bg-white shadow p-6 rounded-md">
               <p className="text-gray-700 italic">
-                "Through Volunteer.NG, I found an opportunity to teach coding to
-                students in underserved schools. Not only did I help these
-                children develop valuable skills, but I also grew professionally
-                and expanded my network. The platform made it easy to find a
-                cause that matched my skills and passion."
+                <q>
+                  Through Volunteer.NG, I found an opportunity to teach coding
+                  to students in underserved schools. Not only did I help these
+                  children develop valuable skills, but I also grew
+                  professionally and expanded my network. The platform made it
+                  easy to find a cause that matched my skills and passion.
+                </q>
               </p>
               <p className="mt-4 font-semibold">Chioma Okafor</p>
               <p className="text-sm text-gray-500">Software Developer, Lagos</p>
             </div>
             <div className="bg-white shadow p-6 rounded-md">
               <p className="text-gray-700 italic">
-                "As a small organization with limited resources, finding
-                qualified volunteers was always challenging. Volunteer.NG
-                changed everything for us. Within weeks of signing up, we
-                connected with skilled professionals who helped us improve our
-                literacy program. The impact on our community has been
-                incredible."
+                <q>
+                  As a small organization with limited resources, finding
+                  qualified volunteers was always challenging. Volunteer.NG
+                  changed everything for us. Within weeks of signing up, we
+                  connected with skilled professionals who helped us improve our
+                  literacy program. The impact on our community has been
+                  incredible.
+                </q>
               </p>
               <p className="mt-4 font-semibold">Adamu Yakubu</p>
               <p className="text-sm text-gray-500">

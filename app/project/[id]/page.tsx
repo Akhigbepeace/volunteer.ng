@@ -88,8 +88,12 @@ const ProjectDetails = () => {
       } else {
         toast.error(res.message || "Failed to delete project.");
       }
-    } catch (error: any) {
-      toast.error(error.message || "An unexpected error occurred.");
+    } catch (error: unknown) {
+      const errorMessage =
+        error instanceof Error
+          ? error.message
+          : "An unexpected error occurred.";
+      toast.error(errorMessage);
     } finally {
       setIsDeleting(false);
     }
@@ -112,8 +116,12 @@ const ProjectDetails = () => {
       } else {
         toast.error(res.message || "Failed to exit project.");
       }
-    } catch (error: any) {
-      toast.error(error.message || "An unexpected error occurred.");
+    } catch (error: unknown) {
+      const errorMessage =
+        error instanceof Error
+          ? error.message
+          : "An unexpected error occurred.";
+      toast.error(errorMessage);
     } finally {
       setIsExiting(false);
     }
