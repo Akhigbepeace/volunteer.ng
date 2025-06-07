@@ -23,12 +23,13 @@ export type FormData = {
 const ProjectApplication = () => {
   const searchParams = useSearchParams();
   const router = useRouter();
-  const project = searchParams.get("project");
 
   const cookies = new Cookies();
   const user = cookies.get("user");
   const userId = user.id;
   const projectId = searchParams.get("projectId");
+  const projectTitle = searchParams.get("projectTitle");
+  const deadline = searchParams.get("deadline");
 
   const defaultFormData = {
     name: "",
@@ -54,7 +55,7 @@ const ProjectApplication = () => {
           ...prev,
           name: userData?.displayName || "",
           email: userData?.email || "",
-          project: project || prev.project,
+          project: projectTitle || prev.project,
         }));
       } catch (error) {
         console.error("Failed to fetch user:", error);
@@ -64,7 +65,7 @@ const ProjectApplication = () => {
     if (user?.id) {
       fetchUserData();
     }
-  }, [user?.id, project]);
+  }, [user?.id, projectTitle]);
 
   const handleChange = (
     e: ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>
@@ -75,6 +76,17 @@ const ProjectApplication = () => {
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
     setLoading(true);
+
+    if (deadline) {
+      const today = new Date();
+      const deadlineDate = new Date(deadline);
+
+      if (today > deadlineDate) {
+        toast.error("Sorry, the application deadline has passed.");
+        setLoading(false);
+        return;
+      }
+    }
 
     try {
       const res = await applyForProject({

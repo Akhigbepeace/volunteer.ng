@@ -6,6 +6,7 @@ import Link from "next/link";
 import { Project } from "@/data/project";
 import { getProject } from "@/lib/project";
 import { toast } from "react-toastify";
+import Cookies from "universal-cookie";
 
 type TabOption = "published" | "ongoing" | "completed";
 type SortOption = "newest" | "oldest" | "az" | "za";
@@ -19,12 +20,16 @@ const OrganizationProjects = () => {
   const [sortOption, setSortOption] = useState<SortOption>("newest");
   const [projects, setProjects] = useState<Project[]>([]);
 
+  const cookies = new Cookies();
+  const user = cookies.get("user");
+  const userId = user.id || "";
+
   useEffect(() => {
     const fetchProjects = async () => {
       setLoading(true);
 
       try {
-        const res = await getProject();
+        const res = await getProject(userId);
         setProjects(res);
       } catch (error) {
         console.error(error);

@@ -9,6 +9,7 @@ export type Project = {
   orgName: string;
   description: string;
   category: string;
+  creatorId: "";
   status: "applied" | "ongoing" | "completed" | "rejected";
   location?: Location | null;
   numberOfHours: number;

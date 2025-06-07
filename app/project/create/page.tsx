@@ -27,6 +27,7 @@ const defaultData: Project = {
   numberOfHours: 0,
   status: "applied",
   location: null,
+  creatorId: "",
   startDate: "",
   endDate: "",
   requirements: [],
@@ -45,15 +46,17 @@ const CreateProject = () => {
   const [userId, setUserId] = useState<string | null>(null);
 
   const router = useRouter();
+  const cookies = new Cookies();
+  const user = cookies.get("user");
 
   useEffect(() => {
-    const cookies = new Cookies();
-    const user = cookies.get("user");
     if (user?.id) {
       setUserId(user.id);
     } else {
       toast.error("User not logged in.");
-      router.push("/login");
+      setTimeout(() => {
+        router.push("/login");
+      }, 5000);
     }
   }, []);
 
@@ -78,6 +81,9 @@ const CreateProject = () => {
     e.preventDefault();
     if (!userId) {
       toast.error("User ID not found. Please log in.");
+      setTimeout(() => {
+        router.push("/login");
+      }, 5000);
       return;
     }
 

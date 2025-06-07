@@ -5,6 +5,7 @@ import ProjectCard from "@/app/component/project/project-card";
 import { Project } from "@/data/project";
 import { getProject } from "@/lib/project";
 import { toast, ToastContainer } from "react-toastify";
+import Cookies from "universal-cookie";
 
 const TABS = ["Applied", "Ongoing", "Completed", "Rejected"];
 
@@ -13,12 +14,16 @@ const Projects = () => {
   const [loading, setLoading] = useState(false);
   const [projects, setProjects] = useState<Project[]>([]);
 
+  const cookies = new Cookies();
+  const user = cookies.get("user");
+  const userId = user.id || "";
+
   useEffect(() => {
     const fetchProjects = async () => {
       setLoading(true);
 
       try {
-        const res = await getProject();
+        const res = await getProject(userId);
         setProjects(res);
       } catch (error) {
         console.error(error);
