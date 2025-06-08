@@ -1,5 +1,6 @@
 "use client";
 
+import Loader from "@/app/component/loader";
 import { handleOrganizationOnboarding } from "@/lib/user";
 import { useRouter } from "next/navigation";
 import React, { SyntheticEvent, useState } from "react";
@@ -19,7 +20,7 @@ export type OrganizationOnboardingForm = {
   description: string;
   websiteURL: string;
   organizationType: string;
-  industry: string[]; // Updated to be a string[] to store selected values
+  industry: string[];
 };
 
 const industryOptions: Industry[] = [
@@ -42,13 +43,14 @@ const defaultData: OrganizationOnboardingForm = {
   email: "",
   phoneNumber: "",
   address: "",
-  industry: [], // Start with empty selection
+  industry: [],
   description: "",
   organizationType: "",
   websiteURL: "",
 };
 
 const OrgOnboardingForm = () => {
+  const [loading, setLoading] = useState(false);
   const [formData, setFormData] =
     useState<OrganizationOnboardingForm>(defaultData);
 
@@ -84,6 +86,8 @@ const OrgOnboardingForm = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
+    setLoading(true);
+
     try {
       const res = await handleOrganizationOnboarding({
         userId,
@@ -98,7 +102,10 @@ const OrgOnboardingForm = () => {
         }, 3000);
       }
     } catch (error) {
-      toast.error(String(error));
+      console.error(error);
+      toast.error("Failed to Onboard organization");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -266,11 +273,14 @@ const OrgOnboardingForm = () => {
         </div>
 
         {/* Submit */}
+
         <button
           type="submit"
-          className="w-full bg-primary text-white py-2 rounded-lg hover:bg-secondary transition"
+          className="w-full py-3 bg-secondary text-white rounded-lg flex items-center justify-center"
+          disabled={loading}
         >
-          Submit
+          {loading ? <Loader /> : null}
+          {loading ? "Creating..." : "Submit"}
         </button>
       </form>
     </div>

@@ -42,7 +42,7 @@ const ProjectCard = (props: ProjectProps) => {
             {project.description}
           </p>
           <p className="bg-gray-200 font-semibold text-sm w-full py-2 px-4">
-            {project.category}
+            {project.causes}
           </p>
         </div>
       </div>

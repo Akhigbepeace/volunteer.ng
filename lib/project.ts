@@ -28,28 +28,18 @@ type CloudinaryRes = {
   public_id: string;
 };
 
-const getProject = async () => {
-  const apiRes = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/projects`, {
+const getProject = async (userId?: string) => {
+  const url = userId
+    ? `${process.env.NEXT_PUBLIC_BASE_URL}/projects?userId=${encodeURIComponent(
+        userId
+      )}`
+    : `${process.env.NEXT_PUBLIC_BASE_URL}/projects`;
+
+  const apiRes = await fetch(url, {
     headers: {
       "Content-Type": "application/json",
     },
   });
-
-  const res = await apiRes.json();
-  return res;
-};
-
-const getUserProject = async (userId: string) => {
-  const apiRes = await fetch(
-    `${process.env.NEXT_PUBLIC_BASE_URL}/projects?userId=${encodeURIComponent(
-      userId
-    )}`,
-    {
-      headers: {
-        "Content-Type": "application/json",
-      },
-    }
-  );
 
   const res = await apiRes.json();
   return res;
@@ -203,7 +193,6 @@ export {
   editProject,
   deleteProject,
   getSingleProject,
-  getUserProject,
   uploadImageToCloudinary,
 };
 

@@ -47,18 +47,27 @@ const ProjectDetails = () => {
         return;
       }
 
+      if (!user) {
+        toast.error("Unauthenticated");
+        setTimeout(() => {
+          router.push("/login");
+        }, 3000);
+
+        return;
+      }
+
       try {
         setIsLoading(true);
 
         const [userData, projectData, projectList] = await Promise.all([
           getUser(user.id),
           getSingleProject(projectId),
-          getProject(),
+          getProject(user.id),
         ]);
 
         setRole(userData.role);
         setProject(projectData);
-        setProjects(projectList);
+        setProjects(projectList.projects);
       } catch (error) {
         toast.error(String(error));
       } finally {
@@ -142,6 +151,7 @@ const ProjectDetails = () => {
 
   const isOrganization = role === "organization";
   const isVolunteer = role === "volunteer";
+  const isOwnersProject = user.id === project?.creatorId;
 
   if (isLoading) return <div className="text-center mt-10">Loading...</div>;
   if (!project)
@@ -170,7 +180,7 @@ const ProjectDetails = () => {
           </button>
         )}
 
-        {isOrganization && (
+        {isOwnersProject && isOrganization && (
           <div className="flex gap-3 mt-4">
             <button
               onClick={handleEdit}
@@ -240,7 +250,7 @@ const ProjectDetails = () => {
               href={
                 user?.role === "volunteer"
                   ? "/signup"
-                  : `/project/apply?project=${project.heading}&projectId=${project._id}`
+                  : `/project/apply?projectTitle=${project.heading}&projectId=${project._id}&deadline=${project.deadline}`
               }
               className="bg-secondary text-white py-2 px-4 rounded-lg text-lg text-center"
             >

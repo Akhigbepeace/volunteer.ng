@@ -6,6 +6,8 @@ import Link from "next/link";
 import { Project } from "@/data/project";
 import { getProject } from "@/lib/project";
 import { toast } from "react-toastify";
+import Cookies from "universal-cookie";
+import { useRouter } from "next/navigation";
 
 type TabOption = "published" | "ongoing" | "completed";
 type SortOption = "newest" | "oldest" | "az" | "za";
@@ -19,13 +21,26 @@ const OrganizationProjects = () => {
   const [sortOption, setSortOption] = useState<SortOption>("newest");
   const [projects, setProjects] = useState<Project[]>([]);
 
+  const router = useRouter();
+  const cookies = new Cookies();
+  const user = cookies.get("user");
+
   useEffect(() => {
     const fetchProjects = async () => {
       setLoading(true);
 
+      if (!user) {
+        toast.error("Unauthenticated!");
+        setTimeout(() => {
+          router.push("/login");
+        }, 3000);
+
+        return;
+      }
+
       try {
-        const res = await getProject();
-        setProjects(res);
+        const res = await getProject(user.id);
+        setProjects(res.projects);
       } catch (error) {
         console.error(error);
         toast.error("Error getting projects");
@@ -41,8 +56,7 @@ const OrganizationProjects = () => {
     .filter((project) =>
       searchQuery
         ? project.heading.toLowerCase().includes(searchQuery.toLowerCase()) ||
-          project.orgName.toLowerCase().includes(searchQuery.toLowerCase()) ||
-          project.category.toLowerCase().includes(searchQuery.toLowerCase())
+          project.orgName.toLowerCase().includes(searchQuery.toLowerCase())
         : true
     )
     .filter((project) => {
@@ -64,7 +78,7 @@ const OrganizationProjects = () => {
   return (
     <div className="p-6">
       <div className="flex justify-between items-center mb-6">
-        <h1 className="text-2xl font-bold">Organization Projects</h1>
+        <h1 className="text-2xl font-bold">My Projects</h1>
         <Link
           href="/project/create"
           className="bg-primary text-white px-4 py-2 rounded-lg"

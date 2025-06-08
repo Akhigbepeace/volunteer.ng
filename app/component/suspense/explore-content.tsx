@@ -40,15 +40,11 @@ const ExploreContent = () => {
     fetchProjects();
   }, []);
 
-  if (loading) {
-    return <div>Loading...</div>;
-  }
-
   return (
     <div>
       <HeroSection />
       <FilterOptions />
-      <Projects projects={projects} />
+      {loading ? <div>Loading...</div> : <Projects projects={projects} />}
     </div>
   );
 };
