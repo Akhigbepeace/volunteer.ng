@@ -7,6 +7,7 @@ import { Project } from "@/data/project";
 import { getProject } from "@/lib/project";
 import { toast } from "react-toastify";
 import Cookies from "universal-cookie";
+import { useRouter } from "next/navigation";
 
 type TabOption = "published" | "ongoing" | "completed";
 type SortOption = "newest" | "oldest" | "az" | "za";
@@ -20,16 +21,25 @@ const OrganizationProjects = () => {
   const [sortOption, setSortOption] = useState<SortOption>("newest");
   const [projects, setProjects] = useState<Project[]>([]);
 
+  const router = useRouter();
   const cookies = new Cookies();
   const user = cookies.get("user");
-  const userId = user.id || "";
 
   useEffect(() => {
     const fetchProjects = async () => {
       setLoading(true);
 
+      if (!user) {
+        toast.error("Unauthenticated!");
+        setTimeout(() => {
+          router.push("/login");
+        }, 3000);
+
+        return;
+      }
+
       try {
-        const res = await getProject(userId);
+        const res = await getProject(user.id);
         setProjects(res.projects);
       } catch (error) {
         console.error(error);
