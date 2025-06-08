@@ -22,7 +22,8 @@ const defaultData: Project = {
   heading: "",
   orgName: "",
   description: "",
-  category: "",
+  causes: [],
+  skills: [],
   deadline: "",
   numberOfHours: 0,
   status: "applied",
@@ -35,7 +36,6 @@ const defaultData: Project = {
   contactEmail: "",
   contactPhone: "",
   maxVolunteers: 0,
-  tags: [],
   createdAt: new Date().toISOString(),
 };
 
@@ -71,7 +71,7 @@ const CreateProject = () => {
 
   const handleMultipleInputs = (
     e: React.ChangeEvent<HTMLInputElement>,
-    field: "requirements" | "benefits" | "tags"
+    field: "requirements" | "benefits" | "skills"
   ) => {
     const values = e.target.value.split(",").map((item) => item.trim());
     setFormData({ ...formData, [field]: values });
@@ -173,7 +173,7 @@ const CreateProject = () => {
             required
             type="text"
             name="category"
-            value={formData.category}
+            value={formData.causes}
             onChange={handleChange}
             placeholder="e.g., Education, Health, etc."
             className="w-full p-2 border rounded"
@@ -353,16 +353,14 @@ const CreateProject = () => {
 
         {/* Tags */}
         <div>
-          <label className="block text-sm font-medium">
-            Tags (comma separated)
-          </label>
+          <label className="block text-sm font-medium">Skills</label>
           <input
             required
             type="text"
             name="tags"
-            value={formData.tags?.join(", ")}
-            onChange={(e) => handleMultipleInputs(e, "tags")}
-            placeholder="Enter tags"
+            value={formData.skills?.join(", ")}
+            onChange={(e) => handleMultipleInputs(e, "skills")}
+            placeholder="Enter Required Skill"
             className="w-full p-2 border rounded"
           />
         </div>

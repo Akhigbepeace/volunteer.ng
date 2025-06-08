@@ -12,6 +12,8 @@ const Join = () => {
   const user = cookies.get("user");
   const userId = user?.id;
 
+  console.log("Join User", user);
+
   const handleRoleSelection = async (role: Role) => {
     try {
       if (!userId) return;

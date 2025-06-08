@@ -5,7 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { FaChevronDown, FaBars, FaTimes } from "react-icons/fa";
 import { getUser, User } from "@/lib/user";
-import { useRouter, useSearchParams } from "next/navigation";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import Cookies from "universal-cookie";
 import { toast, ToastContainer } from "react-toastify";
 import { handleUserLogout } from "@/lib/auth";
@@ -33,28 +33,38 @@ const NavbarContent = () => {
   const router = useRouter();
   const cookies = new Cookies();
   const searchParams = useSearchParams();
+  const pathName = usePathname();
   const user = cookies.get("user");
-  // const userId = user?.id;
+  const isOnboardingPage =
+    pathName === "/onboarding/org" || pathName === "/onboarding/volunteer";
 
   const navLinks: Navlinks[] = useMemo(() => {
     if (!userData?.role) {
-      return [
-        {
-          title: "For Volunteers",
-          menuOptions: [{ title: "Explore Volunteers", path: "/explore" }],
-        },
-        {
-          title: "For Organization",
-          menuOptions: [{ title: "Post Project", path: "/project/create" }],
-        },
-      ];
+      if (pathName === "/explore") {
+        return [
+          {
+            title: "For Volunteers",
+            menuOptions: [{ title: "Explore Projects", path: "/explore" }],
+          },
+          {
+            title: "For Organization",
+            menuOptions: [{ title: "Post Project", path: "/signup" }],
+          },
+        ];
+      }
+
+      return [];
+    }
+
+    if (isOnboardingPage) {
+      return [];
     }
 
     return userData.role === "volunteer"
       ? [
           {
             title: "For Volunteers",
-            menuOptions: [{ title: "Explore Volunteers", path: "/explore" }],
+            menuOptions: [{ title: "Explore Projects", path: "/explore" }],
           },
         ]
       : [
@@ -84,6 +94,7 @@ const NavbarContent = () => {
 
       try {
         const data = await getUser(id);
+
         if (data?.email) {
           setUserData(data);
         } else {
@@ -146,19 +157,23 @@ const NavbarContent = () => {
               {openMenuIndex === index && (
                 <div className="absolute left-0 bg-white p-3 px-5 rounded-xl text-black text-sm mt-2 shadow-md">
                   {link.menuOptions.map((option) => (
-                    <Link
+                    <span
                       key={option.path}
-                      href={option.path}
-                      className="block py-1"
+                      onClick={() => setOpenMenuIndex(null)}
                     >
-                      {option.title}
-                    </Link>
+                      <Link
+                        href={option.path}
+                        className="block py-1 whitespace-nowrap"
+                      >
+                        {option.title}
+                      </Link>
+                    </span>
                   ))}
                 </div>
               )}
             </div>
           ))}
-          {userData?.email && (
+          {userData?.email && !isOnboardingPage && (
             <Link
               href={
                 userData.role === "organization"

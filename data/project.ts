@@ -8,8 +8,9 @@ export type Project = {
   heading: string;
   orgName: string;
   description: string;
-  category: string;
-  creatorId: "";
+  causes: string[];
+  skills: string[];
+  creatorId?: "";
   status: "applied" | "ongoing" | "completed" | "rejected";
   location?: Location | null;
   numberOfHours: number;
@@ -21,6 +22,5 @@ export type Project = {
   contactEmail?: string;
   contactPhone?: string;
   maxVolunteers?: number;
-  tags?: string[];
   createdAt?: string;
 };

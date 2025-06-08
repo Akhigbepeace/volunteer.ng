@@ -23,7 +23,8 @@ const defaultData: Project = {
   heading: "",
   orgName: "",
   description: "",
-  category: "",
+  // creatorId:"",
+  causes: [],
   status: "applied",
   location: null,
   deadline: "",
@@ -35,7 +36,7 @@ const defaultData: Project = {
   contactEmail: "",
   contactPhone: "",
   maxVolunteers: 0,
-  tags: [],
+  skills: [],
   createdAt: new Date().toISOString(),
 };
 
@@ -61,7 +62,7 @@ const EditProject = () => {
         const res: Project = await getSingleProject(projectId as string);
         const {
           _id,
-          category,
+          causes: category,
           description,
           duration,
           heading,
@@ -80,16 +81,17 @@ const EditProject = () => {
           deadline,
           numberOfHours,
           startDate,
-          tags,
+          skills: tags,
         } = res;
 
         setFormData({
           _id,
-          category,
+          causes: category,
           description,
           duration,
           heading,
           image,
+          // creatorId,
           orgName,
           status,
           type,
@@ -104,7 +106,7 @@ const EditProject = () => {
           maxVolunteers,
           requirements,
           startDate,
-          tags,
+          skills: tags,
         });
       } catch (error) {
         toast.error(String(error));
@@ -226,7 +228,7 @@ const EditProject = () => {
             required
             type="text"
             name="category"
-            value={formData.category}
+            value={formData.causes}
             onChange={handleChange}
             placeholder="e.g., Education, Health, etc."
             className="w-full p-2 border rounded"
@@ -413,7 +415,7 @@ const EditProject = () => {
             required
             type="text"
             name="tags"
-            value={formData.tags?.join(", ")}
+            value={formData.skills?.join(", ")}
             onChange={(e) => handleMultipleInputs(e, "tags")}
             placeholder="Enter tags"
             className="w-full p-2 border rounded"

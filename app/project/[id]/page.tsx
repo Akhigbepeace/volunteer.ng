@@ -47,18 +47,27 @@ const ProjectDetails = () => {
         return;
       }
 
+      if (!user) {
+        toast.error("Unauthenticated");
+        setTimeout(() => {
+          router.push("/login");
+        }, 3000);
+
+        return;
+      }
+
       try {
         setIsLoading(true);
 
         const [userData, projectData, projectList] = await Promise.all([
           getUser(user.id),
           getSingleProject(projectId),
-          getProject(),
+          getProject(user.id),
         ]);
 
         setRole(userData.role);
         setProject(projectData);
-        setProjects(projectList);
+        setProjects(projectList.projects);
       } catch (error) {
         toast.error(String(error));
       } finally {

@@ -22,6 +22,7 @@ type OnboardingProps = {
 };
 
 const getUser = async (userId: string) => {
+  console.log(userId, "userID in req");
   const apiRes = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/user`, {
     headers: {
       "Content-Type": "application/json",
