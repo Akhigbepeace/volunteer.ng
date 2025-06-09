@@ -1,9 +1,9 @@
-type Location = "remote" | "physical";
+type Type = "remote" | "physical" | "hybrid";
 
 export type Project = {
   _id: string;
   image: string;
-  type: string;
+  type: Type | null;
   duration: string;
   heading: string;
   orgName: string;
@@ -12,7 +12,7 @@ export type Project = {
   skills: string[];
   creatorId?: "";
   status: "applied" | "ongoing" | "completed" | "rejected";
-  location?: Location | null;
+  location: string[];
   numberOfHours: number;
   deadline: string;
   startDate?: string;

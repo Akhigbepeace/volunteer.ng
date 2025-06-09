@@ -2,41 +2,64 @@
 import { RiUserCommunityLine } from "react-icons/ri";
 import { GoOrganization } from "react-icons/go";
 import { handleSelectRole, Role } from "@/lib/user";
-import { useRouter } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import Cookies from "universal-cookie";
+import { useEffect, useState } from "react";
+import { toast, ToastContainer } from "react-toastify";
 
 const Join = () => {
+  const [userId, setUserId] = useState<string | null>(null);
+
   const router = useRouter();
   const cookies = new Cookies();
+  const params = useParams();
+  const paramId = params.id as string | undefined;
 
   const user = cookies.get("user");
-  const userId = user?.id;
 
-  console.log("Join User", user);
+  useEffect(() => {
+    if (paramId) {
+      setUserId(paramId);
+    } else if (user?.id) {
+      setUserId(user.id);
+    }
+  }, [paramId, user]);
 
   const handleRoleSelection = async (role: Role) => {
     try {
-      if (!userId) return;
+      if (!userId) {
+        console.warn("No userId available");
+        return;
+      }
 
       const data = await handleSelectRole({
         userId,
         role,
       });
 
-      if (data.status.email !== "") {
-        if (role === "volunteer") {
-          router.push("/onboarding/volunteer");
-        } else {
-          router.push("/onboarding/org");
-        }
+      console.log("Role data", role);
+
+      if (data.status === "true") {
+        toast.success("Role Selected Successfully");
+
+        setTimeout(() => {
+          if (role === "volunteer") {
+            router.push("/onboarding/volunteer");
+          } else {
+            router.push("/onboarding/org");
+          }
+        }, 3000);
       }
     } catch (error) {
-      console.log("Error selecting role:", error);
+      console.error("Error selecting role:", error);
+      toast.error("Error Selecting Role");
     }
   };
 
   return (
     <div className="min-h-screen flex flex-col items-center bg-white">
+      <ToastContainer />
+
       <div className="text-center mt-12">
         <h1 className="text-3xl font-bold text-gray-900">Create an account</h1>
         <p className="text-gray-600 mt-2">

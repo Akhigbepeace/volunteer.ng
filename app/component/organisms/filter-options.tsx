@@ -3,12 +3,12 @@ import {
   locationOptions,
   sdgOptions,
   skillsOptions,
+  typeOptions,
 } from "@/data/filter-options";
 import { Project } from "@/data/project";
 import { useFilters } from "@/hooks/useFilter";
 import { FilterSection } from "@/types/filter";
 import React, { useState, useEffect } from "react";
-import TypeFilterComponent from "../type-filter";
 import FilterDropdown from "../filter-dropdown";
 import FilterActions from "../filter-actions";
 import { ToastContainer } from "react-toastify";
@@ -16,13 +16,16 @@ import { ToastContainer } from "react-toastify";
 type FilterOptionsProps = {
   onSearchError?: (error: string) => void;
   className?: string;
+  setLoading: (value: boolean) => void;
   setProjects: (project: Project[]) => void;
 };
 
 const FilterOptions = (props: FilterOptionsProps) => {
-  const { onSearchError, setProjects, className = "" } = props;
+  const { onSearchError, setProjects, className = "", setLoading } = props;
 
   const [openMenuIndex, setOpenMenuIndex] = useState<number | null>(null);
+  const [shouldSearchOnClose, setShouldSearchOnClose] = useState(false);
+
   const {
     filters,
     isLoading,
@@ -33,38 +36,35 @@ const FilterOptions = (props: FilterOptionsProps) => {
   } = useFilters();
 
   const filterSections: FilterSection[] = [
-    {
-      title: "SDG Causes",
-      key: "cause",
-      options: sdgOptions,
-    },
-    {
-      title: "Skills",
-      key: "skills",
-      options: skillsOptions,
-    },
-    {
-      title: "Type",
-      key: "type",
-      customComponent: TypeFilterComponent,
-    },
-    {
-      title: "Location",
-      key: "location",
-      options: locationOptions,
-    },
+    { title: "SDG Causes", key: "cause", options: sdgOptions },
+    { title: "Skills", key: "skills", options: skillsOptions },
+    { title: "Type", key: "type", options: typeOptions },
+    { title: "Location", key: "location", options: locationOptions },
   ];
 
   const toggleMenuOption = (index: number) => {
     setOpenMenuIndex((prevIndex) => (prevIndex === index ? null : index));
   };
 
-  const handleClear = () => {
+  const handleClear = async () => {
     clearFilters();
     setOpenMenuIndex(null);
+
+    setLoading(true);
+    try {
+      const results = await searchProjects(1, 10);
+      setProjects(results.projects);
+    } catch (err) {
+      const errorMessage =
+        err instanceof Error ? err.message : "Failed to load projects";
+      onSearchError?.(errorMessage);
+    } finally {
+      setLoading(false);
+    }
   };
 
   const handleSearch = async () => {
+    setLoading(true);
     try {
       const results = await searchProjects(1, 10);
       setProjects(results.projects);
@@ -72,14 +72,46 @@ const FilterOptions = (props: FilterOptionsProps) => {
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : "Search failed";
       onSearchError?.(errorMessage);
+    } finally {
+      setLoading(false);
     }
   };
 
+  // ✅ Enhanced filter change handlers
+  const handleFilterChangeWithTrigger = (
+    ...args: Parameters<typeof handleFilterChange>
+  ) => {
+    setShouldSearchOnClose(true);
+    handleFilterChange(...args);
+  };
+
+  const handleCheckboxChangeWithTrigger = (
+    ...args: Parameters<typeof handleCheckboxChange>
+  ) => {
+    setShouldSearchOnClose(true);
+    handleCheckboxChange(...args);
+  };
+
   useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
+    const handleClickOutside = async (event: MouseEvent) => {
       const target = event.target as HTMLElement;
       if (!target.closest(".filter-container")) {
         setOpenMenuIndex(null);
+
+        if (shouldSearchOnClose) {
+          setLoading(true);
+          try {
+            const results = await searchProjects(1, 10);
+            setProjects(results.projects);
+          } catch (err) {
+            const errorMessage =
+              err instanceof Error ? err.message : "Search failed";
+            onSearchError?.(errorMessage);
+          } finally {
+            setLoading(false);
+            setShouldSearchOnClose(false);
+          }
+        }
       }
     };
 
@@ -88,7 +120,13 @@ const FilterOptions = (props: FilterOptionsProps) => {
       return () =>
         document.removeEventListener("mousedown", handleClickOutside);
     }
-  }, [openMenuIndex]);
+  }, [
+    openMenuIndex,
+    shouldSearchOnClose,
+    searchProjects,
+    setProjects,
+    onSearchError,
+  ]);
 
   return (
     <div
@@ -101,8 +139,8 @@ const FilterOptions = (props: FilterOptionsProps) => {
         filters={filters}
         openMenuIndex={openMenuIndex}
         onToggleMenu={toggleMenuOption}
-        onFilterChange={handleFilterChange}
-        onCheckboxChange={handleCheckboxChange}
+        onFilterChange={handleFilterChangeWithTrigger}
+        onCheckboxChange={handleCheckboxChangeWithTrigger}
       />
 
       <FilterActions

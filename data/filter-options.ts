@@ -1,6 +1,6 @@
 import { FilterOption, TypeCategory } from "@/types/filter";
 
-export const sdgOptions: FilterOption[] = [
+const sdgOptions: FilterOption[] = [
   { value: "no-poverty", label: "No Poverty" },
   { value: "zero-hunger", label: "Zero Hunger" },
   { value: "good-health", label: "Good Health and Well-being" },
@@ -26,7 +26,7 @@ export const sdgOptions: FilterOption[] = [
   { value: "partnerships", label: "Partnerships for the Goals" },
 ];
 
-export const skillsOptions: FilterOption[] = [
+const skillsOptions: FilterOption[] = [
   { value: "accounting", label: "Accounting" },
   { value: "artificial-intelligence", label: "Artificial Intelligence" },
   { value: "branding", label: "Branding" },
@@ -65,7 +65,7 @@ export const skillsOptions: FilterOption[] = [
   { value: "writing", label: "Writing" },
 ];
 
-export const locationOptions: FilterOption[] = [
+const locationOptions: FilterOption[] = [
   { value: "abia", label: "Abia" },
   { value: "adamawa", label: "Adamawa" },
   { value: "akwa-ibom", label: "Akwa Ibom" },
@@ -105,7 +105,13 @@ export const locationOptions: FilterOption[] = [
   { value: "fct", label: "Federal Capital Territory (FCT)" },
 ];
 
-export const typeCategories: TypeCategory[] = [
+const typeOptions: FilterOption[] = [
+  { value: "virtual", label: "Virtual" },
+  { value: "hybrid", label: "Hybrid" },
+  { value: "physical", label: "Physical" },
+];
+
+const typeCategories: TypeCategory[] = [
   {
     heading: "Mode",
     options: [
@@ -126,3 +132,11 @@ export const typeCategories: TypeCategory[] = [
       "Pre-scoped projects ranging from brand messaging to marketing campaigns, and more that can take 1-6 weeks.",
   },
 ];
+
+export {
+  locationOptions,
+  skillsOptions,
+  sdgOptions,
+  typeOptions,
+  typeCategories,
+};
