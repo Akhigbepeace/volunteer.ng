@@ -29,7 +29,7 @@ const ExploreContent = () => {
 
       try {
         const res = await getProject();
-        setProjects(res);
+        setProjects(res.projects);
       } catch (error) {
         toast.error(String(error));
       } finally {
