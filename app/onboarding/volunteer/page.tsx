@@ -88,6 +88,17 @@ const VolunteerOnboardingForm = () => {
     setFormData((prevData) => ({ ...prevData, [name]: value }));
   };
 
+  const handleIndustryChange = (value: string) => {
+    setFormData((prevData) => {
+      const isSelected = prevData.industry.includes(value);
+      const updatedIndustries = isSelected
+        ? prevData.industry.filter((v) => v !== value)
+        : [...prevData.industry, value];
+
+      return { ...prevData, industry: updatedIndustries };
+    });
+  };
+
   const handleUserTypeChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setUserType(event.target.value);
   };
@@ -174,33 +185,25 @@ const VolunteerOnboardingForm = () => {
         />
 
         <div className="mb-4">
-          <label htmlFor="industries" className="block text-gray-700 mb-1">
-            Industry
-          </label>
-
-          <select
-            multiple
-            required
-            name="industry"
-            id="industry"
-            value={formData.industry}
-            onChange={handleInputChange}
-            className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
-          >
-            <option
-              hidden
-              disabled
-              value=""
-              className="focus:outline-none focus:ring-2 focus:ring-primary"
-            >
-              Select Industry
-            </option>
-            {industryOptions.map((skill, index) => (
-              <option key={index} value={skill.value}>
-                {skill.label}
-              </option>
+          <label className="block text-gray-700 mb-1">Select Industry</label>
+          <div className="border rounded-lg px-4 py-2 space-y-2 max-h-40 overflow-y-auto">
+            {industryOptions.map((industry) => (
+              <label
+                key={industry.value}
+                className="flex items-center space-x-2"
+              >
+                <input
+                  type="checkbox"
+                  checked={formData.industry.includes(industry.value)}
+                  onChange={() => handleIndustryChange(industry.value)}
+                />
+                <span>{industry.label}</span>
+              </label>
             ))}
-          </select>
+          </div>
+          <p className="text-sm text-gray-500 mt-1">
+            You can select multiple industries.
+          </p>
         </div>
 
         <div className="mb-4">
