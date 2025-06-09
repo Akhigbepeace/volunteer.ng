@@ -8,9 +8,10 @@ import { useSearchParams } from "next/navigation";
 import Cookies from "universal-cookie";
 import { getProject } from "@/lib/project";
 import { toast } from "react-toastify";
+import { Project } from "@/data/project";
 
 const ExploreContent = () => {
-  const [projects, setProjects] = useState([]);
+  const [projects, setProjects] = useState<Project[]>([]);
   const [loading, setLoading] = useState(true);
 
   const searchParams = useSearchParams();
@@ -43,7 +44,7 @@ const ExploreContent = () => {
   return (
     <div>
       <HeroSection />
-      <FilterOptions />
+      <FilterOptions setProjects={setProjects} />
       {loading ? <div>Loading...</div> : <Projects projects={projects} />}
     </div>
   );
