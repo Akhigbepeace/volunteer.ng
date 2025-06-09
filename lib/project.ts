@@ -45,6 +45,21 @@ const getProject = async (userId?: string) => {
   return res;
 };
 
+const getFilteredProject = async (queryParams: string) => {
+  const url = `${
+    process.env.NEXT_PUBLIC_BASE_URL
+  }/projects?${queryParams.toString()}`;
+
+  const apiRes = await fetch(url, {
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
+
+  const res = await apiRes.json();
+  return res;
+};
+
 const getSingleProject = async (projectId: string) => {
   if (!projectId) return;
 
@@ -193,6 +208,7 @@ export {
   editProject,
   deleteProject,
   getSingleProject,
+  getFilteredProject,
   uploadImageToCloudinary,
 };
 
