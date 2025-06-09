@@ -280,7 +280,7 @@ const OrgOnboardingForm = () => {
           disabled={loading}
         >
           {loading ? <Loader /> : null}
-          {loading ? "Creating..." : "Submit"}
+          {loading ? "Submitting..." : "Submit"}
         </button>
       </form>
     </div>

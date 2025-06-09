@@ -1,5 +1,3 @@
-// components/TypeFilterComponent.tsx
-
 import { typeCategories } from "@/data/filter-options";
 import { FilterComponentProps } from "@/types/filter";
 import React from "react";

@@ -44,7 +44,7 @@ const ExploreContent = () => {
   return (
     <div>
       <HeroSection />
-      <FilterOptions setProjects={setProjects} />
+      <FilterOptions setLoading={setLoading} setProjects={setProjects} />
       {loading ? <div>Loading...</div> : <Projects projects={projects} />}
     </div>
   );

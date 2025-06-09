@@ -14,19 +14,23 @@ import Cookies from "universal-cookie";
 import { toast, ToastContainer } from "react-toastify";
 import Image from "next/image";
 import Loader from "../loader";
+import {
+  locationOptions,
+  sdgOptions,
+  skillsOptions,
+} from "@/data/filter-options";
 
 const defaultData: Project = {
   _id: uuidv4(),
   image: "",
-  type: "Project",
+  type: null,
   duration: "",
   heading: "",
   orgName: "",
   description: "",
-  // creatorId:"",
   causes: [],
   status: "applied",
-  location: null,
+  location: [],
   deadline: "",
   numberOfHours: 0,
   startDate: "",
@@ -86,27 +90,26 @@ const EditProject = () => {
 
         setFormData({
           _id,
-          causes: category,
-          description,
-          duration,
-          heading,
-          image,
-          // creatorId,
-          orgName,
-          status,
-          type,
-          benefits,
-          deadline,
-          numberOfHours,
-          contactEmail,
-          contactPhone,
-          createdAt,
-          endDate,
-          location,
-          maxVolunteers,
-          requirements,
-          startDate,
-          skills: tags,
+          causes: category || [],
+          description: description || "",
+          duration: duration || "",
+          heading: heading || "",
+          image: image || "",
+          orgName: orgName || "",
+          status: status || "applied",
+          type: type || null,
+          benefits: benefits || [],
+          deadline: deadline || "",
+          numberOfHours: numberOfHours || 0,
+          contactEmail: contactEmail || "",
+          contactPhone: contactPhone || "",
+          createdAt: createdAt || new Date().toISOString(),
+          endDate: endDate || "",
+          location: location || [],
+          maxVolunteers: maxVolunteers || 0,
+          requirements: requirements || [],
+          startDate: startDate || "",
+          skills: tags || [],
         });
       } catch (error) {
         toast.error(String(error));
@@ -165,6 +168,21 @@ const EditProject = () => {
     }
   };
 
+  const handleSelectChange = (
+    field: "causes" | "skills" | "location",
+    value: string
+  ) => {
+    setFormData((prevData) => {
+      const currentValues = prevData[field] as string[];
+      const isSelected = currentValues.includes(value);
+      const updatedValues = isSelected
+        ? currentValues.filter((v) => v !== value)
+        : [...currentValues, value];
+
+      return { ...prevData, [field]: updatedValues };
+    });
+  };
+
   const handleImageUpload = async (e: ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
@@ -198,7 +216,7 @@ const EditProject = () => {
             required
             type="text"
             name="heading"
-            value={formData.heading}
+            value={formData.heading || ""}
             onChange={handleChange}
             placeholder="Enter project title"
             className="w-full p-2 border rounded"
@@ -212,7 +230,7 @@ const EditProject = () => {
           </label>
           <textarea
             name="description"
-            value={formData.description}
+            value={formData.description || ""}
             onChange={handleChange}
             placeholder="Provide a description for the project"
             className="w-full p-2 border rounded"
@@ -221,18 +239,24 @@ const EditProject = () => {
           />
         </div>
 
-        {/* Project Category */}
-        <div>
-          <label className="block text-sm font-medium">Category</label>
-          <input
-            required
-            type="text"
-            name="category"
-            value={formData.causes}
-            onChange={handleChange}
-            placeholder="e.g., Education, Health, etc."
-            className="w-full p-2 border rounded"
-          />
+        {/* Project Causes */}
+        <div className="mb-4">
+          <label className="block text-gray-700 mb-1">Causes</label>
+          <div className="border rounded-lg px-4 py-2 grid grid-cols-2 gap-3 bg-white space-y-2 max-h-60 overflow-y-auto">
+            {sdgOptions.map((cause) => (
+              <label key={cause.value} className="flex items-center space-x-2">
+                <input
+                  type="checkbox"
+                  checked={(formData.causes || []).includes(cause.value)}
+                  onChange={() => handleSelectChange("causes", cause.value)}
+                />
+                <span>{cause.label}</span>
+              </label>
+            ))}
+          </div>
+          <p className="text-sm text-gray-500 mt-1">
+            You can select multiple causes.
+          </p>
         </div>
 
         {/* Project Duration */}
@@ -242,7 +266,7 @@ const EditProject = () => {
             required
             type="text"
             name="duration"
-            value={formData.duration}
+            value={formData.duration || ""}
             onChange={handleChange}
             placeholder="Duration (e.g., 4 Weeks)"
             className="w-full p-2 border rounded"
@@ -258,7 +282,7 @@ const EditProject = () => {
             required
             type="number"
             name="numberOfHours"
-            value={formData.numberOfHours}
+            value={formData.numberOfHours || 0}
             min={1}
             onChange={handleChange}
             placeholder="Enter the number of hours per week"
@@ -268,14 +292,14 @@ const EditProject = () => {
 
         {/* Location */}
         <div>
-          <label className="block text-sm font-medium mb-2">Location</label>
+          <label className="block text-sm font-medium mb-2">Type</label>
           <div className="flex items-center gap-4">
             <label className="flex items-center gap-2">
               <input
                 type="radio"
-                name="location"
+                name="type"
                 value="remote"
-                checked={formData.location === "remote"}
+                checked={formData.type === "remote"}
                 onChange={handleChange}
                 required
               />
@@ -284,14 +308,48 @@ const EditProject = () => {
             <label className="flex items-center gap-2">
               <input
                 type="radio"
-                name="location"
+                name="type"
                 value="physical"
-                checked={formData.location === "physical"}
+                checked={formData.type === "physical"}
                 onChange={handleChange}
               />
               Physical
             </label>
+            <label className="flex items-center gap-2">
+              <input
+                type="radio"
+                name="type"
+                value="hybrid"
+                checked={formData.type === "hybrid"}
+                onChange={handleChange}
+              />
+              Hybrid
+            </label>
           </div>
+        </div>
+
+        <div className="mb-4">
+          <label className="block text-gray-700 mb-1">Location</label>
+          <div className="border rounded-lg px-4 py-2 grid grid-cols-2 gap-3 bg-white space-y-2 max-h-60 overflow-y-auto">
+            {locationOptions.map((location) => (
+              <label
+                key={location.value}
+                className="flex items-center space-x-2 cursor-pointer"
+              >
+                <input
+                  type="checkbox"
+                  checked={(formData.location || []).includes(location.value)}
+                  onChange={() =>
+                    handleSelectChange("location", location.value)
+                  }
+                />
+                <span>{location.label}</span>
+              </label>
+            ))}
+          </div>
+          <p className="text-sm text-gray-500 mt-1">
+            You can select multiple locations.
+          </p>
         </div>
 
         {/* Start and End Date */}
@@ -342,7 +400,7 @@ const EditProject = () => {
           </label>
           <input
             required
-            value={formData.requirements?.join(", ")}
+            value={(formData.requirements || []).join(", ")}
             onChange={(e) => handleMultipleInputs(e, "requirements")}
             placeholder="Enter project requirements"
             className="w-full p-2 border rounded"
@@ -356,7 +414,7 @@ const EditProject = () => {
           </label>
           <input
             required
-            value={formData.benefits?.join(", ")}
+            value={(formData.benefits || []).join(", ")}
             onChange={(e) => handleMultipleInputs(e, "benefits")}
             placeholder="Enter project benefits"
             className="w-full p-2 border rounded"
@@ -398,7 +456,7 @@ const EditProject = () => {
             required
             type="number"
             name="maxVolunteers"
-            value={formData.maxVolunteers || ""}
+            value={formData.maxVolunteers || 0}
             min={1}
             onChange={handleChange}
             placeholder="Max volunteers for this project"
@@ -407,19 +465,26 @@ const EditProject = () => {
         </div>
 
         {/* Tags */}
-        <div>
-          <label className="block text-sm font-medium">
-            Tags (comma separated)
-          </label>
-          <input
-            required
-            type="text"
-            name="tags"
-            value={formData.skills?.join(", ")}
-            onChange={(e) => handleMultipleInputs(e, "tags")}
-            placeholder="Enter tags"
-            className="w-full p-2 border rounded"
-          />
+        <div className="mb-4">
+          <label className="block text-gray-700 mb-1">Skills</label>
+          <div className="border rounded-lg px-4 py-2 grid grid-cols-2 gap-3 bg-white space-y-2 max-h-60 overflow-y-auto">
+            {skillsOptions.map((skill) => (
+              <label
+                key={skill.value}
+                className="flex items-center space-x-2 cursor-pointer"
+              >
+                <input
+                  type="checkbox"
+                  checked={(formData.skills || []).includes(skill.value)}
+                  onChange={() => handleSelectChange("skills", skill.value)}
+                />
+                <span>{skill.label}</span>
+              </label>
+            ))}
+          </div>
+          <p className="text-sm text-gray-500 mt-1">
+            You can select multiple skills.
+          </p>
         </div>
 
         {/* Project Image */}
@@ -428,6 +493,7 @@ const EditProject = () => {
             Project Image
           </label>
           <input
+            required
             name="image"
             type="file"
             accept="image/*"
@@ -454,7 +520,7 @@ const EditProject = () => {
           disabled={loading}
         >
           {loading ? <Loader /> : null}
-          {loading ? "Loading..." : "Edit Project"}
+          {loading ? "Creating..." : "Create Project"}
         </button>
       </form>
     </div>
