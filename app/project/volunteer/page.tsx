@@ -34,7 +34,7 @@ const Projects = () => {
 
       try {
         const res = await getProject(user.id);
-        setProjects(res);
+        setProjects(res.projects);
       } catch (error) {
         console.error(error);
         toast.error("Error getting projects");

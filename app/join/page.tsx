@@ -28,7 +28,7 @@ const Join = () => {
   const handleRoleSelection = async (role: Role) => {
     try {
       if (!userId) {
-        console.warn("No userId available");
+        toast.warn("No User ID available");
         return;
       }
 
@@ -36,8 +36,6 @@ const Join = () => {
         userId,
         role,
       });
-
-      console.log("Role data", role);
 
       if (data.status === "true") {
         toast.success("Role Selected Successfully");
