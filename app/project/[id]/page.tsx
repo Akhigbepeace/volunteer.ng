@@ -7,11 +7,9 @@ import Link from "next/link";
 import Cookies from "universal-cookie";
 import { toast, ToastContainer } from "react-toastify";
 import { IoMdArrowRoundBack } from "react-icons/io";
-import { IoLogoBuffer } from "react-icons/io5";
-
-import AboutOrg from "@/app/component/project/about-org";
 import ProjectCard from "@/app/component/project/project-card";
 import Details from "@/app/component/project/project-detail";
+// import VolunteersSection from "@/app/component/project/volunteers-section";
 
 import {
   deleteProject,
@@ -20,15 +18,25 @@ import {
   getSingleProject,
 } from "@/lib/project";
 import { getUser } from "@/lib/user";
-import { Project } from "@/data/project";
+import { Project, Volunteers } from "@/data/project";
 import Loader from "@/app/component/loader";
+import VolunteersSection from "@/app/component/project/volunters-section";
+
+type ProjectAndVolunteers = {
+  project: Project | null;
+  volunteers: Volunteers[];
+};
 
 const ProjectDetails = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [isExiting, setIsExiting] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
   const [role, setRole] = useState<string>("");
-  const [project, setProject] = useState<Project | null>(null);
+  const [projectAndVolunteers, setProjectsAndVolunteers] =
+    useState<ProjectAndVolunteers>({
+      project: null,
+      volunteers: [],
+    });
   const [projects, setProjects] = useState<Project[]>([]);
 
   const cookies = new Cookies();
@@ -61,15 +69,19 @@ const ProjectDetails = () => {
 
         const [userData, projectData, projectList] = await Promise.all([
           getUser(user.id),
-          getSingleProject(projectId),
+          getSingleProject({ projectId, userId: user.id }),
           getProject(user.id),
         ]);
 
         setRole(userData.role);
-        setProject(projectData);
+        setProjectsAndVolunteers({
+          project: projectData.project,
+          volunteers: projectData.volunteers,
+        });
         setProjects(projectList.projects);
       } catch (error) {
-        toast.error(String(error));
+        console.log("Error getting project details", error);
+        toast.error("Ooopss! Something went wrong");
       } finally {
         setIsLoading(false);
       }
@@ -136,6 +148,35 @@ const ProjectDetails = () => {
     }
   };
 
+  // New function to handle volunteer status updates
+  const handleVolunteerStatusUpdate = async (
+    volunteerId: string,
+    status: "accepted" | "rejected"
+  ) => {
+    try {
+      // You'll need to implement this function in your lib/project.ts
+      // const res = await updateVolunteerStatus({
+      //   projectId: projectId as string,
+      //   volunteerId,
+      //   status,
+      //   userId: user.id,
+      // });
+
+      // For now, we'll update the local state
+      setProjectsAndVolunteers((prev) => ({
+        ...prev,
+        volunteers: prev.volunteers.map((volunteer) =>
+          volunteer._id === volunteerId ? { ...volunteer, status } : volunteer
+        ),
+      }));
+
+      toast.success(`Volunteer ${status} successfully!`);
+    } catch (error) {
+      console.error("Error updating volunteer status:", error);
+      toast.error("Failed to update volunteer status");
+    }
+  };
+
   const formatDateToReadable = (dateString: string) => {
     const date = new Date(dateString);
     const options: Intl.DateTimeFormatOptions = { month: "long" };
@@ -147,10 +188,12 @@ const ProjectDetails = () => {
       return s[(v - 20) % 10] || s[v] || s[0];
     };
     return `${month} ${day}${getOrdinalSuffix(day)}`;
+    // return "Hello";
   };
 
+  const { project, volunteers } = projectAndVolunteers;
+
   const isOrganization = role === "organization";
-  const isVolunteer = role === "volunteer";
   const isOwnersProject = user.id === project?.creatorId;
 
   if (isLoading) return <div className="text-center mt-10">Loading...</div>;
@@ -171,13 +214,36 @@ const ProjectDetails = () => {
           <IoMdArrowRoundBack size={25} /> Back
         </button>
 
-        {isVolunteer && (
+        {/* {isVolunteer && (
           <button
             onClick={handleExitProject}
             className="px-4 py-2 bg-red-600 text-white rounded"
           >
             {isExiting ? <Loader /> : "Exit"}
           </button>
+        )} */}
+        {!isOrganization && (
+          <div className="md:w-1/3 flex flex-col gap-4">
+            {project.status === "applied" ? (
+              <button
+                onClick={handleExitProject}
+                className="px-4 py-2 bg-red-600 text-white rounded text-lg text-center"
+              >
+                {isExiting ? <Loader /> : "Exit Project"}
+              </button>
+            ) : (
+              <Link
+                href={
+                  user?.role === "volunteer"
+                    ? "/signup"
+                    : `/project/apply?projectTitle=${project.heading}&projectId=${project._id}&deadline=${project.deadline}`
+                }
+                className="bg-secondary text-white py-2 px-4 rounded-lg text-lg text-center"
+              >
+                Apply now
+              </Link>
+            )}
+          </div>
         )}
 
         {isOwnersProject && isOrganization && (
@@ -201,50 +267,22 @@ const ProjectDetails = () => {
 
       <h1 className="text-3xl font-bold mt-3">{project.heading}</h1>
       <p className="text-gray-600 mt-2">{project.description}</p>
+      <p className="text-gray-500 text-sm">
+        Posted {formatDateToReadable(project.createdAt as string)}
+      </p>
 
-      {/* Uncomment and customize the section below when needed */}
+      {/* Project Image and Info Section */}
       <div className="flex flex-col md:flex-row mt-5 gap-6">
-        <div className="md:w-2/3">
+        <div className="relative w-full h-[800px]">
           <Image
             src={project.image || "/assets/cwi.jpeg"}
             alt="Project"
-            width={800}
-            height={800}
-            className="rounded-lg w-full"
+            fill
+            className="rounded-lg w-full object-cover"
           />
         </div>
 
-        <div className="md:w-1/3 flex flex-col gap-4">
-          <div className="flex items-center gap-3 border p-4 rounded-lg shadow bg-white">
-            <IoLogoBuffer size={45} />
-            <div>
-              <h2 className="font-semibold">Productive Living Board</h2>
-              <p className="text-gray-500 text-sm">Charlottesville, VA, USA</p>
-            </div>
-          </div>
-
-          <div>
-            <h4 className="text-gray-500 text-sm font-semibold">Cause</h4>
-            <span className="inline-block bg-gray-200 px-3 py-1 rounded-full text-sm">
-              Housing & Homelessness
-            </span>
-          </div>
-
-          <div>
-            <h4 className="text-gray-500 text-sm font-semibold">Skills</h4>
-            <ul className="bg-gray-200 px-3 py-1 rounded-full text-sm">
-              {project.requirements?.map((requirement, index) => (
-                <li key={index} className="list-disc list-inside">
-                  {requirement}
-                </li>
-              ))}
-            </ul>
-          </div>
-
-          <p className="text-gray-500 text-sm">
-            Posted {formatDateToReadable(project.createdAt as string)}
-          </p>
-
+        {/* <div className="md:w-1/3 flex flex-col gap-4">
           {!isOrganization && (
             <Link
               href={
@@ -257,18 +295,37 @@ const ProjectDetails = () => {
               Apply now
             </Link>
           )}
+        </div> */}
+      </div>
+
+      {/* Project Details */}
+      <Details project={project} />
+
+      {/* About Organization
+      <AboutOrg project={} /> */}
+
+      {/* Volunteers Section - Only show to project owner */}
+      {isOwnersProject && isOrganization && (
+        <VolunteersSection
+          volunteers={volunteers}
+          isOwner={isOwnersProject}
+          onStatusUpdate={handleVolunteerStatusUpdate}
+        />
+      )}
+
+      {/* Related Projects */}
+      {projects.length > 1 && (
+        <div className="mt-10">
+          <h2 className="text-2xl font-bold text-primary mb-6">
+            Related Projects
+          </h2>
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+            {projects.map((proj, index) => (
+              <ProjectCard key={index} project={proj} />
+            ))}
+          </div>
         </div>
-      </div>
-
-      {/* Uncomment when ready */}
-      <Details />
-      <AboutOrg />
-
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 mt-5">
-        {projects.map((proj, index) => (
-          <ProjectCard key={index} project={proj} />
-        ))}
-      </div>
+      )}
     </div>
   );
 };
