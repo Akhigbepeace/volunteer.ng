@@ -3,7 +3,7 @@
 import React, { useEffect, useState } from "react";
 import ProjectCard from "@/app/component/project/project-card";
 import { Project } from "@/data/project";
-import { getProject } from "@/lib/project";
+import { getVolunteerAppliedProjects } from "@/lib/project";
 import { toast, ToastContainer } from "react-toastify";
 import Cookies from "universal-cookie";
 import { useRouter } from "next/navigation";
@@ -33,7 +33,7 @@ const Projects = () => {
       }
 
       try {
-        const res = await getProject(user.id);
+        const res = await getVolunteerAppliedProjects(user.id);
         setProjects(res.projects);
       } catch (error) {
         console.error(error);

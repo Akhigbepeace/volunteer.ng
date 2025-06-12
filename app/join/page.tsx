@@ -26,6 +26,11 @@ const Join = () => {
   }, [paramId, user]);
 
   const handleRoleSelection = async (role: Role) => {
+    console.log({
+      params,
+      user,
+    });
+
     try {
       if (!userId) {
         toast.warn("No User ID available");

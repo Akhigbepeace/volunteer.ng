@@ -28,6 +28,11 @@ type CloudinaryRes = {
   public_id: string;
 };
 
+type ProjectDetailsProps = {
+  projectId: string;
+  userId: string;
+};
+
 const getProject = async (userId?: string) => {
   const url = userId
     ? `${process.env.NEXT_PUBLIC_BASE_URL}/projects?userId=${encodeURIComponent(
@@ -60,11 +65,26 @@ const getFilteredProject = async (queryParams: string) => {
   return res;
 };
 
-const getSingleProject = async (projectId: string) => {
+const getVolunteerAppliedProjects = async (userId: string) => {
+  const apiRes = await fetch(
+    `${process.env.NEXT_PUBLIC_BASE_URL}/user-joined-projects?userId=${userId}`,
+    {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    }
+  );
+
+  const res = await apiRes.json();
+  return res;
+};
+
+const getSingleProject = async (props: ProjectDetailsProps) => {
+  const { projectId, userId } = props;
   if (!projectId) return;
 
   const apiRes = await fetch(
-    `${process.env.NEXT_PUBLIC_BASE_URL}/project/${projectId}`,
+    `${process.env.NEXT_PUBLIC_BASE_URL}/project/${projectId}?userId=${userId}`,
     {
       headers: {
         "Content-Type": "application/json",
@@ -210,6 +230,7 @@ export {
   getSingleProject,
   getFilteredProject,
   uploadImageToCloudinary,
+  getVolunteerAppliedProjects,
 };
 
 export type { CloudinaryRes };

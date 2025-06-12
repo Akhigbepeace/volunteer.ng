@@ -63,7 +63,10 @@ const EditProject = () => {
       setLoading(true);
 
       try {
-        const res: Project = await getSingleProject(projectId as string);
+        const res: Project = await getSingleProject({
+          userId: user.id,
+          projectId: projectId as string,
+        });
         const {
           _id,
           causes: category,
