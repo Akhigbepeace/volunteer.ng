@@ -2,7 +2,7 @@
 import { RiUserCommunityLine } from "react-icons/ri";
 import { GoOrganization } from "react-icons/go";
 import { handleSelectRole, Role } from "@/lib/user";
-import { useParams, useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import Cookies from "universal-cookie";
 import { useEffect, useState } from "react";
 import { toast, ToastContainer } from "react-toastify";
@@ -12,8 +12,8 @@ const Join = () => {
 
   const router = useRouter();
   const cookies = new Cookies();
-  const params = useParams();
-  const paramId = params.id as string | undefined;
+  const params = useSearchParams();
+  const paramId = params.get("userId");
 
   const user = cookies.get("user");
 
@@ -26,11 +26,6 @@ const Join = () => {
   }, [paramId, user]);
 
   const handleRoleSelection = async (role: Role) => {
-    console.log({
-      params,
-      user,
-    });
-
     try {
       if (!userId) {
         toast.warn("No User ID available");
