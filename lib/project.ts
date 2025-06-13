@@ -43,6 +43,7 @@ const getProject = async (userId?: string) => {
   const apiRes = await fetch(url, {
     headers: {
       "Content-Type": "application/json",
+      credentials: "include",
     },
   });
 
@@ -58,6 +59,7 @@ const getFilteredProject = async (queryParams: string) => {
   const apiRes = await fetch(url, {
     headers: {
       "Content-Type": "application/json",
+      credentials: "include",
     },
   });
 
@@ -71,6 +73,7 @@ const getVolunteerAppliedProjects = async (userId: string) => {
     {
       headers: {
         "Content-Type": "application/json",
+        credentials: "include",
       },
     }
   );
@@ -88,6 +91,7 @@ const getSingleProject = async (props: ProjectDetailsProps) => {
     {
       headers: {
         "Content-Type": "application/json",
+        credentials: "include",
       },
     }
   );
@@ -105,6 +109,7 @@ const editProject = async (props: EditProjectProps) => {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
+        credentials: "include",
       },
       body: JSON.stringify({
         userId,
@@ -143,6 +148,7 @@ const exitProject = async (props: DeleteProjectProps) => {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
+        credentials: "include",
       },
       body: JSON.stringify({
         userId,
@@ -164,6 +170,7 @@ const createProject = async (props: CreateProjectProps) => {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
+        credentials: "include",
       },
       body: JSON.stringify({
         userId,
@@ -185,6 +192,7 @@ const applyForProject = async (props: ProjectApplicationProps) => {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
+        credentials: "include",
       },
       body: JSON.stringify({
         userId,

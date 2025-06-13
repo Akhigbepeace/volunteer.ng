@@ -26,6 +26,7 @@ const getUser = async (userId: string) => {
     headers: {
       "Content-Type": "application/json",
       userId: String(userId),
+      credentials: "include",
     },
   });
 
@@ -43,6 +44,7 @@ const handleSelectRole = async (props: SelectRoleProp) => {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
+        credentials: "include",
       },
       body: JSON.stringify({
         userId,
@@ -64,6 +66,7 @@ const handleVolunteerOnboarding = async (props: OnboardingProps) => {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
+        credentials: "include",
       },
       body: JSON.stringify({
         userId,
@@ -85,6 +88,7 @@ const handleOrganizationOnboarding = async (props: OnboardingProps) => {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
+        credentials: "include",
       },
       body: JSON.stringify({
         userId,
