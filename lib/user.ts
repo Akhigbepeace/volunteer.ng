@@ -23,10 +23,10 @@ type OnboardingProps = {
 
 const getUser = async (userId: string) => {
   const apiRes = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/user`, {
+    credentials: "include",
     headers: {
       "Content-Type": "application/json",
       userId: String(userId),
-      credentials: "include",
     },
   });
 
@@ -42,9 +42,9 @@ const handleSelectRole = async (props: SelectRoleProp) => {
     `${process.env.NEXT_PUBLIC_BASE_URL}/save-user-type`,
     {
       method: "POST",
+      credentials: "include",
       headers: {
         "Content-Type": "application/json",
-        credentials: "include",
       },
       body: JSON.stringify({
         userId,
@@ -64,9 +64,9 @@ const handleVolunteerOnboarding = async (props: OnboardingProps) => {
     `${process.env.NEXT_PUBLIC_BASE_URL}/save-user-data`,
     {
       method: "POST",
+      credentials: "include",
       headers: {
         "Content-Type": "application/json",
-        credentials: "include",
       },
       body: JSON.stringify({
         userId,
@@ -86,9 +86,9 @@ const handleOrganizationOnboarding = async (props: OnboardingProps) => {
     `${process.env.NEXT_PUBLIC_BASE_URL}/save-user-data`,
     {
       method: "POST",
+      credentials: "include",
       headers: {
         "Content-Type": "application/json",
-        credentials: "include",
       },
       body: JSON.stringify({
         userId,
