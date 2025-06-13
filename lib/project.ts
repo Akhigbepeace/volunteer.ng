@@ -43,7 +43,7 @@ const getProject = async (userId?: string) => {
   const apiRes = await fetch(url, {
     headers: {
       "Content-Type": "application/json",
-      // credentials: "include",
+      credentials: "include",
     },
   });
 
