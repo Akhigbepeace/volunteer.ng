@@ -41,9 +41,9 @@ const getProject = async (userId?: string) => {
     : `${process.env.NEXT_PUBLIC_BASE_URL}/projects`;
 
   const apiRes = await fetch(url, {
+    credentials: "include",
     headers: {
       "Content-Type": "application/json",
-      credentials: "include",
     },
   });
 
@@ -57,9 +57,9 @@ const getFilteredProject = async (queryParams: string) => {
   }/projects?${queryParams.toString()}`;
 
   const apiRes = await fetch(url, {
+    credentials: "include",
     headers: {
       "Content-Type": "application/json",
-      credentials: "include",
     },
   });
 
@@ -71,9 +71,9 @@ const getVolunteerAppliedProjects = async (userId: string) => {
   const apiRes = await fetch(
     `${process.env.NEXT_PUBLIC_BASE_URL}/user-joined-projects?userId=${userId}`,
     {
+      credentials: "include",
       headers: {
         "Content-Type": "application/json",
-        credentials: "include",
       },
     }
   );
@@ -89,9 +89,9 @@ const getSingleProject = async (props: ProjectDetailsProps) => {
   const apiRes = await fetch(
     `${process.env.NEXT_PUBLIC_BASE_URL}/project/${projectId}?userId=${userId}`,
     {
+      credentials: "include",
       headers: {
         "Content-Type": "application/json",
-        credentials: "include",
       },
     }
   );
@@ -107,9 +107,9 @@ const editProject = async (props: EditProjectProps) => {
     `${process.env.NEXT_PUBLIC_BASE_URL}/update-project/${projectId}`,
     {
       method: "PUT",
+      credentials: "include",
       headers: {
         "Content-Type": "application/json",
-        credentials: "include",
       },
       body: JSON.stringify({
         userId,
@@ -146,9 +146,9 @@ const exitProject = async (props: DeleteProjectProps) => {
     `${process.env.NEXT_PUBLIC_BASE_URL}/leave-project`,
     {
       method: "POST",
+      credentials: "include",
       headers: {
         "Content-Type": "application/json",
-        credentials: "include",
       },
       body: JSON.stringify({
         userId,
@@ -168,9 +168,9 @@ const createProject = async (props: CreateProjectProps) => {
     `${process.env.NEXT_PUBLIC_BASE_URL}/save-project-data`,
     {
       method: "POST",
+      credentials: "include",
       headers: {
         "Content-Type": "application/json",
-        credentials: "include",
       },
       body: JSON.stringify({
         userId,
@@ -190,9 +190,9 @@ const applyForProject = async (props: ProjectApplicationProps) => {
     `${process.env.NEXT_PUBLIC_BASE_URL}/join-project`,
     {
       method: "POST",
+      credentials: "include",
       headers: {
         "Content-Type": "application/json",
-        credentials: "include",
       },
       body: JSON.stringify({
         userId,
