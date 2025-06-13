@@ -5,8 +5,6 @@ import ProjectCard from "@/app/component/project/project-card";
 import { Project } from "@/data/project";
 import { getVolunteerAppliedProjects } from "@/lib/project";
 import { toast, ToastContainer } from "react-toastify";
-import Cookies from "universal-cookie";
-import { useRouter } from "next/navigation";
 
 const TABS = ["Applied", "Ongoing", "Completed", "Rejected"];
 
@@ -15,25 +13,12 @@ const Projects = () => {
   const [loading, setLoading] = useState(false);
   const [projects, setProjects] = useState<Project[]>([]);
 
-  const cookies = new Cookies();
-  const router = useRouter();
-  const user = cookies.get("user");
-
   useEffect(() => {
     const fetchProjects = async () => {
       setLoading(true);
 
-      if (!user) {
-        toast.error("Unauthenticated!");
-        setTimeout(() => {
-          router.push("/login");
-        }, 3000);
-
-        return;
-      }
-
       try {
-        const res = await getVolunteerAppliedProjects(user.id);
+        const res = await getVolunteerAppliedProjects();
         setProjects(res.projects);
       } catch (error) {
         console.error(error);

@@ -1,6 +1,6 @@
 "use client";
 
-import React, { ChangeEvent, useEffect, useState } from "react";
+import React, { ChangeEvent, useState } from "react";
 import { Project } from "@/data/project";
 import { v4 as uuidv4 } from "uuid";
 import { useRouter } from "next/navigation";
@@ -9,7 +9,6 @@ import {
   createProject,
   uploadImageToCloudinary,
 } from "@/lib/project";
-import Cookies from "universal-cookie";
 import { toast, ToastContainer } from "react-toastify";
 import Image from "next/image";
 import Loader from "@/app/component/loader";
@@ -31,7 +30,7 @@ const defaultData: Project = {
   skills: [],
   deadline: "",
   numberOfHours: 0,
-  status: "applied",
+  status: "published",
   location: [],
   creatorId: "",
   startDate: "",
@@ -48,22 +47,8 @@ const CreateProject = () => {
   const [formData, setFormData] = useState(defaultData);
   const [loading, setLoading] = useState(false);
   const [imageIsLoading, setImageIsLoading] = useState(false);
-  const [userId, setUserId] = useState<string | null>(null);
 
   const router = useRouter();
-  const cookies = new Cookies();
-  const user = cookies.get("user");
-
-  useEffect(() => {
-    if (user?.id) {
-      setUserId(user.id);
-    } else {
-      toast.error("User not logged in.");
-      setTimeout(() => {
-        router.push("/login");
-      }, 5000);
-    }
-  }, []);
 
   const handleChange = (
     e: React.ChangeEvent<
@@ -99,18 +84,10 @@ const CreateProject = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!userId) {
-      toast.error("User ID not found. Please log in.");
-      setTimeout(() => {
-        router.push("/login");
-      }, 5000);
-      return;
-    }
 
     try {
       setLoading(true);
       const res = await createProject({
-        userId,
         project: {
           ...formData,
         },

@@ -4,8 +4,6 @@ import React, { useEffect, useState } from "react";
 import HeroSection from "../organisms/hero-section";
 import FilterOptions from "../organisms/filter-options";
 import Projects from "../organisms/projects";
-import { useSearchParams } from "next/navigation";
-import Cookies from "universal-cookie";
 import { getProject } from "@/lib/project";
 import { toast } from "react-toastify";
 import { Project } from "@/data/project";
@@ -13,16 +11,6 @@ import { Project } from "@/data/project";
 const ExploreContent = () => {
   const [projects, setProjects] = useState<Project[]>([]);
   const [loading, setLoading] = useState(true);
-
-  const searchParams = useSearchParams();
-  const cookies = new Cookies();
-  const userId = searchParams.get("userId");
-
-  useEffect(() => {
-    if (userId) {
-      cookies.set("user", { id: userId }, { path: "/" });
-    }
-  }, [userId]);
 
   useEffect(() => {
     const fetchProjects = async () => {

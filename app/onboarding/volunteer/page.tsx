@@ -7,7 +7,6 @@ import { handleVolunteerOnboarding } from "@/lib/user";
 import { useRouter } from "next/navigation";
 import React, { SyntheticEvent, useState } from "react";
 import { toast, ToastContainer } from "react-toastify";
-import Cookies from "universal-cookie";
 
 export type VolunteerOnboardingData = {
   displayName: string;
@@ -79,9 +78,6 @@ const VolunteerOnboardingForm = () => {
     useState<VolunteerOnboardingData>(defaultData);
 
   const router = useRouter();
-  const cookies = new Cookies();
-  const user = cookies.get("user");
-  const userId = user?.id;
 
   const handleInputChange = (e: SyntheticEvent) => {
     const { name, value } = e.currentTarget as HTMLFormElement;
@@ -118,11 +114,10 @@ const VolunteerOnboardingForm = () => {
     setLoading(true);
     try {
       const res = await handleVolunteerOnboarding({
-        userId,
         volunteer: formData,
       });
 
-      if (res) router.push("/project/volunteer");
+      if (res.status === "true") router.push("/project/volunteer");
     } catch (error) {
       toast.error(String(error));
     } finally {

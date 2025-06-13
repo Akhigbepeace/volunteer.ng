@@ -10,7 +10,6 @@ import {
   getSingleProject,
   uploadImageToCloudinary,
 } from "@/lib/project";
-import Cookies from "universal-cookie";
 import { toast, ToastContainer } from "react-toastify";
 import Image from "next/image";
 import Loader from "../loader";
@@ -50,11 +49,8 @@ const EditProject = () => {
   const [imageIsLoading, setImageIsLoading] = useState(false);
 
   const router = useRouter();
-  const cookies = new Cookies();
   const params = useParams();
   const projectId = params.id;
-  const user = cookies.get("user");
-  const userId = user.id;
 
   useEffect(() => {
     const fetchSingleProject = async () => {
@@ -64,7 +60,6 @@ const EditProject = () => {
 
       try {
         const res: Project = await getSingleProject({
-          userId: user.id,
           projectId: projectId as string,
         });
         const {
@@ -122,7 +117,7 @@ const EditProject = () => {
     };
 
     fetchSingleProject();
-  }, [userId, projectId]);
+  }, [projectId]);
 
   const handleChange = (
     e: React.ChangeEvent<
@@ -148,7 +143,6 @@ const EditProject = () => {
       setLoading(true);
 
       const res = await editProject({
-        userId,
         projectId: projectId as string,
         project: {
           ...formData,

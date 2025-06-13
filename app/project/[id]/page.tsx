@@ -4,7 +4,6 @@ import { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
-import Cookies from "universal-cookie";
 import { toast, ToastContainer } from "react-toastify";
 import { IoMdArrowRoundBack } from "react-icons/io";
 import ProjectCard from "@/app/component/project/project-card";
@@ -39,11 +38,9 @@ const ProjectDetails = () => {
     });
   const [projects, setProjects] = useState<Project[]>([]);
 
-  const cookies = new Cookies();
   const router = useRouter();
   const params = useParams();
   const projectId = params.id as string | undefined;
-  const user = cookies.get("user");
 
   useEffect(() => {
     const initialize = async () => {
@@ -55,22 +52,13 @@ const ProjectDetails = () => {
         return;
       }
 
-      if (!user) {
-        toast.error("Unauthenticated");
-        setTimeout(() => {
-          router.push("/login");
-        }, 3000);
-
-        return;
-      }
-
       try {
         setIsLoading(true);
 
         const [userData, projectData, projectList] = await Promise.all([
-          getUser(user.id),
-          getSingleProject({ projectId, userId: user.id }),
-          getProject(user.id),
+          getUser(),
+          getSingleProject({ projectId }),
+          getProject(),
         ]);
 
         setRole(userData.role);
@@ -97,7 +85,6 @@ const ProjectDetails = () => {
       setIsDeleting(true);
       const res = await deleteProject({
         projectId: projectId as string,
-        userId: user.id,
       });
 
       if (res.success) {
@@ -125,7 +112,6 @@ const ProjectDetails = () => {
       setIsExiting(true);
       const res = await exitProject({
         projectId: projectId as string,
-        userId: user.id,
       });
 
       if (res.user) {
@@ -194,7 +180,7 @@ const ProjectDetails = () => {
   const { project, volunteers } = projectAndVolunteers;
 
   const isOrganization = role === "organization";
-  const isOwnersProject = user.id === project?.creatorId;
+  const isOwnersProject = project?.creatorId;
 
   if (isLoading) return <div className="text-center mt-10">Loading...</div>;
   if (!project)
@@ -214,14 +200,6 @@ const ProjectDetails = () => {
           <IoMdArrowRoundBack size={25} /> Back
         </button>
 
-        {/* {isVolunteer && (
-          <button
-            onClick={handleExitProject}
-            className="px-4 py-2 bg-red-600 text-white rounded"
-          >
-            {isExiting ? <Loader /> : "Exit"}
-          </button>
-        )} */}
         {!isOrganization && (
           <div className="md:w-1/3 flex flex-col gap-4">
             {project.status === "applied" ? (
@@ -234,7 +212,7 @@ const ProjectDetails = () => {
             ) : (
               <Link
                 href={
-                  user?.role === "volunteer"
+                  role === "volunteer"
                     ? "/signup"
                     : `/project/apply?projectTitle=${project.heading}&projectId=${project._id}&deadline=${project.deadline}`
                 }
@@ -281,28 +259,12 @@ const ProjectDetails = () => {
             className="rounded-lg w-full object-cover"
           />
         </div>
-
-        {/* <div className="md:w-1/3 flex flex-col gap-4">
-          {!isOrganization && (
-            <Link
-              href={
-                user?.role === "volunteer"
-                  ? "/signup"
-                  : `/project/apply?projectTitle=${project.heading}&projectId=${project._id}&deadline=${project.deadline}`
-              }
-              className="bg-secondary text-white py-2 px-4 rounded-lg text-lg text-center"
-            >
-              Apply now
-            </Link>
-          )}
-        </div> */}
+ 
       </div>
 
       {/* Project Details */}
       <Details project={project} />
 
-      {/* About Organization
-      <AboutOrg project={} /> */}
 
       {/* Volunteers Section - Only show to project owner */}
       {isOwnersProject && isOrganization && (

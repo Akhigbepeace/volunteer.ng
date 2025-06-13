@@ -2,24 +2,20 @@ import type { FormData } from "@/app/component/suspense/apply";
 import { Project } from "@/data/project";
 
 type ProjectApplicationProps = {
-  userId: string;
   projectId: string;
   formData: FormData;
 };
 
 type CreateProjectProps = {
-  userId: string;
   project: Project;
 };
 
 type EditProjectProps = {
-  userId: string;
   projectId: string;
   project: Project;
 };
 
 type DeleteProjectProps = {
-  userId: string;
   projectId: string;
 };
 
@@ -30,17 +26,10 @@ type CloudinaryRes = {
 
 type ProjectDetailsProps = {
   projectId: string;
-  userId: string;
 };
 
-const getProject = async (userId?: string) => {
-  const url = userId
-    ? `${process.env.NEXT_PUBLIC_BASE_URL}/projects?userId=${encodeURIComponent(
-        userId
-      )}`
-    : `${process.env.NEXT_PUBLIC_BASE_URL}/projects`;
-
-  const apiRes = await fetch(url, {
+const getProject = async () => {
+  const apiRes = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/projects`, {
     credentials: "include",
     headers: {
       "Content-Type": "application/json",
@@ -67,9 +56,9 @@ const getFilteredProject = async (queryParams: string) => {
   return res;
 };
 
-const getVolunteerAppliedProjects = async (userId: string) => {
+const getVolunteerAppliedProjects = async () => {
   const apiRes = await fetch(
-    `${process.env.NEXT_PUBLIC_BASE_URL}/user-joined-projects?userId=${userId}`,
+    `${process.env.NEXT_PUBLIC_BASE_URL}/user-joined-projects`,
     {
       credentials: "include",
       headers: {
@@ -83,11 +72,11 @@ const getVolunteerAppliedProjects = async (userId: string) => {
 };
 
 const getSingleProject = async (props: ProjectDetailsProps) => {
-  const { projectId, userId } = props;
+  const { projectId } = props;
   if (!projectId) return;
 
   const apiRes = await fetch(
-    `${process.env.NEXT_PUBLIC_BASE_URL}/project/${projectId}?userId=${userId}`,
+    `${process.env.NEXT_PUBLIC_BASE_URL}/project/${projectId}`,
     {
       credentials: "include",
       headers: {
@@ -101,7 +90,7 @@ const getSingleProject = async (props: ProjectDetailsProps) => {
 };
 
 const editProject = async (props: EditProjectProps) => {
-  const { userId, project, projectId } = props;
+  const { project, projectId } = props;
 
   const apiRes = await fetch(
     `${process.env.NEXT_PUBLIC_BASE_URL}/update-project/${projectId}`,
@@ -112,7 +101,6 @@ const editProject = async (props: EditProjectProps) => {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        userId,
         ...project,
       }),
     }
@@ -123,10 +111,10 @@ const editProject = async (props: EditProjectProps) => {
 };
 
 const deleteProject = async (props: DeleteProjectProps) => {
-  const { projectId, userId } = props;
+  const { projectId } = props;
 
   const apiRes = await fetch(
-    `${process.env.NEXT_PUBLIC_BASE_URL}/delete-project/${userId}/${projectId}`,
+    `${process.env.NEXT_PUBLIC_BASE_URL}/delete-project/${projectId}`,
     {
       method: "DELETE",
       headers: {
@@ -140,7 +128,7 @@ const deleteProject = async (props: DeleteProjectProps) => {
 };
 
 const exitProject = async (props: DeleteProjectProps) => {
-  const { projectId, userId } = props;
+  const { projectId } = props;
 
   const apiRes = await fetch(
     `${process.env.NEXT_PUBLIC_BASE_URL}/leave-project`,
@@ -151,7 +139,6 @@ const exitProject = async (props: DeleteProjectProps) => {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        userId,
         projectId,
       }),
     }
@@ -162,7 +149,7 @@ const exitProject = async (props: DeleteProjectProps) => {
 };
 
 const createProject = async (props: CreateProjectProps) => {
-  const { userId, project } = props;
+  const { project } = props;
 
   const apiRes = await fetch(
     `${process.env.NEXT_PUBLIC_BASE_URL}/save-project-data`,
@@ -173,7 +160,6 @@ const createProject = async (props: CreateProjectProps) => {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        userId,
         ...project,
       }),
     }
@@ -184,7 +170,7 @@ const createProject = async (props: CreateProjectProps) => {
 };
 
 const applyForProject = async (props: ProjectApplicationProps) => {
-  const { formData, userId, projectId } = props;
+  const { formData, projectId } = props;
 
   const apiRes = await fetch(
     `${process.env.NEXT_PUBLIC_BASE_URL}/join-project`,
@@ -195,7 +181,6 @@ const applyForProject = async (props: ProjectApplicationProps) => {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        userId,
         projectId,
         ...formData,
       }),

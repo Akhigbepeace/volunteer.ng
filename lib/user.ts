@@ -11,22 +11,19 @@ type User = {
 };
 
 type SelectRoleProp = {
-  userId: string | null;
   role: Role;
 };
 
 type OnboardingProps = {
-  userId: string;
   volunteer?: VolunteerOnboardingData;
   organization?: OrganizationOnboardingForm;
 };
 
-const getUser = async (userId: string) => {
+const getUser = async () => {
   const apiRes = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/user`, {
     credentials: "include",
     headers: {
       "Content-Type": "application/json",
-      userId: String(userId),
     },
   });
 
@@ -36,7 +33,7 @@ const getUser = async (userId: string) => {
 };
 
 const handleSelectRole = async (props: SelectRoleProp) => {
-  const { userId, role } = props;
+  const { role } = props;
 
   const apiRes = await fetch(
     `${process.env.NEXT_PUBLIC_BASE_URL}/save-user-type`,
@@ -47,7 +44,6 @@ const handleSelectRole = async (props: SelectRoleProp) => {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        userId,
         role,
       }),
     }
@@ -58,7 +54,7 @@ const handleSelectRole = async (props: SelectRoleProp) => {
 };
 
 const handleVolunteerOnboarding = async (props: OnboardingProps) => {
-  const { userId, volunteer } = props;
+  const { volunteer } = props;
 
   const apiRes = await fetch(
     `${process.env.NEXT_PUBLIC_BASE_URL}/save-user-data`,
@@ -69,7 +65,6 @@ const handleVolunteerOnboarding = async (props: OnboardingProps) => {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        userId,
         volunteer,
       }),
     }
@@ -80,7 +75,7 @@ const handleVolunteerOnboarding = async (props: OnboardingProps) => {
 };
 
 const handleOrganizationOnboarding = async (props: OnboardingProps) => {
-  const { userId, organization } = props;
+  const { organization } = props;
 
   const apiRes = await fetch(
     `${process.env.NEXT_PUBLIC_BASE_URL}/save-user-data`,
@@ -91,7 +86,6 @@ const handleOrganizationOnboarding = async (props: OnboardingProps) => {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        userId,
         organization,
       }),
     }

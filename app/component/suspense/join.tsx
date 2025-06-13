@@ -2,38 +2,15 @@
 import { RiUserCommunityLine } from "react-icons/ri";
 import { GoOrganization } from "react-icons/go";
 import { handleSelectRole, Role } from "@/lib/user";
-import { useRouter, useSearchParams } from "next/navigation";
-import Cookies from "universal-cookie";
-import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import { toast, ToastContainer } from "react-toastify";
 
 const SelectRole = () => {
-  const [userId, setUserId] = useState<string | null>(null);
-
   const router = useRouter();
-  const cookies = new Cookies();
-  const params = useSearchParams();
-  const paramId = params.get("userId");
-
-  const user = cookies.get("user");
-
-  useEffect(() => {
-    if (paramId) {
-      setUserId(paramId);
-    } else if (user?.id) {
-      setUserId(user.id);
-    }
-  }, [paramId, user]);
 
   const handleRoleSelection = async (role: Role) => {
     try {
-      if (!userId) {
-        toast.warn("No User ID available");
-        return;
-      }
-
       const data = await handleSelectRole({
-        userId,
         role,
       });
 

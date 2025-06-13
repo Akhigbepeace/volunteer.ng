@@ -5,7 +5,6 @@ import { getUser } from "@/lib/user";
 import { useRouter, useSearchParams } from "next/navigation";
 import React, { useState, useEffect, FormEvent, ChangeEvent } from "react";
 import { toast, ToastContainer } from "react-toastify";
-import Cookies from "universal-cookie";
 import Loader from "../loader";
 
 export type FormData = {
@@ -23,10 +22,6 @@ export type FormData = {
 const ProjectApplication = () => {
   const searchParams = useSearchParams();
   const router = useRouter();
-
-  const cookies = new Cookies();
-  const user = cookies.get("user");
-  const userId = user.id;
   const projectId = searchParams.get("projectId");
   const projectTitle = searchParams.get("projectTitle");
   const deadline = searchParams.get("deadline");
@@ -49,7 +44,7 @@ const ProjectApplication = () => {
   useEffect(() => {
     const fetchUserData = async () => {
       try {
-        const userData = await getUser(user.id);
+        const userData = await getUser();
 
         setFormData((prev) => ({
           ...prev,
@@ -62,10 +57,8 @@ const ProjectApplication = () => {
       }
     };
 
-    if (user?.id) {
-      fetchUserData();
-    }
-  }, [user?.id, projectTitle]);
+    fetchUserData();
+  }, [projectTitle]);
 
   const handleChange = (
     e: ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>
@@ -90,7 +83,6 @@ const ProjectApplication = () => {
 
     try {
       const res = await applyForProject({
-        userId,
         projectId: projectId as string,
         formData,
       });

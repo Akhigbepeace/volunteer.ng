@@ -5,7 +5,6 @@ import { handleOrganizationOnboarding } from "@/lib/user";
 import { useRouter } from "next/navigation";
 import React, { SyntheticEvent, useState } from "react";
 import { toast, ToastContainer } from "react-toastify";
-import Cookies from "universal-cookie";
 
 type Industry = {
   value: string;
@@ -55,9 +54,6 @@ const OrgOnboardingForm = () => {
     useState<OrganizationOnboardingForm>(defaultData);
 
   const router = useRouter();
-  const cookies = new Cookies();
-  const user = cookies.get("user");
-  const userId = user?.id;
 
   const handleInputChange = (e: SyntheticEvent) => {
     const { name, value } = e.currentTarget as HTMLFormElement;
@@ -90,7 +86,6 @@ const OrgOnboardingForm = () => {
 
     try {
       const res = await handleOrganizationOnboarding({
-        userId,
         organization: formData,
       });
 

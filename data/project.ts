@@ -11,7 +11,7 @@ type Project = {
   causes: string[];
   skills: string[];
   creatorId?: "";
-  status: "applied" | "ongoing" | "completed" | "rejected";
+  status: "applied" | "ongoing" | "completed" | "published" | "rejected";
   location: string[];
   numberOfHours: number;
   deadline: string;

@@ -5,8 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { FaChevronDown, FaBars, FaTimes } from "react-icons/fa";
 import { getUser, User } from "@/lib/user";
-import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import Cookies from "universal-cookie";
+import { usePathname, useRouter } from "next/navigation";
 import { toast, ToastContainer } from "react-toastify";
 import { handleUserLogout } from "@/lib/auth";
 
@@ -21,20 +20,13 @@ type Navlinks = {
 };
 
 const NavbarContent = () => {
-  const [userId, setUserId] = useState("");
   const [openMenuIndex, setOpenMenuIndex] = useState<number | null>(null);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [searchParamsUserId, setSearchParamsUserId] = useState<string | null>(
-    null
-  );
 
   const [userData, setUserData] = useState<User | null>(null);
 
   const router = useRouter();
-  const cookies = new Cookies();
-  const searchParams = useSearchParams();
   const pathName = usePathname();
-  const user = cookies.get("user");
   const isOnboardingPage =
     pathName === "/onboarding/org" || pathName === "/onboarding/volunteer";
 
@@ -76,24 +68,9 @@ const NavbarContent = () => {
   }, [userData]);
 
   useEffect(() => {
-    const id = searchParams.get("userId");
-    if (id) {
-      setSearchParamsUserId(id);
-      cookies.set("user", { id }, { path: "/" });
-    }
-  }, [searchParams]);
-
-  useEffect(() => {
-    if (user) setUserId(user.id);
-  }, [user]);
-
-  useEffect(() => {
     const fetchUser = async () => {
-      const id = searchParamsUserId || userId;
-      if (!id) return;
-
       try {
-        const data = await getUser(id);
+        const data = await getUser();
 
         if (data?.email) {
           setUserData(data);
@@ -106,7 +83,7 @@ const NavbarContent = () => {
     };
 
     fetchUser();
-  }, [searchParamsUserId, userId]);
+  }, []);
 
   const toggleMenuOption = (index: number) => {
     setOpenMenuIndex((prevIndex) => (prevIndex === index ? null : index));
@@ -115,7 +92,6 @@ const NavbarContent = () => {
   const handleLogout = async () => {
     try {
       await handleUserLogout();
-      cookies.remove("user");
       setUserData(null);
       router.push("/login");
     } catch (error) {
@@ -265,12 +241,11 @@ const NavbarContent = () => {
               )}
             </div>
           ))}
-
-          {userData?.email && (
+          {userData?.email && userData.role && (
             <Link
               href={
                 userData.role === "organization"
-                  ? " /project/organization"
+                  ? "/project/organization"
                   : "/project/volunteer"
               }
             >

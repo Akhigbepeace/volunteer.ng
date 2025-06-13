@@ -1,11 +1,27 @@
 import { Project } from "@/data/project";
 import React from "react";
 
-type Props = {
+type ProjectDetailsProp = {
   project: Project;
 };
 
-const ProjectDetails: React.FC<Props> = ({ project }) => {
+const ProjectDetails = ({ project }: ProjectDetailsProp) => {
+  function formatWithSuffix(dateString: string) {
+    const date = new Date(dateString);
+    const day = date.getDate();
+
+    let suffix = "th";
+
+    if (day % 10 === 1 && day % 100 !== 11) suffix = "st";
+    else if (day % 10 === 2 && day % 100 !== 12) suffix = "nd";
+    else if (day % 10 === 3 && day % 100 !== 13) suffix = "rd";
+
+    return (
+      date.toLocaleDateString("en-US", { month: "long", year: "numeric" }) +
+      ` ${day}${suffix}`
+    );
+  }
+
   return (
     <div className="max-w-5xl mx-auto p-6 bg-white rounded-lg shadow-md mt-5">
       <h2 className="text-2xl font-bold text-primary">Project details</h2>
@@ -58,22 +74,29 @@ const ProjectDetails: React.FC<Props> = ({ project }) => {
         <h3 className="text-lg font-bold text-secondary">Project Timeline</h3>
         <p className="text-gray-700 mt-2">Duration: {project.duration}</p>
         {project.startDate && (
-          <p className="text-gray-700">Start: {project.startDate}</p>
+          <p className="text-gray-700">
+            Start:
+            {formatWithSuffix(project.startDate)}
+          </p>
         )}
         {project.endDate && (
-          <p className="text-gray-700">End: {project.endDate}</p>
+          <p className="text-gray-700">
+            End: {formatWithSuffix(project.endDate)}
+          </p>
         )}
         <p className="text-gray-700">Deadline: {project.deadline}</p>
       </div>
 
       <div className="mt-6">
         <h3 className="text-lg font-bold text-secondary">Other Info</h3>
-        <p className="text-gray-700">
-          Number of hours: {project.numberOfHours} hrs
+        <p className="text-gray-700 capitalize">
+          Number of hours : {project.duration} hrs
         </p>
-        <p className="text-gray-700">Status: {project.status}</p>
+        <p className="text-gray-700 capitalize">Status: {project.status}</p>
         {project.location.length > 0 && (
-          <p className="text-gray-700">Location: {project.location}</p>
+          <p className="text-gray-700 capitalize">
+            Location: {project.location}
+          </p>
         )}
       </div>
     </div>
