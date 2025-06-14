@@ -3,6 +3,7 @@ type Type = "remote" | "physical" | "hybrid";
 type Project = {
   _id: string;
   image: string;
+  canApply?: boolean;
   type: Type | null;
   duration: string;
   heading: string;
@@ -11,7 +12,13 @@ type Project = {
   causes: string[];
   skills: string[];
   creatorId?: "";
-  status: "applied" | "ongoing" | "completed" | "published" | "rejected";
+  status:
+    | "applied"
+    | "ongoing"
+    | "completed"
+    | "published"
+    | "rejected"
+    | "pending";
   location: string[];
   numberOfHours: number;
   deadline: string;

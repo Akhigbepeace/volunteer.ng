@@ -29,9 +29,9 @@ const ProjectDetails = ({ project }: ProjectDetailsProp) => {
       <div className="mt-10">
         <h3 className="text-lg font-bold text-secondary">What we need</h3>
         <ul className="list-disc list-inside text-gray-700 space-y-2 mt-2">
-          {project.requirements?.map((item, index) => (
-            <li key={index}>{item}</li>
-          )) || (
+          {project.requirements
+            ?.filter((requirement) => requirement.trim() !== "")
+            ?.map((item, index) => <li key={index}>{item}</li>) || (
             <li className="text-gray-500 italic">
               No specific requirements listed.
             </li>
@@ -63,9 +63,11 @@ const ProjectDetails = ({ project }: ProjectDetailsProp) => {
         <div className="mt-6">
           <h3 className="text-lg font-bold text-secondary">Benefits</h3>
           <ul className="list-disc list-inside text-gray-700 mt-2 space-y-1">
-            {project.benefits.map((benefit, index) => (
-              <li key={index}>{benefit}</li>
-            ))}
+            {project.benefits
+              .filter((item) => item.trim() !== "")
+              .map((benefit, index) => (
+                <li key={index}>{benefit}</li>
+              ))}
           </ul>
         </div>
       )}
@@ -90,7 +92,7 @@ const ProjectDetails = ({ project }: ProjectDetailsProp) => {
       <div className="mt-6">
         <h3 className="text-lg font-bold text-secondary">Other Info</h3>
         <p className="text-gray-700 capitalize">
-          Number of hours : {project.duration} hrs
+          Number of hours : {project.duration}
         </p>
         <p className="text-gray-700 capitalize">Status: {project.status}</p>
         {project.location.length > 0 && (

@@ -202,24 +202,24 @@ const ProjectDetails = () => {
 
         {!isOrganization && (
           <div className="md:w-1/3 flex flex-col gap-4">
-            {project.status === "applied" ? (
+            {project.canApply && project.status === "pending" ? (
+              <Link
+                href={
+                  role === "volunteer"
+                    ? `/project/apply?projectTitle=${project.heading}&projectId=${project._id}&deadline=${project.deadline}`
+                    : "/signup"
+                }
+                className="bg-secondary text-white py-2 px-4 rounded-lg text-lg text-center"
+              >
+                Apply now
+              </Link>
+            ) : (
               <button
                 onClick={handleExitProject}
                 className="px-4 py-2 bg-red-600 text-white rounded text-lg text-center"
               >
                 {isExiting ? <Loader /> : "Exit Project"}
               </button>
-            ) : (
-              <Link
-                href={
-                  role === "volunteer"
-                    ? "/signup"
-                    : `/project/apply?projectTitle=${project.heading}&projectId=${project._id}&deadline=${project.deadline}`
-                }
-                className="bg-secondary text-white py-2 px-4 rounded-lg text-lg text-center"
-              >
-                Apply now
-              </Link>
             )}
           </div>
         )}
@@ -259,12 +259,10 @@ const ProjectDetails = () => {
             className="rounded-lg w-full object-cover"
           />
         </div>
- 
       </div>
 
       {/* Project Details */}
       <Details project={project} />
-
 
       {/* Volunteers Section - Only show to project owner */}
       {isOwnersProject && isOrganization && (
@@ -282,9 +280,11 @@ const ProjectDetails = () => {
             Related Projects
           </h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
-            {projects.map((proj, index) => (
-              <ProjectCard key={index} project={proj} />
-            ))}
+            {projects
+              .filter((project) => project._id !== projectId)
+              .map((proj, index) => (
+                <ProjectCard key={index} project={proj} />
+              ))}
           </div>
         </div>
       )}
