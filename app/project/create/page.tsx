@@ -30,7 +30,7 @@ const defaultData: Project = {
   skills: [],
   deadline: "",
   numberOfHours: 0,
-  status: "published",
+  status: "pending",
   location: [],
   creatorId: "",
   startDate: "",
