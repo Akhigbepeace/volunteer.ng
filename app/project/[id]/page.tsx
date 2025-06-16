@@ -15,6 +15,7 @@ import {
   exitProject,
   getProject,
   getSingleProject,
+  updateVolunteerStatus,
 } from "@/lib/project";
 import { getUser } from "@/lib/user";
 import { Project, Volunteers } from "@/data/project";
@@ -23,7 +24,14 @@ import VolunteersSection from "@/app/component/project/volunters-section";
 
 type ProjectAndVolunteers = {
   project: Project | null;
+  hasJoinedProject: boolean | null;
   volunteers: Volunteers[];
+};
+
+const initialProjectData = {
+  project: null,
+  hasJoinedProject: null,
+  volunteers: [],
 };
 
 const ProjectDetails = () => {
@@ -32,10 +40,7 @@ const ProjectDetails = () => {
   const [isDeleting, setIsDeleting] = useState(false);
   const [role, setRole] = useState<string>("");
   const [projectAndVolunteers, setProjectsAndVolunteers] =
-    useState<ProjectAndVolunteers>({
-      project: null,
-      volunteers: [],
-    });
+    useState<ProjectAndVolunteers>(initialProjectData);
   const [projects, setProjects] = useState<Project[]>([]);
 
   const router = useRouter();
@@ -64,6 +69,7 @@ const ProjectDetails = () => {
         setRole(userData.role);
         setProjectsAndVolunteers({
           project: projectData.project,
+          hasJoinedProject: projectData.hasJoinedProject,
           volunteers: projectData.volunteers,
         });
         setProjects(projectList.projects);
@@ -140,13 +146,13 @@ const ProjectDetails = () => {
     status: "accepted" | "rejected"
   ) => {
     try {
-      // You'll need to implement this function in your lib/project.ts
-      // const res = await updateVolunteerStatus({
-      //   projectId: projectId as string,
-      //   volunteerId,
-      //   status,
-      //   userId: user.id,
-      // });
+      const res = await updateVolunteerStatus({
+        projectId: projectId as string,
+        volunteerId,
+        status,
+      });
+
+      console.log("Update status res", res);
 
       // For now, we'll update the local state
       setProjectsAndVolunteers((prev) => ({
@@ -174,13 +180,16 @@ const ProjectDetails = () => {
       return s[(v - 20) % 10] || s[v] || s[0];
     };
     return `${month} ${day}${getOrdinalSuffix(day)}`;
-    // return "Hello";
   };
 
-  const { project, volunteers } = projectAndVolunteers;
+  const { project, volunteers, hasJoinedProject } = projectAndVolunteers;
 
   const isOrganization = role === "organization";
   const isOwnersProject = project?.creatorId;
+
+  console.log({
+    projectAndVolunteers,
+  });
 
   if (isLoading) return <div className="text-center mt-10">Loading...</div>;
   if (!project)
@@ -202,7 +211,14 @@ const ProjectDetails = () => {
 
         {!isOrganization && (
           <div className="md:w-1/3 flex flex-col gap-4">
-            {project.canApply && project.status === "pending" ? (
+            {hasJoinedProject ? (
+              <button
+                onClick={handleExitProject}
+                className="px-4 py-2 bg-red-600 text-white rounded text-lg text-center"
+              >
+                {isExiting ? <Loader /> : "Exit Project"}
+              </button>
+            ) : (
               <Link
                 href={
                   role === "volunteer"
@@ -213,13 +229,6 @@ const ProjectDetails = () => {
               >
                 Apply now
               </Link>
-            ) : (
-              <button
-                onClick={handleExitProject}
-                className="px-4 py-2 bg-red-600 text-white rounded text-lg text-center"
-              >
-                {isExiting ? <Loader /> : "Exit Project"}
-              </button>
             )}
           </div>
         )}

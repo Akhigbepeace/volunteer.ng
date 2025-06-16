@@ -117,17 +117,17 @@ const VolunteerOnboardingForm = () => {
         volunteer: formData,
       });
 
-      if (res.status === "true") router.push("/project/volunteer");
+      if (res.status === "true") {
+        router.push("/project/volunteer");
+      } else {
+        toast.error(res.message);
+      }
     } catch (error) {
       toast.error(String(error));
     } finally {
       setLoading(false);
     }
   };
-
-  if (loading) {
-    return <div>Loading...</div>;
-  }
 
   return (
     <div className="min-h-screen bg-gray-50 flex items-center justify-center">
@@ -325,7 +325,7 @@ const VolunteerOnboardingForm = () => {
         </div>
         <button
           type="submit"
-          className="w-full bg-primary text-white py-2 rounded-lg hover:bg-secondary transition"
+          className="w-full py-3 bg-secondary text-white rounded-lg flex items-center justify-center"
         >
           {loading ? <Loader /> : null}
           {loading ? "Please Wait..." : "Submit"}

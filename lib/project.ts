@@ -28,6 +28,12 @@ type ProjectDetailsProps = {
   projectId: string;
 };
 
+type VolunteeerStatusProps = {
+  projectId: string;
+  volunteerId: string;
+  status: "accepted" | "rejected";
+};
+
 const getProject = async () => {
   const apiRes = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/projects`, {
     credentials: "include",
@@ -82,6 +88,30 @@ const getSingleProject = async (props: ProjectDetailsProps) => {
       headers: {
         "Content-Type": "application/json",
       },
+    }
+  );
+
+  const res = await apiRes.json();
+  return res;
+};
+
+const updateVolunteerStatus = async (props: VolunteeerStatusProps) => {
+  const { projectId, status, volunteerId } = props;
+  if (!projectId) return;
+
+  const apiRes = await fetch(
+    `${process.env.NEXT_PUBLIC_BASE_URL}/update-project-status`,
+    {
+      method: "POST",
+      credentials: "include",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        projectId,
+        status,
+        volunteerId,
+      }),
     }
   );
 
@@ -216,6 +246,7 @@ const uploadImageToCloudinary = async (file: File): Promise<CloudinaryRes> => {
 export {
   getProject,
   applyForProject,
+  updateVolunteerStatus,
   exitProject,
   createProject,
   editProject,
