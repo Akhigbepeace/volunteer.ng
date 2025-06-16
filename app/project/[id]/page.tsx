@@ -185,13 +185,8 @@ const ProjectDetails = () => {
   const { project, volunteers, hasJoinedProject } = projectAndVolunteers;
 
   const isOrganization = role === "organization";
-  const isOwnersProject = project?.creatorId;
 
-  const filteredProjects = projects.filter(
-    (project) => project._id !== projectId
-  );
   console.log({
-    filteredProjects,
     projectAndVolunteers,
   });
 
@@ -237,7 +232,7 @@ const ProjectDetails = () => {
           </div>
         )}
 
-        {isOwnersProject && isOrganization && (
+        {volunteers && isOrganization && (
           <div className="flex gap-3 mt-4">
             <button
               onClick={handleEdit}
@@ -278,10 +273,9 @@ const ProjectDetails = () => {
       <Details project={project} />
 
       {/* Volunteers Section - Only show to project owner */}
-      {isOwnersProject && isOrganization && (
+      {isOrganization && volunteers && (
         <VolunteersSection
           volunteers={volunteers}
-          isOwner={isOwnersProject}
           onStatusUpdate={handleVolunteerStatusUpdate}
         />
       )}
@@ -293,9 +287,11 @@ const ProjectDetails = () => {
             Related Projects
           </h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
-            {projects.map((proj, index) => (
-              <ProjectCard key={index} project={proj} />
-            ))}
+            {projects
+              .filter((project) => project._id !== projectId)
+              .map((proj, index) => (
+                <ProjectCard key={index} project={proj} />
+              ))}
           </div>
         </div>
       )}

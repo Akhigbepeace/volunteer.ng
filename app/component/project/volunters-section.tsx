@@ -11,7 +11,6 @@ import {
 
 interface VolunteersSectionProps {
   volunteers: Volunteers[];
-  isOwner: boolean;
   onStatusUpdate?: (
     volunteerId: string,
     status: "accepted" | "rejected"
@@ -19,7 +18,7 @@ interface VolunteersSectionProps {
 }
 
 const VolunteersSection = (props: VolunteersSectionProps) => {
-  const { volunteers, isOwner, onStatusUpdate } = props;
+  const { volunteers, volunteers: isOwner, onStatusUpdate } = props;
 
   const normalizedVolunteers = volunteers.map((v) => ({
     ...v,
