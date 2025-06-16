@@ -74,8 +74,6 @@ const NavbarContent = () => {
 
         if (data?.email) {
           setUserData(data);
-        } else {
-          router.push("/explore");
         }
       } catch (error) {
         toast.error(String(error));
@@ -149,17 +147,15 @@ const NavbarContent = () => {
               )}
             </div>
           ))}
-          {userData?.email && !isOnboardingPage && (
-            <Link
-              href={
-                userData.role === "organization"
-                  ? " /project/organization"
-                  : "/project/volunteer"
-              }
-            >
-              Project
-            </Link>
-          )}{" "}
+
+          {userData &&
+            !isOnboardingPage &&
+            userData.role === "organization" && (
+              <Link href="/project/organization">Project</Link>
+            )}
+          {userData && !isOnboardingPage && userData.role === "volunteer" && (
+            <Link href="/project/volunteer">Project</Link>
+          )}
         </div>
 
         {/* Right Section */}
@@ -241,16 +237,12 @@ const NavbarContent = () => {
               )}
             </div>
           ))}
-          {userData?.email && userData.role && (
-            <Link
-              href={
-                userData.role === "organization"
-                  ? "/project/organization"
-                  : "/project/volunteer"
-              }
-            >
-              Project
-            </Link>
+
+          {userData && userData.role === "organization" && (
+            <Link href="/project/organization">Project</Link>
+          )}
+          {userData && userData.role === "volunteer" && (
+            <Link href="/project/volunteer">Project</Link>
           )}
 
           <div className="flex flex-col gap-3 w-full items-center">
