@@ -96,9 +96,16 @@ const ProjectDetails = ({ project }: ProjectDetailsProp) => {
         </p>
         <p className="text-gray-700 capitalize">Status: {project.status}</p>
         {project.location.length > 0 && (
-          <p className="text-gray-700 capitalize">
-            Location: {project.location}
-          </p>
+          <>
+            <p className="font-bold"> Location:</p>
+            <ul className="text-gray-700 capitalize">
+              {project.location.map((location, index) => (
+                <li key={index} className="list-disc list-inside">
+                  {location}
+                </li>
+              ))}
+            </ul>
+          </>
         )}
       </div>
     </div>

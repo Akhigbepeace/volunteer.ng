@@ -517,7 +517,7 @@ const EditProject = () => {
           disabled={loading}
         >
           {loading ? <Loader /> : null}
-          {loading ? "Creating..." : "Create Project"}
+          {loading ? "Please Wait..." : "Edit Project"}
         </button>
       </form>
     </div>

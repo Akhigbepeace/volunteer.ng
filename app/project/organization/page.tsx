@@ -7,10 +7,15 @@ import { Project } from "@/data/project";
 import { getProject } from "@/lib/project";
 import { toast } from "react-toastify";
 
-type TabOption = "published" | "ongoing" | "completed";
+type TabOption = "published" | "ongoing" | "completed" | "received";
 type SortOption = "newest" | "oldest" | "az" | "za";
 
-const projectTab = ["published", "ongoing", "completed"] as TabOption[];
+const projectTab = [
+  "published",
+  "ongoing",
+  "completed",
+  "received ",
+] as TabOption[];
 
 const OrganizationProjects = () => {
   const [searchQuery, setSearchQuery] = useState("");

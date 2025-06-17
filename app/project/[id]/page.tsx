@@ -231,7 +231,7 @@ const ProjectDetails = () => {
           </div>
         )}
 
-        {isOrganization && (
+        {isOrganization && volunteers && (
           <div className="flex gap-3 mt-4">
             <button
               onClick={handleEdit}

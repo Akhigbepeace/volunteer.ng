@@ -210,7 +210,7 @@ const ProjectApplication = () => {
         />
         <button
           type="submit"
-          className="w-full bg-secondary text-white p-2 rounded"
+          className="w-full py-3 bg-secondary text-white rounded-lg flex items-center justify-center"
         >
           {loading ? <Loader /> : null}
           {loading ? "Loading..." : " Apply Now"}
