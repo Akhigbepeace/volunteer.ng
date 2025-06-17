@@ -30,7 +30,7 @@ const defaultData: Project = {
   skills: [],
   deadline: "",
   numberOfHours: 0,
-  status: "pending",
+  status: "published",
   location: [],
   creatorId: "",
   startDate: "",
@@ -99,6 +99,8 @@ const CreateProject = () => {
         setTimeout(() => {
           router.push("/project/organization");
         }, 3000);
+      } else {
+        toast.error(res.message);
       }
     } catch (error) {
       toast.error(String(error));
@@ -125,6 +127,8 @@ const CreateProject = () => {
       setImageIsLoading(false);
     }
   };
+
+  console.log({ formData });
 
   return (
     <div className="p-6 max-w-3xl mx-auto">
@@ -441,7 +445,7 @@ const CreateProject = () => {
         <button
           type="submit"
           className="w-full py-3 bg-secondary text-white rounded-lg flex items-center justify-center"
-          disabled={loading}
+          disabled={loading || imageIsLoading}
         >
           {loading ? <Loader /> : null}
           {loading ? "Creating..." : "Create Project"}

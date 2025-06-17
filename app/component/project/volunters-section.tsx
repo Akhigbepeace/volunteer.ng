@@ -9,12 +9,14 @@ import {
   FaTimesCircle,
 } from "react-icons/fa";
 
+export type StatusUpdateProps = {
+  volunteerId: string;
+  status: "accepted" | "rejected";
+};
+
 interface VolunteersSectionProps {
   volunteers: Volunteers[];
-  onStatusUpdate?: (
-    volunteerId: string,
-    status: "accepted" | "rejected"
-  ) => void;
+  onStatusUpdate?: (props: StatusUpdateProps) => void;
 }
 
 const VolunteersSection = (props: VolunteersSectionProps) => {
@@ -164,7 +166,10 @@ const VolunteersSection = (props: VolunteersSectionProps) => {
                     <div className="flex gap-2">
                       <button
                         onClick={() =>
-                          onStatusUpdate(volunteer._id, "accepted")
+                          onStatusUpdate({
+                            volunteerId: volunteer._id,
+                            status: "accepted",
+                          })
                         }
                         className="px-3 py-1 bg-green-600 text-white text-sm rounded hover:bg-green-700 transition-colors"
                       >
@@ -173,7 +178,10 @@ const VolunteersSection = (props: VolunteersSectionProps) => {
 
                       <button
                         onClick={() =>
-                          onStatusUpdate(volunteer._id, "rejected")
+                          onStatusUpdate({
+                            volunteerId: volunteer._id,
+                            status: "rejected",
+                          })
                         }
                         className="px-3 py-1 bg-red-600 text-white text-sm rounded hover:bg-red-700 transition-colors"
                       >

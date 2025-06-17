@@ -20,7 +20,9 @@ import {
 import { getUser } from "@/lib/user";
 import { Project, Volunteers } from "@/data/project";
 import Loader from "@/app/component/loader";
-import VolunteersSection from "@/app/component/project/volunters-section";
+import VolunteersSection, {
+  StatusUpdateProps,
+} from "@/app/component/project/volunters-section";
 
 type ProjectAndVolunteers = {
   project: Project | null;
@@ -141,18 +143,15 @@ const ProjectDetails = () => {
   };
 
   // New function to handle volunteer status updates
-  const handleVolunteerStatusUpdate = async (
-    volunteerId: string,
-    status: "accepted" | "rejected"
-  ) => {
+  const handleVolunteerStatusUpdate = async (props: StatusUpdateProps) => {
+    const { status, volunteerId } = props;
+
     try {
       const res = await updateVolunteerStatus({
         projectId: projectId as string,
         volunteerId,
         status,
       });
-
-      console.log("Update status res", res);
 
       // For now, we'll update the local state
       setProjectsAndVolunteers((prev) => ({
@@ -232,7 +231,7 @@ const ProjectDetails = () => {
           </div>
         )}
 
-        {volunteers && isOrganization && (
+        {isOrganization && (
           <div className="flex gap-3 mt-4">
             <button
               onClick={handleEdit}
