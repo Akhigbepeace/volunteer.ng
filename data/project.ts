@@ -34,15 +34,18 @@ type Project = {
 
 type Volunteers = {
   company: string;
-  contactEmail: string;
+  email: string;
   createdAt: string;
-  displayName: string;
+  name: string;
   experience: string;
+  availability: string;
+  qualifications: string;
   favorites: [];
   googleId: string;
   image: string;
   industry: string[];
   phone: string;
+  message: string;
   status: "pending" | "accepted" | "rejected";
   projectsJoined: string[];
   requirements: [];

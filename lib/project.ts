@@ -1,4 +1,6 @@
 import type { FormData } from "@/app/component/suspense/apply";
+import { TabOption } from "@/app/project/organization/page";
+import { TabType } from "@/app/project/volunteer/page";
 import { Project } from "@/data/project";
 
 type ProjectApplicationProps = {
@@ -46,6 +48,21 @@ const getProject = async () => {
   return res;
 };
 
+const getOrgProject = async () => {
+  const apiRes = await fetch(
+    `${process.env.NEXT_PUBLIC_BASE_URL}/my-projects`,
+    {
+      credentials: "include",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    }
+  );
+
+  const res = await apiRes.json();
+  return res;
+};
+
 const getFilteredProject = async (queryParams: string) => {
   const url = `${
     process.env.NEXT_PUBLIC_BASE_URL
@@ -65,6 +82,36 @@ const getFilteredProject = async (queryParams: string) => {
 const getVolunteerAppliedProjects = async () => {
   const apiRes = await fetch(
     `${process.env.NEXT_PUBLIC_BASE_URL}/user-joined-projects`,
+    {
+      credentials: "include",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    }
+  );
+
+  const res = await apiRes.json();
+  return res;
+};
+
+const getVolunteerProjectByStatus = async (status: TabType) => {
+  const apiRes = await fetch(
+    `${process.env.NEXT_PUBLIC_BASE_URL}/projects-by-status/${status}`,
+    {
+      credentials: "include",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    }
+  );
+
+  const res = await apiRes.json();
+  return res;
+};
+
+const getOrgProjectByStatus = async (status: TabOption) => {
+  const apiRes = await fetch(
+    `${process.env.NEXT_PUBLIC_BASE_URL}/projects-by-org/${status}`,
     {
       credentials: "include",
       headers: {
@@ -246,9 +293,12 @@ const uploadImageToCloudinary = async (file: File): Promise<CloudinaryRes> => {
 
 export {
   getProject,
+  getVolunteerProjectByStatus,
+  getOrgProjectByStatus,
   applyForProject,
   updateVolunteerStatus,
   exitProject,
+  getOrgProject,
   createProject,
   editProject,
   deleteProject,

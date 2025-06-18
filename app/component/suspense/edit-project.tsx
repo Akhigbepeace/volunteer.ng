@@ -59,7 +59,7 @@ const EditProject = () => {
       setLoading(true);
 
       try {
-        const res: Project = await getSingleProject({
+        const res = await getSingleProject({
           projectId: projectId as string,
         });
         const {
@@ -84,7 +84,7 @@ const EditProject = () => {
           numberOfHours,
           startDate,
           skills: tags,
-        } = res;
+        } = res.project as Project;
 
         setFormData({
           _id,

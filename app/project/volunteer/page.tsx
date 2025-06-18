@@ -3,37 +3,40 @@
 import React, { useEffect, useState } from "react";
 import ProjectCard from "@/app/component/project/project-card";
 import { Project } from "@/data/project";
-import { getVolunteerAppliedProjects } from "@/lib/project";
+import { getVolunteerProjectByStatus } from "@/lib/project";
 import { toast, ToastContainer } from "react-toastify";
 
-const TABS = ["Applied", "Ongoing", "Completed", "Rejected"];
+const TABS = ["Pending", "Accepted", "Rejected"];
+// const TABS = ["Pending", "Applied", "Ongoing", "Completed", "Rejected"];
+export type TabType =
+  | "pending"
+  | "applied"
+  | "ongoing"
+  | "completed"
+  | "rejected";
 
 const Projects = () => {
-  const [activeTab, setActiveTab] = useState("Applied");
+  const [activeTab, setActiveTab] = useState<TabType>("applied");
   const [loading, setLoading] = useState(false);
   const [projects, setProjects] = useState<Project[]>([]);
 
+  const fetchProjects = async (status: TabType) => {
+    setLoading(true);
+
+    try {
+      const res = await getVolunteerProjectByStatus(status);
+      setProjects(res.projects);
+    } catch (error) {
+      console.error(error);
+      toast.error("Error getting projects");
+    } finally {
+      setLoading(false);
+    }
+  };
+
   useEffect(() => {
-    const fetchProjects = async () => {
-      setLoading(true);
-
-      try {
-        const res = await getVolunteerAppliedProjects();
-        setProjects(res.projects);
-      } catch (error) {
-        console.error(error);
-        toast.error("Error getting projects");
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchProjects();
+    fetchProjects("pending");
   }, []);
-
-  const filteredProjects = projects.filter(
-    (project) => project.status === activeTab.toLowerCase()
-  );
 
   if (loading) {
     return <div>Loading...</div>;
@@ -54,7 +57,11 @@ const Projects = () => {
                 ? "border-b-2 border-primary text-primary"
                 : "text-gray-500"
             }`}
-            onClick={() => setActiveTab(tab)}
+            onClick={() => {
+              setActiveTab(tab.toLowerCase() as TabType);
+
+              fetchProjects(tab.toLowerCase() as TabType);
+            }}
           >
             {tab} Projects
           </button>
@@ -62,8 +69,8 @@ const Projects = () => {
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
-        {filteredProjects.length > 0 ? (
-          filteredProjects.map((project, index) => (
+        {projects.length > 0 ? (
+          projects.map((project, index) => (
             <ProjectCard key={index} project={project} />
           ))
         ) : (

@@ -99,7 +99,7 @@ const ProjectDetails = () => {
         toast.success(res.message || "Project deleted successfully.");
 
         setTimeout(() => {
-          router.push("/project/organization");
+          router.push("/project/organizatiopn");
         }, 3000);
       } else {
         toast.error(res.message || "Failed to delete project.");
@@ -153,6 +153,8 @@ const ProjectDetails = () => {
         status,
       });
 
+      console.log("Status Update", res);
+
       // For now, we'll update the local state
       setProjectsAndVolunteers((prev) => ({
         ...prev,
@@ -184,10 +186,6 @@ const ProjectDetails = () => {
   const { project, volunteers, hasJoinedProject } = projectAndVolunteers;
 
   const isOrganization = role === "organization";
-
-  console.log({
-    projectAndVolunteers,
-  });
 
   if (isLoading) return <div className="text-center mt-10">Loading...</div>;
   if (!project)
@@ -231,7 +229,7 @@ const ProjectDetails = () => {
           </div>
         )}
 
-        {isOrganization && volunteers && (
+        {isOrganization && (
           <div className="flex gap-3 mt-4">
             <button
               onClick={handleEdit}

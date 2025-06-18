@@ -4,10 +4,10 @@ import React, { useEffect, useState } from "react";
 import ProjectCard from "@/app/component/project/project-card";
 import Link from "next/link";
 import { Project } from "@/data/project";
-import { getProject } from "@/lib/project";
+import { getOrgProjectByStatus } from "@/lib/project";
 import { toast } from "react-toastify";
 
-type TabOption = "published" | "ongoing" | "completed" | "received";
+export type TabOption = "published" | "ongoing" | "completed" | "received";
 type SortOption = "newest" | "oldest" | "az" | "za";
 
 const projectTab = [
@@ -24,22 +24,22 @@ const OrganizationProjects = () => {
   const [sortOption, setSortOption] = useState<SortOption>("newest");
   const [projects, setProjects] = useState<Project[]>([]);
 
+  const fetchProjects = async (status: TabOption) => {
+    setLoading(true);
+
+    try {
+      const res = await getOrgProjectByStatus(status);
+      setProjects(res.projects);
+    } catch (error) {
+      console.error(error);
+      toast.error("Error getting projects");
+    } finally {
+      setLoading(false);
+    }
+  };
+
   useEffect(() => {
-    const fetchProjects = async () => {
-      setLoading(true);
-
-      try {
-        const res = await getProject();
-        setProjects(res.projects);
-      } catch (error) {
-        console.error(error);
-        toast.error("Error getting projects");
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchProjects();
+    fetchProjects("published");
   }, []);
 
   const filteredProjects = projects
@@ -82,7 +82,10 @@ const OrganizationProjects = () => {
         {projectTab.map((tab) => (
           <button
             key={tab}
-            onClick={() => setActiveTab(tab)}
+            onClick={() => {
+              setActiveTab(tab);
+              fetchProjects(tab.toLowerCase() as TabOption);
+            }}
             className={`px-4 py-2 rounded-full font-medium capitalize ${
               activeTab === tab
                 ? "bg-primary text-white"
