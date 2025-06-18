@@ -212,6 +212,7 @@ const applyForProject = async (props: ProjectApplicationProps) => {
       },
       body: JSON.stringify({
         projectId,
+        status: "applied",
         ...formData,
       }),
     }

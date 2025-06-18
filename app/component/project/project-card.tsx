@@ -41,9 +41,9 @@ const ProjectCard = (props: ProjectProps) => {
           <p className="p-4 text-sm font-bold opacity-70">
             {project.description}
           </p>
-          <p className="bg-gray-200 font-semibold text-sm w-full py-2 px-4">
+          {/* <p className="bg-gray-200 font-semibold text-sm w-full py-2 px-4">
             {project.causes}
-          </p>
+          </p> */}
         </div>
       </div>
     </Link>
