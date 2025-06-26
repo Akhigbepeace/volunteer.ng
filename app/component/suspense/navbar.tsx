@@ -106,7 +106,7 @@ const NavbarContent = () => {
     <nav className="sticky top-0 z-50 bg-primary shadow-md px-4 md:px-6 py-4">
       <ToastContainer />
       <div className="flex justify-between items-center w-full">
-        <Link href="/explore" className="relative w-[200px] h-[50px]">
+        <Link href="/home" className="relative w-[200px] h-[50px]">
           <Image
             src="/assets/logos/full-white.png"
             alt="Logo"

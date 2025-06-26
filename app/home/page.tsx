@@ -1,5 +1,11 @@
+"use client";
+
 import Link from "next/link";
 import HomeNavbar from "../component/home-page-navbar";
+import "react-responsive-carousel/lib/styles/carousel.min.css";
+import { Carousel } from "react-responsive-carousel";
+import Image from "next/image";
+import { testimonials } from "@/data/testimonials";
 
 const HomePage = () => {
   return (
@@ -10,7 +16,7 @@ const HomePage = () => {
         {/* Hero Section */}
         <section className="bg-green-50 pb-20 pt-40 text-center px-4">
           <h1 className="text-4xl font-bold text-green-700 mb-4">
-            Build Nigeria Through Service
+            Facilitating Social Impact
           </h1>
           <p className="text-lg text-gray-700 max-w-2xl mx-auto mb-6">
             Connect with meaningful volunteer opportunities that match your
@@ -112,54 +118,48 @@ const HomePage = () => {
             Hear from volunteers and organizations who&apos;ve experienced the
             power of connection
           </p>
-          <div className="grid md:grid-cols-2 gap-10 text-left">
-            <div className="bg-white shadow p-6 rounded-md">
-              <p className="text-gray-700 italic">
-                <q>
-                  Through Volunteer.NG, I found an opportunity to teach coding
-                  to students in underserved schools. Not only did I help these
-                  children develop valuable skills, but I also grew
-                  professionally and expanded my network. The platform made it
-                  easy to find a cause that matched my skills and passion.
-                </q>
-              </p>
-              <p className="mt-4 font-semibold">Chioma Okafor</p>
-              <p className="text-sm text-gray-500">Software Developer, Lagos</p>
-            </div>
-            <div className="bg-white shadow p-6 rounded-md">
-              <p className="text-gray-700 italic">
-                <q>
-                  As a small organization with limited resources, finding
-                  qualified volunteers was always challenging. Volunteer.NG
-                  changed everything for us. Within weeks of signing up, we
-                  connected with skilled professionals who helped us improve our
-                  literacy program. The impact on our community has been
-                  incredible.
-                </q>
-              </p>
-              <p className="mt-4 font-semibold">Adamu Yakubu</p>
-              <p className="text-sm text-gray-500">
-                Director, Education for All NGO
-              </p>
-            </div>
+          <div className="text-left">
+            <Carousel
+              autoPlay
+              centerMode
+              infiniteLoop
+              showThumbs={false}
+              showArrows={false}
+              showIndicators={false}
+              showStatus={false}
+              useKeyboardArrows={true}
+            >
+              {testimonials.map((testimonial, index) => (
+                <div
+                  key={index}
+                  className="bg-white shadow p-6 rounded-md mx-5 h-64 flex flex-col items-center justify-between"
+                >
+                  <p className="text-gray-700 italic">
+                    <q>{testimonial.content}</q>
+                  </p>
+
+                  <div>
+                    <h3 className="mt-4 font-semibold">{testimonial.name}</h3>
+                    <p className="text-sm text-gray-500">
+                      {testimonial.designation}
+                    </p>
+                  </div>
+                </div>
+              ))}
+            </Carousel>
           </div>
         </section>
 
         {/* Sign-up Section */}
         <section id="join" className="bg-green-50 py-20 px-4 text-center">
           <h2 className="text-3xl font-semibold text-green-700 mb-2">
-            Join the Movement Today
+            Subscribe to our Newsletter
           </h2>
           <p className="text-gray-700 mb-10">
             Get your free account in less than 2 minutes and start making a
             difference
           </p>
           <form className="max-w-2xl mx-auto grid gap-4">
-            <select className="border border-gray-300 px-4 py-2 rounded-md">
-              <option value="">I am a:</option>
-              <option value="volunteer">Volunteer</option>
-              <option value="organization">Organization</option>
-            </select>
             <input
               type="text"
               placeholder="Full Name"
@@ -170,18 +170,6 @@ const HomePage = () => {
               placeholder="Email Address"
               className="border border-gray-300 px-4 py-2 rounded-md"
             />
-            <input
-              type="text"
-              placeholder="Location"
-              className="border border-gray-300 px-4 py-2 rounded-md"
-            />
-            <select className="border border-gray-300 px-4 py-2 rounded-md">
-              <option value="">Primary Interest</option>
-              <option>Education</option>
-              <option>Health</option>
-              <option>Environment</option>
-              <option>Youth Empowerment</option>
-            </select>
             <button
               type="submit"
               className="bg-green-600 text-white px-6 py-3 rounded-md hover:bg-green-700 transition"
@@ -189,13 +177,41 @@ const HomePage = () => {
               Sign Up
             </button>
           </form>
+
+          <div className="mt-10 flex items-center justify-center gap-4 flex-wrap">
+            <Link
+              href="https://www.apple.com/app-store/"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <Image
+                src="https://developer.apple.com/assets/elements/badges/download-on-the-app-store.svg"
+                alt="Download on the App Store"
+                width={150}
+                height={50}
+              />
+            </Link>
+
+            <Link
+              href="https://play.google.com/store"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <Image
+                src="https://upload.wikimedia.org/wikipedia/commons/7/78/Google_Play_Store_badge_EN.svg"
+                alt="Get it on Google Play"
+                width={150}
+                height={50}
+              />
+            </Link>
+          </div>
         </section>
 
         {/* Footer */}
         <footer className="bg-green-700 text-white text-center py-6 px-4">
-          <p>© 2025 Volunteer.NG - Building Nigeria Through Service</p>
+          <p>© 2025 Volunteer.ng - Building Nigeria Through Service</p>
           <div className="mt-2 text-sm flex flex-wrap justify-center gap-4">
-            <span>Supported by Nigeria Network of NGOs</span>
+            <span>By Volint</span>
             <span>Secure & Private</span>
             <span>Made in Nigeria 🇳🇬</span>
           </div>

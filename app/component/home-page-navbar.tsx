@@ -27,6 +27,12 @@ const HomeNavbar = () => {
             href="#how-it-works"
             className="text-gray-700 hover:text-green-700 transition"
           >
+            About
+          </Link>
+          <Link
+            href="#how-it-works"
+            className="text-gray-700 hover:text-green-700 transition"
+          >
             How It Works
           </Link>
           <Link
@@ -40,12 +46,6 @@ const HomeNavbar = () => {
             className="text-gray-700 hover:text-green-700 transition"
           >
             Stories
-          </Link>
-          <Link
-            href="#join"
-            className="text-gray-700 hover:text-green-700 transition"
-          >
-            Join
           </Link>
 
           <Link
@@ -94,6 +94,12 @@ const HomeNavbar = () => {
             href="#how-it-works"
             className="block text-gray-700 hover:text-green-700"
           >
+            About
+          </Link>
+          <Link
+            href="#how-it-works"
+            className="block text-gray-700 hover:text-green-700"
+          >
             How It Works
           </Link>
           <Link
@@ -108,12 +114,7 @@ const HomeNavbar = () => {
           >
             Stories
           </Link>
-          <Link
-            href="#join"
-            className="block text-gray-700 hover:text-green-700"
-          >
-            Join
-          </Link>
+
           <Link
             href="/explore"
             className="inline-block w-full text-center bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-md mt-2"
