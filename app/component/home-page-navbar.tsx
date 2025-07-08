@@ -24,25 +24,25 @@ const HomeNavbar = () => {
         {/* Desktop Nav */}
         <div className="hidden md:flex items-center space-x-8">
           <Link
-            href="#how-it-works"
+            href="/about"
             className="text-gray-700 hover:text-green-700 transition"
           >
             About
           </Link>
           <Link
-            href="#how-it-works"
+            href="/home#how-it-works"
             className="text-gray-700 hover:text-green-700 transition"
           >
             How It Works
           </Link>
           <Link
-            href="#impact"
+            href="/home#impact"
             className="text-gray-700 hover:text-green-700 transition"
           >
             Impact
           </Link>
           <Link
-            href="#testimonials"
+            href="/home#testimonials"
             className="text-gray-700 hover:text-green-700 transition"
           >
             Stories
@@ -91,7 +91,7 @@ const HomeNavbar = () => {
       {isOpen && (
         <div className="md:hidden bg-white border-t px-4 pb-4 space-y-2">
           <Link
-            href="#how-it-works"
+            href="/about"
             className="block text-gray-700 hover:text-green-700"
           >
             About

@@ -17,7 +17,7 @@ import { ReactNode } from "react";
 
 export const metadata: Metadata = {
   title: "Volunteer.ng",
-  description: "Facilitating social impact",
+  description: "Building Nigeria Through Service",
 };
 
 type RootLayoutProp = Readonly<{
