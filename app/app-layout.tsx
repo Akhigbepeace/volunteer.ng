@@ -12,7 +12,7 @@ type AppLayoutProp = { children: ReactNode };
 const AppLayout = ({ children }: AppLayoutProp) => {
   const pathname = usePathname();
 
-  const hiddenRoutes = ["/", "/home", "/404"];
+  const hiddenRoutes = ["/", "/home", "/about", "/404"];
   const shouldHideLayout = hiddenRoutes.includes(pathname);
 
   return (

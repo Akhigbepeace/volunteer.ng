@@ -16,7 +16,7 @@ const HomePage = () => {
         {/* Hero Section */}
         <section className="bg-green-50 pb-20 pt-40 text-center px-4">
           <h1 className="text-4xl font-bold text-green-700 mb-4">
-            Facilitating Social Impact
+            Building Nigeria Through Service
           </h1>
           <p className="text-lg text-gray-700 max-w-2xl mx-auto mb-6">
             Connect with meaningful volunteer opportunities that match your
