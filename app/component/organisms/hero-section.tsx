@@ -12,7 +12,7 @@ const HeroSection = () => {
 
       <div className="absolute inset-0 flex flex-col items-center justify-center text-center gap-4 bg-black/70 px-4">
         <h1 className="text-3xl md:text-5xl lg:text-6xl font-black text-white leading-tight">
-        Building Nigeria Through Service
+          Facilitating Social Impact
         </h1>
         <p className="text-lg md:text-xl lg:text-2xl font-extralight text-white">
           Skill and passion based volunteering

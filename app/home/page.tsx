@@ -16,7 +16,7 @@ const HomePage = () => {
         {/* Hero Section */}
         <section className="bg-green-50 pb-20 pt-40 text-center px-4">
           <h1 className="text-4xl font-bold text-green-700 mb-4">
-            Building Nigeria Through Service
+            Facilitating Social Impact
           </h1>
           <p className="text-lg text-gray-700 max-w-2xl mx-auto mb-6">
             Connect with meaningful volunteer opportunities that match your
@@ -209,7 +209,7 @@ const HomePage = () => {
 
         {/* Footer */}
         <footer className="bg-green-700 text-white text-center py-6 px-4">
-          <p>© 2025 Volunteer.ng - Building Nigeria Through Service</p>
+          <p>© 2025 Volunteer.ng - Facilitating Social Impact</p>
           <div className="mt-2 text-sm flex flex-wrap justify-center gap-4">
             <span>By Volint</span>
             <span>Secure & Private</span>
