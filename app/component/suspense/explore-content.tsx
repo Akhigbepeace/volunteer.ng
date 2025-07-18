@@ -30,7 +30,7 @@ const ExploreContent = () => {
   }, []);
 
   return (
-    <div>
+    <div className="min-h-screen">
       <HeroSection />
       <FilterOptions setLoading={setLoading} setProjects={setProjects} />
       {loading ? <div>Loading...</div> : <Projects projects={projects} />}
