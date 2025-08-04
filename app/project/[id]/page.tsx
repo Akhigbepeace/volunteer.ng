@@ -23,6 +23,7 @@ import Loader from "@/app/component/loader";
 import VolunteersSection, {
   StatusUpdateProps,
 } from "@/app/component/project/volunters-section";
+import { Role } from "@/hooks/use-popup-auth";
 
 type ProjectAndVolunteers = {
   project: Project | null;
@@ -40,7 +41,7 @@ const ProjectDetails = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [isExiting, setIsExiting] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
-  const [role, setRole] = useState<string>("");
+  const [role, setRole] = useState<Role | null>(null);
   const [projectAndVolunteers, setProjectsAndVolunteers] =
     useState<ProjectAndVolunteers>(initialProjectData);
   const [projects, setProjects] = useState<Project[]>([]);
@@ -68,7 +69,7 @@ const ProjectDetails = () => {
           getProject(),
         ]);
 
-        setRole(userData.role);
+        setRole(userData?.role as Role);
         setProjectsAndVolunteers({
           project: projectData.project,
           hasJoinedProject: projectData.hasJoinedProject,
