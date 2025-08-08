@@ -21,6 +21,7 @@ export const useGoogleAuth = () => {
   const verifyTokenAndRedirect = async (token: string, popup?: Window) => {
     setIsAuthenticating(true);
     try {
+      console.log("Make req to /dashboard");
       // Step 5: Use token to make request to /dashboard
       const response = await fetch(
         "https://volunteer-ng.onrender.com/dashboard",
@@ -33,6 +34,8 @@ export const useGoogleAuth = () => {
         }
       );
 
+      console.log("Response", response);
+
       if (!response.ok) {
         toast.error("Authentication failed");
         cookies.remove("authToken");
@@ -41,7 +44,7 @@ export const useGoogleAuth = () => {
       }
 
       const data = await response.json();
-
+      console.log("Res data", data);
       // Step 7: If user hasn't onboarded, redirect to /join
       if (!data.onboarded) {
         router.push("/join");
@@ -62,6 +65,7 @@ export const useGoogleAuth = () => {
 
       // Step 9: Close popup on successful authentication and redirect
       popup?.close();
+      console.log("Close popup");
     } catch (error) {
       console.error("Verification error:", error);
       toast.error("Authentication failed. Please try again.");
@@ -75,7 +79,7 @@ export const useGoogleAuth = () => {
   const handleGoogleAuth = () => {
     // Step 1: User clicks login button, show popup
     setIsAuthenticating(true);
-
+    console.log("Show Pop up");
     // Step 2: Make request to /auth/google to handle OAuth
     const popup = window.open(
       "https://volunteer-ng.onrender.com/auth/google",
@@ -91,14 +95,15 @@ export const useGoogleAuth = () => {
 
     const handleMessage = (event: MessageEvent) => {
       if (!allowedOrigins.includes(event.origin)) return;
-
+      console.log("Event Message", event);
       if (event.data.token) {
         // Step 3: On successful authentication, get token
         const token = event.data.token;
 
+        console.log("Token", token);
         // Step 4: Save token for future requests
         cookies.set("authToken", token, { path: "/" });
-
+        console.log("Token stored");
         // Step 5-9: Verify token and redirect based on onboarding status
         verifyTokenAndRedirect(token, popup);
       } else if (event.data.error) {
