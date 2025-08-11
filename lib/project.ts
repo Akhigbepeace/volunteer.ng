@@ -2,6 +2,9 @@ import type { FormData } from "@/app/component/suspense/apply";
 import { TabOption } from "@/app/project/organization/page";
 import { TabType } from "@/app/project/volunteer/page";
 import { Project } from "@/data/project";
+import Cookies from "universal-cookie";
+
+const cookies = new Cookies();
 
 type ProjectApplicationProps = {
   projectId: string;
@@ -36,12 +39,17 @@ type VolunteeerStatusProps = {
   status: "accepted" | "rejected";
 };
 
+const getAuthHeaders = () => {
+  const token = cookies.get("authToken");
+  return {
+    "Content-Type": "application/json",
+    ...(token && { Authorization: `Bearer ${token}` }),
+  };
+};
+
 const getProject = async () => {
   const apiRes = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/projects`, {
-    credentials: "include",
-    headers: {
-      "Content-Type": "application/json",
-    },
+    headers: getAuthHeaders(),
   });
 
   const res = await apiRes.json();
@@ -52,10 +60,7 @@ const getOrgProject = async () => {
   const apiRes = await fetch(
     `${process.env.NEXT_PUBLIC_BASE_URL}/my-projects`,
     {
-      credentials: "include",
-      headers: {
-        "Content-Type": "application/json",
-      },
+      headers: getAuthHeaders(),
     }
   );
 
@@ -69,10 +74,7 @@ const getFilteredProject = async (queryParams: string) => {
   }/projects?${queryParams.toString()}`;
 
   const apiRes = await fetch(url, {
-    credentials: "include",
-    headers: {
-      "Content-Type": "application/json",
-    },
+    headers: getAuthHeaders(),
   });
 
   const res = await apiRes.json();
@@ -83,10 +85,7 @@ const getVolunteerAppliedProjects = async () => {
   const apiRes = await fetch(
     `${process.env.NEXT_PUBLIC_BASE_URL}/user-joined-projects`,
     {
-      credentials: "include",
-      headers: {
-        "Content-Type": "application/json",
-      },
+      headers: getAuthHeaders(),
     }
   );
 
@@ -98,10 +97,7 @@ const getVolunteerProjectByStatus = async (status: TabType) => {
   const apiRes = await fetch(
     `${process.env.NEXT_PUBLIC_BASE_URL}/projects-by-status/${status}`,
     {
-      credentials: "include",
-      headers: {
-        "Content-Type": "application/json",
-      },
+      headers: getAuthHeaders(),
     }
   );
 
@@ -113,10 +109,7 @@ const getOrgProjectByStatus = async (status: TabOption) => {
   const apiRes = await fetch(
     `${process.env.NEXT_PUBLIC_BASE_URL}/projects-by-org/${status}`,
     {
-      credentials: "include",
-      headers: {
-        "Content-Type": "application/json",
-      },
+      headers: getAuthHeaders(),
     }
   );
 
@@ -131,10 +124,7 @@ const getSingleProject = async (props: ProjectDetailsProps) => {
   const apiRes = await fetch(
     `${process.env.NEXT_PUBLIC_BASE_URL}/project/${projectId}`,
     {
-      credentials: "include",
-      headers: {
-        "Content-Type": "application/json",
-      },
+      headers: getAuthHeaders(),
     }
   );
 
@@ -150,10 +140,7 @@ const updateVolunteerStatus = async (props: VolunteeerStatusProps) => {
     `${process.env.NEXT_PUBLIC_BASE_URL}/update-project-status`,
     {
       method: "POST",
-      credentials: "include",
-      headers: {
-        "Content-Type": "application/json",
-      },
+      headers: getAuthHeaders(),
       body: JSON.stringify({
         projectId,
         status,
@@ -173,10 +160,7 @@ const editProject = async (props: EditProjectProps) => {
     `${process.env.NEXT_PUBLIC_BASE_URL}/update-project/${projectId}`,
     {
       method: "PUT",
-      credentials: "include",
-      headers: {
-        "Content-Type": "application/json",
-      },
+      headers: getAuthHeaders(),
       body: JSON.stringify({
         ...project,
       }),
@@ -194,9 +178,7 @@ const deleteProject = async (props: DeleteProjectProps) => {
     `${process.env.NEXT_PUBLIC_BASE_URL}/delete-project/${projectId}`,
     {
       method: "DELETE",
-      headers: {
-        "Content-Type": "application/json",
-      },
+      headers: getAuthHeaders(),
     }
   );
 
@@ -211,10 +193,7 @@ const exitProject = async (props: DeleteProjectProps) => {
     `${process.env.NEXT_PUBLIC_BASE_URL}/leave-project`,
     {
       method: "POST",
-      credentials: "include",
-      headers: {
-        "Content-Type": "application/json",
-      },
+      headers: getAuthHeaders(),
       body: JSON.stringify({
         projectId,
       }),
@@ -232,10 +211,7 @@ const createProject = async (props: CreateProjectProps) => {
     `${process.env.NEXT_PUBLIC_BASE_URL}/save-project-data`,
     {
       method: "POST",
-      credentials: "include",
-      headers: {
-        "Content-Type": "application/json",
-      },
+      headers: getAuthHeaders(),
       body: JSON.stringify({
         ...project,
       }),
@@ -253,10 +229,7 @@ const applyForProject = async (props: ProjectApplicationProps) => {
     `${process.env.NEXT_PUBLIC_BASE_URL}/join-project`,
     {
       method: "POST",
-      credentials: "include",
-      headers: {
-        "Content-Type": "application/json",
-      },
+      headers: getAuthHeaders(),
       body: JSON.stringify({
         projectId,
         status: "applied",
