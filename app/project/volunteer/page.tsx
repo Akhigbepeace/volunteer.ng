@@ -25,6 +25,7 @@ const Projects = () => {
 
     try {
       const res = await getVolunteerProjectByStatus(status);
+      if (!res.projects) return;
       setProjects(res.projects);
     } catch (error) {
       console.error(error);
